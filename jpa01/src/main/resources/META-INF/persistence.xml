@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence" version="2.2">
+    <persistence-unit name="jpabegin" transaction-type="RESOURCE_LOCAL">
+        <class>com.example.jpa.domain.User</class>
+        <exclude-unlisted-classes>true</exclude-unlisted-classes>
+        <properties>
+            <!-- 필수 속성 -->
+            <property name="jakarta.persistence.jdbc.driver" value="org.mariadb.jdbc.Driver"/>
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:mariadb://localhost:3306/sample"/>
+            <property name="jakarta.persistence.jdbc.user" value="root"/>
+            <property name="jakarta.persistence.jdbc.password" value="!123456"/>
+
+            <!-- 옵션 속성 -->
+
+            <!-- hikari pooling 환경설정 -->
+            <property name="hibernate.hikari.poolName" value="pool"/>
+            <property name="hibernate.hikari.maximumPoolSize" value="10"/>
+            <property name="hibernate.hikari.minimumIdle" value="10"/>
+            <property name="hibernate.hikari.connectionTimeout" value="1000"/>
+
+            <!-- JPA 기본 환경 : 기본값 -->
+
+        </properties>
+    </persistence-unit>
+</persistence>
