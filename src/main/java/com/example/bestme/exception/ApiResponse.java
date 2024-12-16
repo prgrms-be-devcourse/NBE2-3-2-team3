@@ -27,7 +27,7 @@ public class ApiResponse<T> {
         return new ApiResponse<>(false, httpStatus, "실패", null);
     }
 
-    public static ApiResponse<Void> error(String message, HttpStatus httpStatus) {
+    public static ApiResponse<Void> error(HttpStatus httpStatus, String message) {
         return new ApiResponse<>(false, httpStatus, message, null);
     }
 }

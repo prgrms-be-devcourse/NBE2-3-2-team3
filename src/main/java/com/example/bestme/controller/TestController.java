@@ -30,7 +30,7 @@ public class TestController {
     @GetMapping("/error")
     public ResponseEntity<ApiResponse<Void>> errorResponse() {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(ApiResponse.error("Invalid Request", HttpStatus.BAD_REQUEST));
+                .body(ApiResponse.error(HttpStatus.BAD_REQUEST, "Invalid Request"));
     }
 
 }
