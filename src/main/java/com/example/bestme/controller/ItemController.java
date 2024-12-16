@@ -28,11 +28,11 @@ public class ItemController {
         return ApiResponse.success(response);
     }
 
-//    @GetMapping("/{id}")
-//    public ApiResponse<ItemDetailResponse> getItem(@PathVariable Long id) {
-//        ItemDetailResponse response = itemService.getItemDetailResponse(id);
-//        return ApiResponse.success(response);
-//    }
+    @GetMapping("/{id}")
+    public ApiResponse<ItemDetailResponse> getItem(@PathVariable Long id) {
+        ItemDetailResponse response = itemService.getItemDetailResponse(id);
+        return ApiResponse.success(response);
+    }
 
 //    @GetMapping("/filters")
 //    public ApiResponse<FilterDataResponse> getFilterData() {

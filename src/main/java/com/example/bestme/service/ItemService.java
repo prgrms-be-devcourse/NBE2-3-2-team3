@@ -47,10 +47,10 @@ public class ItemService {
         );
     }
 
-//    public ItemDetailResponse getItemDetailResponse(Long id) {
-//        Item item = itemRepository.findById(id).orElseThrow(() -> new NoSuchElementException("아이템 x"));
-//        return ItemDetailResponse.from(item);
-//    }
+    public ItemDetailResponse getItemDetailResponse(Long id) {
+        Item item = itemRepository.findById(id).orElseThrow(() -> new NoSuchElementException("아이템 x"));
+        return ItemDetailResponse.from(item);
+    }
 
 //    public FilterDataResponse getFilterDataResponse() {
 //        List<Category> categories = categoryRepository.findAll();
