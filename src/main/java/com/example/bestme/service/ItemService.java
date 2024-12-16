@@ -23,8 +23,8 @@ import java.util.NoSuchElementException;
 public class ItemService {
 
     private final ItemRepository itemRepository;
-//    private final ColorRepository colorRepository;
-//    private final CategoryRepository categoryRepository;
+    private final ColorRepository colorRepository;
+    private final CategoryRepository categoryRepository;
 
     public ItemsResponse getItemsResponseByFilter(FilterRequest filterRequest) {
         return ItemsResponse.of(
@@ -52,9 +52,9 @@ public class ItemService {
         return ItemDetailResponse.from(item);
     }
 
-//    public FilterDataResponse getFilterDataResponse() {
-//        List<Category> categories = categoryRepository.findAll();
-//        List<Color> colors = colorRepository.findAll();
-//        return FilterDataResponse.of(categories, colors);
-//    }
+    public FilterDataResponse getFilterDataResponse() {
+        List<Category> categories = categoryRepository.findAll();
+        List<Color> colors = colorRepository.findAll();
+        return FilterDataResponse.of(categories, colors);
+    }
 }

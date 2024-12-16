@@ -34,9 +34,9 @@ public class ItemController {
         return ApiResponse.success(response);
     }
 
-//    @GetMapping("/filters")
-//    public ApiResponse<FilterDataResponse> getFilterData() {
-//        FilterDataResponse response = itemService.getFilterDataResponse();
-//        return ApiResponse.success(response);
-//    }
+    @GetMapping("/filters")
+    public ApiResponse<FilterDataResponse> getFilterData() {
+        FilterDataResponse response = itemService.getFilterDataResponse();
+        return ApiResponse.success(response);
+    }
 }
