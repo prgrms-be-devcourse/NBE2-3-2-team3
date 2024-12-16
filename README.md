@@ -33,6 +33,6 @@ feat/자신이 맡은 역할/#순서
 
 ex) feat/login/#2
 
-    feat/login/#4 ...
+feat/login/#4 ...
     
-    feat/gpt/#3
+feat/gpt/#3
