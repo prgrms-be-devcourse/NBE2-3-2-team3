@@ -27,12 +27,20 @@ Rename : 파일 및 폴더명 수정
 
 Remove : 파일 삭제
 
+ex)
+
+    git commit -m "feat : 회원가입 기능 구현"
+
+    
+
 
 # Branch Naming Rule
 feat/자신이 맡은 역할/#순서
 
-ex) feat/login/#2
+ex) 
 
-feat/login/#4 ...
+    feat/login/#2
+
+    feat/login/#4 ...
     
-feat/gpt/#3
+    feat/gpt/#3
