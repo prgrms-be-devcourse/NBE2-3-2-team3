@@ -26,3 +26,10 @@ Chore : 빌드 관련 코드 수정
 Rename : 파일 및 폴더명 수정
 
 Remove : 파일 삭제
+
+
+# Branch Naming Rule
+feat/자신이 맡은 역할/#순서
+ex) feat/login/#2
+    feat/login/#4 ...
+    feat/gpt/#3
