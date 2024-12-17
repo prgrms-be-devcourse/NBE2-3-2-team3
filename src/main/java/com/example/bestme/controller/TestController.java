@@ -29,8 +29,8 @@ public class TestController {
     //    에러응답 예시
     @GetMapping("/error")
     public ResponseEntity<ApiResponse<Void>> errorResponse() {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(ApiResponse.error(HttpStatus.BAD_REQUEST, "Invalid Request"));
+
+        return ResponseEntity.badRequest().body(ApiResponse.error(HttpStatus.BAD_REQUEST, "Test failed"));
     }
 }
 
