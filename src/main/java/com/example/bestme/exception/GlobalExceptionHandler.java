@@ -35,6 +35,7 @@ public class GlobalExceptionHandler {
                 .body(ApiResponse.error(HttpStatus.NOT_FOUND, "리소스를 찾을 수 없습니다: " + ex.getMessage()));
     }
 
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiResponse<Void>> handleValidationException(MethodArgumentNotValidException ex) {
         String errorMessage = ex.getBindingResult()
