@@ -43,6 +43,7 @@ public class SecurityConfig {
                         .requestMatchers("/style", "/style/**").permitAll()
                         .requestMatchers("/community", "/community/**").permitAll()
                         .requestMatchers("/member", "/member/**").permitAll()
+                        .requestMatchers("/results", "/results/**").permitAll() //임시로 해놓았습니다. url 변경시 삭제
                         .requestMatchers("/manager").permitAll()
 
                         // 다른 요청들은 인증할 것
