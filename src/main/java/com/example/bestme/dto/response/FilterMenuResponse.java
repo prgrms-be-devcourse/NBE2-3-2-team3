@@ -5,17 +5,17 @@ import com.example.bestme.domain.Color;
 
 import java.util.List;
 
-public record FilterDataResponse(
+public record FilterMenuResponse(
         List<String> menu,
         List<CategoryResponse> categories,
         List<ColorResponse> colors
 ) {
 
-    public static FilterDataResponse of(
+    public static FilterMenuResponse of(
             List<Category> categories,
             List<Color> colors
     ) {
-        return new FilterDataResponse(
+        return new FilterMenuResponse(
                 List.of("categories", "colors"),
                 categories.stream().map(CategoryResponse::from).toList(),
                 colors.stream().map(ColorResponse::from).toList()
@@ -29,10 +29,26 @@ public record FilterDataResponse(
         }
     }
 
-    public record CategoryResponse(Long id, String name) {
+    public record CategoryResponse(
+            Long id,
+            Integer depth,
+            String parentCategoryName,
+            String name,
+            List<CategoryResponse> subCategories
+    ) {
 
         public static CategoryResponse from(Category category) {
-            return new CategoryResponse(category.getId(), category.getName());
+            List<CategoryResponse> subCategories = category.getSubCategories().stream()
+                    .map(CategoryResponse::from)
+                    .toList();
+
+            return new CategoryResponse(
+                    category.getId(),
+                    category.getDepth(),
+                    category.getParentCategoryName(),
+                    category.getName(),
+                    subCategories
+            );
         }
     }
 }
