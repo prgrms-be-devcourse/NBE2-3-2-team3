@@ -13,6 +13,6 @@ public interface UserRepository extends JpaRepository<User, String> {
     User findByEmail(String email);
 
     // 닉네임(Unique)으로 유저를 찾는 쿼리
-    @Query(value = "select u from User u where u.email = ?1")
+    @Query(value = "select u from User u where u.nickname = ?1")
     User findByNickname(String nickname);
 }

@@ -35,4 +35,8 @@ public class ApiResponse<T> {
     public static ApiResponse<Void> error(HttpStatus httpStatus, String message) {
         return new ApiResponse<>(false, httpStatus.value(), message, null);
     }
+
+    public static <T> ApiResponse<T> error(HttpStatus httpStatus, String message, T data) {
+        return new ApiResponse<>(false, httpStatus.value(), message, null);
+    }
 }
