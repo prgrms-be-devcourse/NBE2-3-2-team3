@@ -6,7 +6,6 @@ import com.example.bestme.dto.user.RequestLoginDTO;
 import com.example.bestme.dto.user.RequestSignUpDTO;
 import com.example.bestme.exception.ApiResponse;
 import com.example.bestme.repository.user.UserRepository;
-import com.example.bestme.util.ShaUtil;
 import com.example.bestme.util.jwt.JwtTokenDTO;
 import com.example.bestme.util.jwt.JwtTokenProvider;
 import org.modelmapper.ModelMapper;
@@ -16,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
