@@ -45,6 +45,7 @@ public class JwtTokenProvider {
         LocalDateTime now = LocalDateTime.now();
 
         // 1 시간의 유효기간 - accessToken
+
         LocalDateTime accessTokenExpire = now.plusHours(1);
         String accessToken = Jwts.builder()
                 .setSubject(authentication.getName())
@@ -82,6 +83,7 @@ public class JwtTokenProvider {
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
 
+
         // UserDetails - 인터페이스 / User - UserDetails 구현 클래스
         // UserDetails 객체를 만들어서 return Authentication
         UserDetails principal = new User(claims.getSubject(), "", authorities);
@@ -96,7 +98,9 @@ public class JwtTokenProvider {
                     .build()
                     .parseClaimsJws(token);
             return true;
-        } catch (Exception e) {
+        }  catch (SecurityException | MalformedJwtException e) {
+            return false;
+        }  catch (Exception e) {
             System.out.println("에러 : " + e.getMessage());
         }
         return false;
@@ -115,3 +119,4 @@ public class JwtTokenProvider {
         }
     }
 }
+

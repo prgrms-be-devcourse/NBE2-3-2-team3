@@ -14,10 +14,12 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @ToString
+@Table(name = "user")
 public class User{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private Long userId;
 
     @Column(nullable = false, unique = true)
@@ -33,8 +35,9 @@ public class User{
     @ColumnDefault("0")
     private boolean kakaoFlag;
 
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false, updatable = false, name = "created_at")
     private LocalDateTime createdAt;
+    @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
     @Column(nullable = false)
@@ -55,5 +58,11 @@ public class User{
         this.deletedAt = deletedAt;
         this.deletedFlag = deletedFlag;
         this.role = role;
+    }
+
+    public User(String userId, String email, String nickname){
+        this.userId=Long.parseLong(userId);
+        this.email = email;
+        this.nickname = nickname;
     }
 }
