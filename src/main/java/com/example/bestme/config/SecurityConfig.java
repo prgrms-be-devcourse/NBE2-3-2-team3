@@ -57,7 +57,6 @@ public class SecurityConfig {
                 .oauth2Login(oauth2 -> oauth2
                         .redirectionEndpoint(endpoint -> endpoint.baseUri("/login/oauth2/code/kakao"))
                         .userInfoEndpoint(endpoint -> endpoint.userService(oAuth2UserService))
-                );
                 ).addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }

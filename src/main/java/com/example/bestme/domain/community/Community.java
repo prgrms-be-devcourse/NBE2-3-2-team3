@@ -2,14 +2,12 @@ package com.example.bestme.domain.community;
 
 import com.example.bestme.domain.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 @Entity( name = "board" )
 @Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Community extends BaseEntity {
