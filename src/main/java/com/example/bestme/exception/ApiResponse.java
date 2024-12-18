@@ -24,7 +24,7 @@ public class ApiResponse<T> {
 
     // 성공 응답 (httpStatus 코드 종류 다양하게 할 시 사용)
     public static <T> ApiResponse<T> success(HttpStatus httpStatus, String message, T data) {
-        return new ApiResponse<>(true, httpStatus, message, data);
+        return new ApiResponse<>(true, httpStatus.value(), message, data);
     }
 
     // 에러 응답
@@ -33,6 +33,10 @@ public class ApiResponse<T> {
     }
 
     public static ApiResponse<Void> error(HttpStatus httpStatus, String message) {
+        return new ApiResponse<>(false, httpStatus.value(), message, null);
+    }
+
+    public static <T> ApiResponse<T> error(HttpStatus httpStatus, String message, T data) {
         return new ApiResponse<>(false, httpStatus.value(), message, null);
     }
 }
