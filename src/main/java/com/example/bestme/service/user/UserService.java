@@ -4,6 +4,7 @@ import com.example.bestme.dto.user.RequestLoginDTO;
 import com.example.bestme.dto.user.RequestSignUpDTO;
 import com.example.bestme.exception.ApiResponse;
 import com.example.bestme.util.jwt.JwtTokenDTO;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
 
 public interface UserService {
@@ -11,5 +12,5 @@ public interface UserService {
     ResponseEntity<ApiResponse<Void>> join(RequestSignUpDTO to);
 
     // 로그인
-    ResponseEntity<ApiResponse<JwtTokenDTO>> login(RequestLoginDTO to);
+    ResponseEntity<ApiResponse<Void>> login(RequestLoginDTO to, HttpServletResponse response);
 }

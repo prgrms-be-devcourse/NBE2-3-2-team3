@@ -8,6 +8,7 @@ import com.example.bestme.exception.ApiResponse;
 import com.example.bestme.repository.user.UserRepository;
 import com.example.bestme.util.jwt.JwtTokenDTO;
 import com.example.bestme.util.jwt.JwtTokenProvider;
+import jakarta.servlet.http.HttpServletResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -70,7 +71,7 @@ public class UserServiceImpl implements UserService{
 
 
     @Override
-    public ResponseEntity<ApiResponse<JwtTokenDTO>> login(RequestLoginDTO to) {
+    public ResponseEntity<ApiResponse<Void>> login(RequestLoginDTO to, HttpServletResponse response) {
 
         // 입력한 이메일을 바탕으로 DB에 존재하는 User 검색
         User user = userRepository.findByEmail(to.getEmail());
@@ -80,18 +81,27 @@ public class UserServiceImpl implements UserService{
         // (순서 지키기) - (입력한 비밀번호, DB에 존재하는 User 의 암호화된 비밀번호)
         if (user == null || !passwordEncoder.matches(to.getPassword(), user.getPassword())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(ApiResponse.error(HttpStatus.UNAUTHORIZED, "잘못된 이메일 또는 비밀번호로 인해서 로그인에 실패하였습니다.", null));
+                    .body(ApiResponse.error(HttpStatus.UNAUTHORIZED, "잘못된 이메일 또는 비밀번호로 로그인에 실패하였습니다.", null));
         }
 
+        // jwt 토큰 생성
+        JwtTokenDTO jwtTokenDTO = createToken(to);
+
+        // header 에 토큰 저장
+        response.setHeader("Authorization", jwtTokenDTO.getGrantType() + " " + jwtTokenDTO.getAccessToken());
+        response.setHeader("refresh", jwtTokenDTO.getGrantType() + " " + jwtTokenDTO.getRefreshToken());
+
+        // ApiResponse 에 토큰 반환
+        return ResponseEntity.ok(ApiResponse.success("로그인에 성공하였습니다.", null));
+    }
+
+    // 토큰 생성 메서드
+    public JwtTokenDTO createToken(RequestLoginDTO to) {
         // email + password 기반 Authentication 객체 생성
-        // authentication 인증 여부를 확인하는 authenticated 값이 false
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(to.getEmail(), to.getPassword());
 
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
-        JwtTokenDTO jwtTokenDTO = jwtTokenProvider.generateToken(authentication);
-
-        // ApiResponse 에 토큰 반환
-        return ResponseEntity.ok(ApiResponse.success("로그인에 성공하였습니다.", jwtTokenDTO));
+        return jwtTokenProvider.generateToken(authentication);
     }
 }

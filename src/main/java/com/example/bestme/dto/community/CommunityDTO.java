@@ -7,6 +7,9 @@ import lombok.*;
 
 @Getter
 @Setter
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class CommunityDTO {
 
     private Long boardId;
@@ -17,5 +20,5 @@ public class CommunityDTO {
     private Long view = 0L; // 기본값 설정
 
     @Enumerated(EnumType.STRING)
-    private Category category; // 기본값 설정
+    private Category category;
 }

@@ -1,5 +1,6 @@
 package com.example.bestme.config;
 
+import com.example.bestme.handler.OAuth2SuccessHandler;
 import com.example.bestme.util.jwt.JwtAuthenticationFilter;
 import com.example.bestme.util.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,7 @@ public class SecurityConfig {
     private final JwtTokenProvider jwtTokenProvider;
 
     private final DefaultOAuth2UserService oAuth2UserService;
+    private final OAuth2SuccessHandler oAuth2SuccessHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -38,6 +40,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // 권한에 따라 접근 제한
                         .requestMatchers("/test").hasAuthority("USER")
+                        // 여러 권한 제안할 시
+                        // .requestMatchers("/test/**").hasAnyAuthority("USER", "ADMIN")
 
                         // 해당하는 요청들은 모든 사용자에게 허용
                         .requestMatchers("/api/**").permitAll()
@@ -56,7 +60,11 @@ public class SecurityConfig {
                 )
                 .oauth2Login(oauth2 -> oauth2
                         .redirectionEndpoint(endpoint -> endpoint.baseUri("/login/oauth2/code/kakao"))
+                        .loginPage("/login")
+                        .defaultSuccessUrl("/main", true)
                         .userInfoEndpoint(endpoint -> endpoint.userService(oAuth2UserService))
+                        .successHandler(oAuth2SuccessHandler)
+
                 ).addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
