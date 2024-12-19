@@ -4,6 +4,7 @@ import com.example.bestme.domain.Result;
 import com.example.bestme.dto.api.ResultRequest;
 import com.example.bestme.dto.api.ResultResponse;
 
+
 import java.util.List;
 
 public interface ResultService {

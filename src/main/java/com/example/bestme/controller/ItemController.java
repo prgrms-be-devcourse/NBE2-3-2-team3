@@ -20,10 +20,11 @@ public class ItemController {
 
     @GetMapping
     public ApiResponse<ItemsResponse> getItems(
-            @RequestParam(required = false) List<String> categories,
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(required = false) List<String> brands,
             @RequestParam(required = false) List<String> colors
     ) {
-        FilterRequest filterRequest = FilterRequest.of(categories, colors);
+        FilterRequest filterRequest = FilterRequest.of(categoryId, brands, colors);
         ItemsResponse response = itemService.getItemsResponseByFilter(filterRequest);
         return ApiResponse.success(response);
     }
