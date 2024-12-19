@@ -9,10 +9,11 @@ import java.util.Collection;
 import java.util.Map;
 
 @NoArgsConstructor
-@AllArgsConstructor
 public class CustomOAuth2User implements OAuth2User {
 
     private String userId;
+    private Map<String, Object> attributes; // 사용자 속성 정보
+    private Collection<? extends GrantedAuthority> authorities;
 
 
     @Override
@@ -28,5 +29,11 @@ public class CustomOAuth2User implements OAuth2User {
     @Override
     public String getName() {
         return this.userId;
+    }
+
+    public CustomOAuth2User(String userId, Map<String, Object> attributes, Collection<? extends GrantedAuthority> authorities) {
+        this.userId = userId;
+        this.attributes = attributes;
+        this.authorities = authorities;
     }
 }
