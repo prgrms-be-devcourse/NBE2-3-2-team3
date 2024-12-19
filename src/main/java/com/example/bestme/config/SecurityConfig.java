@@ -40,6 +40,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // 권한에 따라 접근 제한
                         .requestMatchers("/test").hasAuthority("USER")
+                        // 여러 권한 제안할 시
+                        // .requestMatchers("/test/**").hasAnyAuthority("USER", "ADMIN")
 
                         // 해당하는 요청들은 모든 사용자에게 허용
                         .requestMatchers("/api/**").permitAll()

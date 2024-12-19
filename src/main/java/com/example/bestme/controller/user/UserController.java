@@ -5,9 +5,12 @@ import com.example.bestme.dto.user.RequestSignUpDTO;
 import com.example.bestme.exception.ApiResponse;
 import com.example.bestme.service.user.UserService;
 import com.example.bestme.util.jwt.JwtTokenDTO;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,8 +35,8 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<JwtTokenDTO>> login(@RequestBody RequestLoginDTO to) {
-        return userService.login(to);
+    public ResponseEntity<ApiResponse<Void>> login(@RequestBody RequestLoginDTO to, HttpServletResponse response) {
+        return userService.login(to, response);
     }
 
     @PostMapping("/test")
