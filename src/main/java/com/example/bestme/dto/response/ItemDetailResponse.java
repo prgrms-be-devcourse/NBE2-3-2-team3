@@ -6,9 +6,7 @@ public record ItemDetailResponse(
         Long id,
         String name,
         String imageUrl,
-        String purchaseUrl,
-        String color,
-        String category
+        String purchaseUrl
 ) {
 
     public static ItemDetailResponse from(Item item) {
@@ -16,9 +14,7 @@ public record ItemDetailResponse(
                 item.getId(),
                 item.getName(),
                 item.getImageUrl(),
-                item.getPurchaseUrl(),
-                item.getColor().getName(),
-                item.getCategory().getName()
+                item.getPurchaseUrl()
         );
     }
 }

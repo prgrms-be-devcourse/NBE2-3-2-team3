@@ -1,7 +1,7 @@
 package com.example.bestme.controller;
 
 import com.example.bestme.dto.request.FilterRequest;
-import com.example.bestme.dto.response.FilterDataResponse;
+import com.example.bestme.dto.response.FilterMenuResponse;
 import com.example.bestme.dto.response.ItemDetailResponse;
 import com.example.bestme.dto.response.ItemsResponse;
 import com.example.bestme.exception.ApiResponse;
@@ -20,10 +20,11 @@ public class ItemController {
 
     @GetMapping
     public ApiResponse<ItemsResponse> getItems(
-            @RequestParam(required = false) List<String> categories,
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(required = false) List<String> brands,
             @RequestParam(required = false) List<String> colors
     ) {
-        FilterRequest filterRequest = FilterRequest.of(categories, colors);
+        FilterRequest filterRequest = FilterRequest.of(categoryId, brands, colors);
         ItemsResponse response = itemService.getItemsResponseByFilter(filterRequest);
         return ApiResponse.success(response);
     }
@@ -34,9 +35,9 @@ public class ItemController {
         return ApiResponse.success(response);
     }
 
-    @GetMapping("/filters")
-    public ApiResponse<FilterDataResponse> getFilterData() {
-        FilterDataResponse response = itemService.getFilterDataResponse();
+    @GetMapping("/filter-menu")
+    public ApiResponse<FilterMenuResponse> getFilterMenu() {
+        FilterMenuResponse response = itemService.getFilterMenuResponse();
         return ApiResponse.success(response);
     }
 }
