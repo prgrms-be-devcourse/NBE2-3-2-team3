@@ -25,10 +25,12 @@ public class CommunityService {
     private final String uploadPath;
 
     // 커뮤니티 개발 담당자의 프로젝트 내 -> 이미지 업로드 폴더 (절대 경로) 사용
+    /*
     public CommunityService(CommunityRepository communityRepositorySpy, @Value("${file.upload-path}") String uploadPath) {
         this.communityRepositorySpy = communityRepositorySpy;
         this.uploadPath = uploadPath;
     }
+     */
 
     // OS별 루트 폴더 아래 -> 이미지 업로드 폴더 (절대 경로) 사용 시
     /*
@@ -47,15 +49,22 @@ public class CommunityService {
     }
      */
 
-    @PostConstruct      // 해당 클래스의 모든 의존성 주입이 완료된 후에 자동으로 실행(객체 생성 후 바로 실행할 초기화 작업을 정의할 때 유용)
+    public CommunityService(CommunityRepository communityRepositorySpy, @Value("${file.upload-path}") String uploadPath) {
+        this.communityRepositorySpy = communityRepositorySpy;
+        // 실행 디렉토리를 기준으로 "upload" 폴더 설정
+        this.uploadPath = new File(uploadPath).getAbsolutePath();
+    }
+
+    @PostConstruct
     public void init() {
         File directory = new File(uploadPath);
-        if (!directory.exists() && !directory.mkdirs()) {
+        if (!directory.exists() && !directory.mkdirs()) {            // upload 폴더 없을 경우 생성
             throw new RuntimeException("파일 저장 폴더 생성 실패");
         }
     }
 
-    public CommunityDTO write(WriteDTO to, MultipartFile file) {
+
+    public CommunityDTO createBoard(WriteDTO to, MultipartFile file) {
 
         if ( to.getUserId() == null ) {throw new IllegalArgumentException("user id가 없습니다.");}
         if ( to.getSubject() == null || to.getSubject().isBlank() ) {throw new IllegalArgumentException("제목 입력은 필수입니다.");}
@@ -65,9 +74,7 @@ public class CommunityService {
             try {
                 String fileName = fileUpload(file);
                 to.setImagename(fileName);
-            } catch (IOException e) {
-                throw new RuntimeException("[에러]" + e.getMessage());
-            }
+            } catch (IOException e) { throw new RuntimeException("[에러]" + e.getMessage());}
         }
 
         Community entity = modelMapper.map(to, Community.class);
@@ -78,6 +85,7 @@ public class CommunityService {
         return result;
     }
 
+    // 이미지 파일 업로드 메서드
     public String fileUpload(MultipartFile file) throws IOException {
 
         String fileName = file.getOriginalFilename();
@@ -91,7 +99,8 @@ public class CommunityService {
         return fileName;
     }
 
-    public List<CommunityDTO> selectAll() {
+    // 페이지별 게시물 가져오는 메서드
+    public List<CommunityDTO> findAllPage() {
 
         List<Community> boards = communityRepositorySpy.findAll();
 
