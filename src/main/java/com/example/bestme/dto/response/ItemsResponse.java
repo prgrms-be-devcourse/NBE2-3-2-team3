@@ -9,12 +9,12 @@ public record ItemsResponse(
         List<ItemResponse> items
 ) {
 
-    public static ItemsResponse of(long totalCount, List<Item> items) {
+    public static ItemsResponse from(List<Item> items) {
         List<ItemResponse> itemResponses = items.stream()
                 .map(ItemResponse::from)
                 .toList();
 
-        return new ItemsResponse(totalCount, itemResponses);
+        return new ItemsResponse(items.size(), itemResponses);
     }
 
     public record ItemResponse(
