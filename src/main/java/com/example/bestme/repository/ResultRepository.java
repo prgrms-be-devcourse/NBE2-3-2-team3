@@ -1,8 +1,8 @@
 package com.example.bestme.repository;
 
 import com.example.bestme.domain.Result;
-import com.example.bestme.domain.user.User;
-import com.example.bestme.dto.ResultResponse;
+import com.example.bestme.dto.api.ResultResponse;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

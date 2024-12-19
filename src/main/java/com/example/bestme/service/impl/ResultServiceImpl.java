@@ -1,13 +1,13 @@
 package com.example.bestme.service.impl;
 
 import com.example.bestme.domain.Result;
-import com.example.bestme.dto.ResultRequest;
-import com.example.bestme.dto.ResultResponse;
+import com.example.bestme.dto.api.ResultRequest;
+import com.example.bestme.dto.api.ResultResponse;
+
 import com.example.bestme.repository.ResultRepository;
 import com.example.bestme.service.ResultService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.config.Configuration;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.modelmapper.ModelMapper;
