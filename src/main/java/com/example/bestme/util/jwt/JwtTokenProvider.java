@@ -11,6 +11,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
@@ -26,11 +27,13 @@ import java.util.stream.Collectors;
 public class JwtTokenProvider {
 
     private final Key key;
+    private final InMemoryClientRegistrationRepository clientRegistrationRepository;
 
     // application.properties 의 시크릿 키 값 가져와서 key 에 저장
-    public JwtTokenProvider( @Value("${jwt.secret.key}") String secretKey) {
+    public JwtTokenProvider(@Value("${jwt.secret.key}") String secretKey, InMemoryClientRegistrationRepository clientRegistrationRepository) {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
+        this.clientRegistrationRepository = clientRegistrationRepository;
     }
 
 
@@ -49,7 +52,7 @@ public class JwtTokenProvider {
         LocalDateTime accessTokenExpire = now.plusHours(1);
         String accessToken = Jwts.builder()
                 .setSubject(authentication.getName())
-                .claim("auth",authorities)
+                .claim("auth", authorities)
                 .setExpiration(Date.from(accessTokenExpire.atZone(ZoneId.systemDefault()).toInstant()))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
@@ -57,6 +60,8 @@ public class JwtTokenProvider {
         // 1 일의 유효기간 - refreshToken
         LocalDateTime refreshTokenExpire = now.plusDays(1);
         String refreshToken = Jwts.builder()
+                .setSubject(authentication.getName())
+                .claim("auth", authorities)
                 .setExpiration(Date.from(refreshTokenExpire.atZone(ZoneId.systemDefault()).toInstant()))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
@@ -101,9 +106,42 @@ public class JwtTokenProvider {
         }  catch (SecurityException | MalformedJwtException e) {
             return false;
         }  catch (Exception e) {
-            System.out.println("에러 : " + e.getMessage());
+            System.out.println("입력 token 만료");
         }
         return false;
+    }
+
+    // 기존 refreshToken 정보를 가지고 다시 accessToken, refreshToken 생성
+    public JwtTokenDTO reGenerateToken(String refreshToken) {
+
+        Claims claims = parseClaims(refreshToken);
+
+        LocalDateTime now = LocalDateTime.now();
+
+        // 1 시간의 유효기간 - accessToken
+
+        LocalDateTime accessTokenExpire = now.plusHours(1);
+        String accessToken = Jwts.builder()
+                .setSubject(claims.getSubject())
+                .claim("auth", claims.get("auth"))
+                .setExpiration(Date.from(accessTokenExpire.atZone(ZoneId.systemDefault()).toInstant()))
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+
+        // 1 일의 유효기간 - refreshToken
+        LocalDateTime refreshTokenExpire = now.plusDays(1);
+        String newRefreshToken = Jwts.builder()
+                .setSubject(claims.getSubject())
+                .claim("auth", claims.get("auth"))
+                .setExpiration(Date.from(refreshTokenExpire.atZone(ZoneId.systemDefault()).toInstant()))
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+
+        return JwtTokenDTO.builder()
+                .grantType("Bearer")
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
     }
 
     // accessToken
