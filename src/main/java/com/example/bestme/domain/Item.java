@@ -30,8 +30,9 @@ public class Item extends BaseEntity {
     @JoinColumn(name = "color_id")
     private Color color;
 
-    @OneToMany(mappedBy = "item")
-    private List<ItemCategory> itemCategories = new ArrayList<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "brand_id")

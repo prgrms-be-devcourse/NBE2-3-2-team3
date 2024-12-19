@@ -9,7 +9,7 @@ import java.util.List;
 public interface ItemRepository extends JpaRepository<Item, Long> {
 
     @Query(value = """
-        WITH RECURSIVE subcategories (id) AS (
+        WITH RECURSIVE cte (id) AS (
             SELECT id
             FROM category
             WHERE :categoryId IS NULL OR id = :categoryId
@@ -18,16 +18,15 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     
             SELECT ca.id
             FROM category ca
-            JOIN subcategories sc ON ca.parent_category_id = sc.id
+            JOIN cte ON ca.parent_category_id = cte.id
         )
         SELECT DISTINCT i.*
         FROM item i
-        JOIN item_category ic ON i.id = ic.item_id
         JOIN brand b ON i.brand_id = b.id
         JOIN color co ON i.color_id = co.id
-        WHERE (:categoryId IS NULL OR ic.category_id IN (SELECT id FROM subcategories))
+        WHERE (:categoryId IS NULL OR i.category_id IN (SELECT id FROM cte))
         AND (:brands IS NULL OR b.name IN (:brands))
         AND (:colors IS NULL OR co.name IN (:colors))
     """, nativeQuery = true)
-    List<Item> findItemsByFilter(Long categoryId, List<String> brands, List<String> colors);
+    List<Item> findItemsBySearchCondition(Long categoryId, List<String> brands, List<String> colors);
 }

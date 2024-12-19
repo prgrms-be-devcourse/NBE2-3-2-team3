@@ -1,6 +1,7 @@
 package com.example.bestme.controller;
 
-import com.example.bestme.dto.request.FilterRequest;
+import com.example.bestme.dto.request.SearchConditionRequest;
+import com.example.bestme.dto.response.CategoryMenuResponse;
 import com.example.bestme.dto.response.FilterMenuResponse;
 import com.example.bestme.dto.response.ItemDetailResponse;
 import com.example.bestme.dto.response.ItemsResponse;
@@ -24,8 +25,8 @@ public class ItemController {
             @RequestParam(required = false) List<String> brands,
             @RequestParam(required = false) List<String> colors
     ) {
-        FilterRequest filterRequest = FilterRequest.of(categoryId, brands, colors);
-        ItemsResponse response = itemService.getItemsResponseByFilter(filterRequest);
+        SearchConditionRequest searchConditionRequest = SearchConditionRequest.of(categoryId, brands, colors);
+        ItemsResponse response = itemService.getItemsResponseBySearchCondition(searchConditionRequest);
         return ApiResponse.success(response);
     }
 
@@ -35,9 +36,15 @@ public class ItemController {
         return ApiResponse.success(response);
     }
 
-    @GetMapping("/filter-menu")
-    public ApiResponse<FilterMenuResponse> getFilterMenu() {
-        FilterMenuResponse response = itemService.getFilterMenuResponse();
+    @GetMapping("/categories")
+    public ApiResponse<CategoryMenuResponse> getCategoryMenu() {
+        CategoryMenuResponse response = itemService.getCategoryMenuResponse();
+        return ApiResponse.success(response);
+    }
+
+    @GetMapping("/filters")
+    public ApiResponse<FilterMenuResponse> getFilterMenu(@RequestParam(required = false) Long categoryId) {
+        FilterMenuResponse response = itemService.getFilterMenuResponse(categoryId);
         return ApiResponse.success(response);
     }
 }

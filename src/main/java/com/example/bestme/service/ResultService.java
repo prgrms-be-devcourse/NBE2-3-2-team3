@@ -1,8 +1,9 @@
 package com.example.bestme.service;
 
 import com.example.bestme.domain.Result;
-import com.example.bestme.dto.ResultRequest;
-import com.example.bestme.dto.ResultResponse;
+import com.example.bestme.dto.api.ResultRequest;
+import com.example.bestme.dto.api.ResultResponse;
+
 
 import java.util.List;
 
