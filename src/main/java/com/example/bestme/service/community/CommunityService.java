@@ -1,18 +1,19 @@
 package com.example.bestme.service.community;
 
 import com.example.bestme.domain.community.Community;
-import com.example.bestme.dto.community.CommunityDTO;
-import com.example.bestme.dto.community.WriteDTO;
+import com.example.bestme.dto.community.ResponseAllBoardDTO;
+import com.example.bestme.dto.community.RequestWriteDTO;
+import com.example.bestme.dto.community.ResponseFindBoardDTO;
 import com.example.bestme.repository.CommunityRepository;
 import jakarta.annotation.PostConstruct;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -63,8 +64,8 @@ public class CommunityService {
         }
     }
 
-
-    public CommunityDTO createBoard(WriteDTO to, MultipartFile file) {
+    // 게시물 insert
+    public ResponseFindBoardDTO createBoard(RequestWriteDTO to, MultipartFile file) {
 
         if ( to.getUserId() == null ) {throw new IllegalArgumentException("user id가 없습니다.");}
         if ( to.getSubject() == null || to.getSubject().isBlank() ) {throw new IllegalArgumentException("제목 입력은 필수입니다.");}
@@ -80,17 +81,33 @@ public class CommunityService {
         Community entity = modelMapper.map(to, Community.class);
         communityRepositorySpy.save(entity);
 
-        CommunityDTO result = modelMapper.map(entity, CommunityDTO.class);
+        ResponseFindBoardDTO result = modelMapper.map(entity, ResponseFindBoardDTO.class);
+        result.setImageUrl("/upload/" + result.getImagename());
 
         return result;
     }
 
-    // 이미지 파일 업로드 메서드
+    // 이미지 파일 upload 메서드
     public String fileUpload(MultipartFile file) throws IOException {
 
         String fileName = file.getOriginalFilename();
 
-        String ext = fileName.substring(fileName.lastIndexOf("."));
+        String ext = fileName.substring(fileName.lastIndexOf(".")).toLowerCase();
+        String mimeType = file.getContentType();
+
+        // 허용된 확장자 목록
+        List<String> allowedExtensions = Arrays.asList(".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg");
+        // 허용된 Mime 타입 목록
+        List<String> allowedMimeTypes = Arrays.asList("image/jpeg", "image/png", "image/gif", "image/webp", "image/svg+xml");
+
+        // 업로드된 파일의 확장자가 허용된 확장자가 아니면 예외 발생
+        if( !allowedExtensions.contains(ext) ) {
+            throw new IllegalArgumentException("허용되지 않은 파일 형식입니다. 허용된 확장자: " + allowedExtensions);
+        }
+        if( !allowedMimeTypes.contains(mimeType) ) {
+            throw new IllegalArgumentException("허용되지 않은 파일 형식입니다.");
+        }
+
         fileName = UUID.randomUUID() + "_" + ext;
 
         File saveFile = new File(uploadPath, fileName);
@@ -100,12 +117,16 @@ public class CommunityService {
     }
 
     // 페이지별 게시물 가져오는 메서드
-    public List<CommunityDTO> findAllPage() {
+    public List<ResponseAllBoardDTO> findAllBoard() {
 
         List<Community> boards = communityRepositorySpy.findAll();
 
-        List<CommunityDTO> lists = boards.stream()
-                .map(board -> modelMapper.map(board, CommunityDTO.class))
+        if (boards.isEmpty()) {
+            throw new IllegalArgumentException("생성된 게시물이 존재하지 않습니다.");
+        }
+
+        List<ResponseAllBoardDTO> lists = boards.stream()
+                .map(board -> modelMapper.map(board, ResponseAllBoardDTO.class))
                 .collect(Collectors.toList());
 
         return lists;

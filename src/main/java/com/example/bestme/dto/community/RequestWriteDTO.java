@@ -11,12 +11,13 @@ import lombok.*;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class WriteDTO {
+public class RequestWriteDTO {
 
     private Long userId;
     private String subject;
-    private String content;
     private String imagename;
+    private String content;
+    private Long view = 0L; // 기본값 설정
 
     @Schema(description = "카테고리", example = "BASIC")
     @Enumerated(EnumType.STRING)
