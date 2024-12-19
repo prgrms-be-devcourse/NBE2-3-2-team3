@@ -1,5 +1,6 @@
 package com.example.bestme.service.impl;
 
+import com.example.bestme.domain.user.CustomOAuth2User;
 import com.example.bestme.domain.user.User;
 import com.example.bestme.repository.user.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -52,13 +53,16 @@ public class OAuth2UserServiceImpl extends DefaultOAuth2UserService {
             System.out.println("아이디 : " + userId);
             System.out.println("닉네임 : " + nickname);
             System.out.println("이메일 : " + email);
-            userEntity = new User(userId, email, nickname);
+
+            if (!userRepository.existsById(userId)) {
+                userEntity = new User(userId, email, nickname);
+                userRepository.save(userEntity);
+            }
 
         }
 
-        //UserRepository.save(userEntity);
 
-        return oAuth2User;
+        return new CustomOAuth2User(userId);
 
     }
 }
