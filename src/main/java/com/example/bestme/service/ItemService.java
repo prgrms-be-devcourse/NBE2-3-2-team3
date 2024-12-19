@@ -4,7 +4,8 @@ import com.example.bestme.domain.Brand;
 import com.example.bestme.domain.Category;
 import com.example.bestme.domain.Color;
 import com.example.bestme.domain.Item;
-import com.example.bestme.dto.request.FilterRequest;
+import com.example.bestme.dto.request.SearchConditionRequest;
+import com.example.bestme.dto.response.CategoryMenuResponse;
 import com.example.bestme.dto.response.FilterMenuResponse;
 import com.example.bestme.dto.response.ItemDetailResponse;
 import com.example.bestme.dto.response.ItemsResponse;
@@ -29,27 +30,31 @@ public class ItemService {
     private final BrandRepository brandRepository;
     private final ColorRepository colorRepository;
 
-    public ItemsResponse getItemsResponseByFilter(FilterRequest filterRequest) {
-        return ItemsResponse.from(getItemsByFilterV2(filterRequest));
+    public ItemsResponse getItemsResponseBySearchCondition(SearchConditionRequest searchConditionRequest) {
+        return ItemsResponse.from(getItemsBySearchCondition(searchConditionRequest));
     }
 
-    private List<Item> getItemsByFilterV2(FilterRequest filterRequest) {
-        return itemRepository.findItemsByFilter(
-                filterRequest.categoryId(),
-                filterRequest.brands(),
-                filterRequest.colors()
+    private List<Item> getItemsBySearchCondition(SearchConditionRequest searchConditionRequest) {
+        return itemRepository.findItemsBySearchCondition(
+                searchConditionRequest.categoryId(),
+                searchConditionRequest.brands(),
+                searchConditionRequest.colors()
         );
     }
 
     public ItemDetailResponse getItemDetailResponse(Long id) {
-        Item item = itemRepository.findById(id).orElseThrow(() -> new NoSuchElementException("아이템이 없음"));
+        Item item = itemRepository.findById(id).orElseThrow(() -> new NoSuchElementException("아이템 없음"));
         return ItemDetailResponse.from(item);
     }
 
-    public FilterMenuResponse getFilterMenuResponse() {
+    public CategoryMenuResponse getCategoryMenuResponse() {
         List<Category> categories = categoryRepository.findAllByParentCategoryIdIsNull();
-        List<Brand> brands = brandRepository.findAll();
+        return CategoryMenuResponse.from(categories);
+    }
+
+    public FilterMenuResponse getFilterMenuResponse(Long categoryId) {
+        List<Brand> brands = brandRepository.findAllByCategoryId(categoryId);
         List<Color> colors = colorRepository.findAll();
-        return FilterMenuResponse.of(categories, brands, colors);
+        return FilterMenuResponse.of(brands, colors);
     }
 }
