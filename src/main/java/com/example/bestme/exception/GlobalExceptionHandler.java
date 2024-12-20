@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 
 @RestControllerAdvice
@@ -48,6 +49,27 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(ApiResponse.error(HttpStatus.BAD_REQUEST, errorMessage));
     }
+
+    /**
+     * WebClient 호출 실패 처리
+     */
+    @ExceptionHandler(WebClientResponseException.class)
+    public ResponseEntity<ApiResponse<Void>> handleWebClientResponseException(WebClientResponseException ex) {
+        // 인증 키 만료(401) 오류 처리
+        if (ex.getStatusCode() == HttpStatus.UNAUTHORIZED) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(ApiResponse.error(HttpStatus.UNAUTHORIZED, "인증 키가 유효하지 않거나 만료되었습니다. 새로운 키로 다시 시도해주세요."));
+        }
+
+        // 일반 WebClient 오류 처리
+        String errorMessage = "API 호출 실패: " + ex.getMessage();
+        if (ex.getResponseBodyAsString() != null) {
+            errorMessage += " - 상세 오류: " + ex.getResponseBodyAsString();
+        }
+        return ResponseEntity.status(ex.getStatusCode())
+                .body(ApiResponse.error((HttpStatus) ex.getStatusCode(), errorMessage));
+    }
+
 
 
 }
