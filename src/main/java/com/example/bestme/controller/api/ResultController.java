@@ -18,12 +18,19 @@ import java.util.stream.Collectors;
 @RequestMapping("/api")
 public class ResultController {
     private final ResultService resultService;
+    private final ChatGPTController chatGPTController;
+
     private final ModelMapper modelMapper = new ModelMapper();
 
     @PostMapping("/results/{userId}/{colorId}")
     public ResponseEntity<ApiResponse<ResultResponse.CreateResultResponseDTO>> createResult(@PathVariable Long userId, @PathVariable Long colorId, @RequestBody ResultRequest.CreateResultDTO createResultDTO) {
         Result result = resultService.createResult(userId, colorId, createResultDTO);
         ResultResponse.CreateResultResponseDTO dto = modelMapper.map(result, ResultResponse.CreateResultResponseDTO.class);
+        //Chat GPT API 내부적으로 호출
+        String requestMessage = "안녕, 오늘 입을 옷을 추천해줘";
+//        System.out.println("동공컬러: " + createResultDTO.getPupilColor());
+//        System.out.println("헤어컬러: " + createResultDTO.getHairColor());
+        System.out.println(chatGPTController.chat(requestMessage));
         return ResponseEntity.ok(ApiResponse.success("result 생성 완료", dto));
     }
 
