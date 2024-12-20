@@ -10,12 +10,13 @@ import lombok.*;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommunityDTO {
+public class ResponseAllBoardDTO {
 
     private Long boardId;
     private Long userId;
     private String subject;
     private String imagename;
+    private String imageUrl;
     private String content;
     private Long view;
 
