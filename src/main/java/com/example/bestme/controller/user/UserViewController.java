@@ -25,7 +25,7 @@ public class UserViewController {
 
     @GetMapping("/main")
     public String mainPage() {
-        return "main";
+        return "home";
     }
 
 }

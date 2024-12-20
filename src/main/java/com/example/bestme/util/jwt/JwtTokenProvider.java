@@ -47,22 +47,21 @@ public class JwtTokenProvider {
 
         LocalDateTime now = LocalDateTime.now();
 
-        // 1 시간의 유효기간 - accessToken
-
-        LocalDateTime accessTokenExpire = now.plusHours(1);
+        // 30 분의 유효기간 - accessToken
+        LocalDateTime accessTokenExpire = now.plusMinutes(30);
         String accessToken = Jwts.builder()
-                .setSubject(authentication.getName())
-                .claim("auth", authorities)
-                .setExpiration(Date.from(accessTokenExpire.atZone(ZoneId.systemDefault()).toInstant()))
+                .setSubject(authentication.getName()) // user 의 email
+                .claim("auth", authorities) // user 의 role
+                .setExpiration(Date.from(accessTokenExpire.atZone(ZoneId.systemDefault()).toInstant())) // 만료기간 설정
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
 
-        // 1 일의 유효기간 - refreshToken
-        LocalDateTime refreshTokenExpire = now.plusDays(1);
+        // 1 주일의 유효기간 - refreshToken
+        LocalDateTime refreshTokenExpire = now.plusDays(7);
         String refreshToken = Jwts.builder()
-                .setSubject(authentication.getName())
-                .claim("auth", authorities)
-                .setExpiration(Date.from(refreshTokenExpire.atZone(ZoneId.systemDefault()).toInstant()))
+                .setSubject(authentication.getName()) // user 의 email
+                .claim("auth", authorities) // user 의 role
+                .setExpiration(Date.from(refreshTokenExpire.atZone(ZoneId.systemDefault()).toInstant())) // 만료기간 설정
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
 
