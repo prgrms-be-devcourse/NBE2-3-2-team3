@@ -90,6 +90,7 @@ public class UserServiceImpl implements UserService{
         // header 에 토큰 저장
         response.setHeader("Authorization", jwtTokenDTO.getGrantType() + " " + jwtTokenDTO.getAccessToken());
         response.setHeader("refresh", jwtTokenDTO.getGrantType() + " " + jwtTokenDTO.getRefreshToken());
+        response.addHeader("Access-Control-Expose-Headers","Authorization, refresh");
 
         // ApiResponse 에 토큰 반환
         return ResponseEntity.ok(ApiResponse.success("로그인에 성공하였습니다.", null));
