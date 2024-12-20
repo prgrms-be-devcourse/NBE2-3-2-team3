@@ -48,6 +48,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
                 HttpServletResponse resp = (HttpServletResponse) response;
                 resp.setHeader("Authorization", jwtTokenDTO.getGrantType() + " " + jwtTokenDTO.getAccessToken());
                 resp.setHeader("refresh", jwtTokenDTO.getGrantType() + " " + jwtTokenDTO.getRefreshToken());
+                resp.addHeader("Access-Control-Expose-Headers","Authorization, refresh");
 
                 Authentication authentication = jwtTokenProvider.getAuthentication(jwtTokenDTO.getAccessToken());
                 SecurityContextHolder.getContext().setAuthentication(authentication);
