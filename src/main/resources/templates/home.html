@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>BestMe</title>
-    <link rel="stylesheet" type="text/css" href="../static/styles/header.css">
-    <link rel="stylesheet" type="text/css" href="../static/styles/home.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/styles/header.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/styles/home.css}">
+
     <script src="https://kit.fontawesome.com/5fcc17a7cc.js" crossorigin="anonymous"></script>
 </head>
 <body>
@@ -18,7 +19,7 @@
     <div class="header-box">
         <ul>
             <li class="sel">
-                <a href="#">홈</a>
+                <a href="/">홈</a>
             </li>
             <li>
                 <a href="#">퍼스널컬러 테스트</a>
@@ -36,15 +37,15 @@
     </div>
     <div class="header-box">
         <div class="user-box">
-            <button class="login" type="button">Log in</button>
-            <button class="sign-up" type="button">Sign up</button>
+            <button class="login" type="button" onclick="location.href = '/bestMeLogin'">Log in</button>
+            <button class="sign-up" type="button" onclick="location.href = '/join'">Sign up</button>
         </div>
     </div>
 </header>
 <main id="main">
     <div class="section-container">
         <section class="main-img">
-            <div class="img-box"></div>
+            <div class="img-box" th:style="'background-image: url(/imgs/bestme.jpg)'"></div>
             <div class="text-box">
                 <span class="big">나의 가장 최선의 모습, Best Me</span>
                 <span class="small">Personal color is a color that complements a person's skin tone, hair color, and eye color.</span>
@@ -56,7 +57,7 @@
             <div class="post-container">
                 <div class="post">
                     <a class="post-img-box" href="#">
-                        <img src="/static/imgs/post1.png" alt="">
+                        <img th:src="@{/imgs/post1.png}" alt="">
                     </a>
                     <a class="subject" href="#">퍼스널 컬러란?</a>
                     <span class="writer">by BestMe</span>
@@ -64,7 +65,7 @@
                 </div>
                 <div class="post">
                     <a class="post-img-box" href="#">
-                        <img src="/static/imgs/post2.png" alt="">
+                        <img th:src="@{/imgs/post2.png}" alt="">
                     </a>
                     <a class="subject" href="#">퍼스널 컬러란?</a>
                     <span class="writer">by BestMe</span>
@@ -72,7 +73,7 @@
                 </div>
                 <div class="post">
                     <a class="post-img-box" href="#">
-                        <img src="/static/imgs/post3.jpg" alt="">
+                        <img th:src="@{/imgs/post3.jpg}" alt="">
                     </a>
                     <a class="subject" href="#">퍼스널 컬러란?</a>
                     <span class="writer">by BestMe</span>
@@ -80,7 +81,7 @@
                 </div>
                 <div class="post">
                     <a class="post-img-box" href="#">
-                        <img src="/static/imgs/post4.jpg" alt="">
+                        <img th:src="@{/imgs/post4.jpg}" alt="">
                     </a>
                     <a class="subject" href="#">퍼스널 컬러란?</a>
                     <span class="writer">by BestMe</span>
@@ -90,7 +91,5 @@
         </section>
     </div>
 </main>
-<br><br><br><br><br>
-    <footer id="footer"><p>© 2025 BestMe. Distributed by Team3</p></footer>
 </body>
 </html>
