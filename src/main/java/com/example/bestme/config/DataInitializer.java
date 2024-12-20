@@ -21,6 +21,7 @@ public class DataInitializer implements CommandLineRunner {
             colorRepository.save(new Color(2L, "여름 쿨톤"));
             colorRepository.save(new Color(3L, "가을 웜톤"));
             colorRepository.save(new Color(4L, "겨울 쿨톤"));
+            colorRepository.save(new Color(5L, "진단 불가"));
         }
     }
 }
