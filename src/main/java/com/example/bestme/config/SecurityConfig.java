@@ -59,6 +59,7 @@ public class SecurityConfig {
                         // 다른 요청들은 인증할 것
                         .anyRequest().authenticated()
                 )
+                /*
                 .oauth2Login(oauth2 -> oauth2
                         .redirectionEndpoint(endpoint -> endpoint.baseUri("/login/oauth2/code/kakao"))
                         .loginPage("/login")
@@ -66,7 +67,9 @@ public class SecurityConfig {
                         .userInfoEndpoint(endpoint -> endpoint.userService(oAuth2UserService))
                         .successHandler(oAuth2SuccessHandler)
 
-                ).addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
+                ).
+                addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
+                 */
                 .build();
     }
 
