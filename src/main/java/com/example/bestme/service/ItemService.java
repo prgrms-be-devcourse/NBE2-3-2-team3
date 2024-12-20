@@ -42,8 +42,8 @@ public class ItemService {
         );
     }
 
-    public ItemDetailResponse getItemDetailResponse(Long id) {
-        Item item = itemRepository.findById(id).orElseThrow(() -> new NoSuchElementException("아이템 없음"));
+    public ItemDetailResponse getItemDetailResponse(Long itemId) {
+        Item item = itemRepository.findById(itemId).orElseThrow(() -> new NoSuchElementException("아이템 없음"));
         return ItemDetailResponse.from(item);
     }
 
