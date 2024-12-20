@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import net.jcip.annotations.Immutable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -20,4 +23,12 @@ public class Color extends BaseEntity {
 
     @Column(nullable = false)
     private String name;
+
+    @OneToMany(mappedBy = "color", fetch = FetchType.LAZY) // 1:N 관계 양방향 매핑
+    private List<Result> results = new ArrayList<>();
+
+    public Color(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 }
