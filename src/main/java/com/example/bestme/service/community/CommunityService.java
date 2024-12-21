@@ -5,26 +5,15 @@ import com.example.bestme.dto.community.ResponseAllBoardDTO;
 import com.example.bestme.dto.community.RequestWriteDTO;
 import com.example.bestme.dto.community.ResponseFindBoardDTO;
 import com.example.bestme.repository.CommunityRepository;
-import jakarta.annotation.PostConstruct;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PagedResourcesAssembler;
-import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.Link;
-import org.springframework.hateoas.PagedModel;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class CommunityService {

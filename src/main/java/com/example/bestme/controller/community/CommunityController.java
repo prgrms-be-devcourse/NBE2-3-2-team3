@@ -1,17 +1,13 @@
 package com.example.bestme.controller.community;
 
-import com.example.bestme.domain.community.Community;
 import com.example.bestme.dto.community.ResponseAllBoardDTO;
 import com.example.bestme.dto.community.RequestWriteDTO;
 import com.example.bestme.dto.community.ResponseFindBoardDTO;
 import com.example.bestme.exception.ApiResponse;
 import com.example.bestme.service.community.CommunityService;
-import com.example.bestme.service.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.modelmapper.ModelMapper;
-import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
@@ -19,7 +15,6 @@ import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
