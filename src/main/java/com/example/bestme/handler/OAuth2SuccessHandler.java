@@ -1,6 +1,5 @@
 package com.example.bestme.handler;
 
-import com.example.bestme.domain.user.CustomOAuth2User;
 import com.example.bestme.util.jwt.JwtTokenProvider;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,21 +15,22 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-    private final JwtTokenProvider jwtProvider;
+    /*
+    private final JwtTokenProvider jwtTokenProvider;
+
+    public OAuth2SuccessHandler(JwtTokenProvider jwtTokenProvider) {
+        this.jwtTokenProvider = jwtTokenProvider;
+    }
 
     @Override
-    public void onAuthenticationSuccess(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            Authentication authentication
-    ) throws IOException, ServletException {
-        CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+        // JWT 토큰 생성
+        String jwtToken = jwtTokenProvider.generateToken(authentication);
 
-        String userId = oAuth2User.getName();
-        //String token = jwtProvider.create(userId);
-        //String token = jwtProvider.generateToken();
-
-        // response.sendRedirect("http://localhost:3000/auth/oauth-response/" + token + "/3600");
-
+        // 클라이언트에 JWT 토큰 반환
+        response.setHeader("Authorization", "Bearer " + jwtToken);
+        getRedirectStrategy().sendRedirect(request, response, "/main"); // 로그인 후 리다이렉트 경로 설정
     }
+
+     */
 }

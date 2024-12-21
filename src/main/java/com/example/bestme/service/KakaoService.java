@@ -1,11 +1,18 @@
 package com.example.bestme.service;
 
+import com.example.bestme.domain.user.Role;
+import com.example.bestme.domain.user.User;
+import com.example.bestme.repository.user.UserRepository;
+import com.example.bestme.util.jwt.JwtTokenDTO;
+import com.example.bestme.util.jwt.JwtTokenProvider;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -14,15 +21,24 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.Map;
 
 @Getter
 @Slf4j
 @Service
 public class KakaoService {
 
+    //private final JwtTokenProvider jwtTokenProvider;
+    @Autowired
+    private UserRepository userRepository;
+
     private String client_id;
     private String redirect_uri;
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
+
     public KakaoService(
             @Value("${spring.security.oauth2.client.registration.kakao.client-id}") String clientId,
             @Value("${spring.security.oauth2.client.registration.kakao.redirect-uri}") String redirectUri
@@ -33,7 +49,7 @@ public class KakaoService {
 
 
 
-    //인가 코드를 받아서 accessToken을 반환
+    // 인가 코드를 받아서 accessToken을 반환
     public String getAccessToken(String code){
         System.out.println("인가 코드" + code);
         String accessToken = "";
@@ -105,7 +121,7 @@ public class KakaoService {
 
 
             conn.setRequestMethod("GET");
-            conn.setRequestProperty("Authorization", "Bearer " + accessToken);
+            conn.setRequestProperty("Authorization", "Bearer " + accessToken); // 요청 헤더에 AccessToken추가
             conn.setRequestProperty("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
 
             int responseCode = conn.getResponseCode();
@@ -149,6 +165,35 @@ public class KakaoService {
     //accessToken을 받아서 로그아웃 시키는 메서드
     public void kakaoLogout(String accessToken) {
 
+    }
+
+    public String handleKakaoLogin(Map<String, Object> userInfo) {
+        String email = (String)userInfo.get("email");
+        String nickname = (String)userInfo.get("nickname");
+
+        // 이메일 기준으로 사용자 검색
+        User user = userRepository.findByEmail(email);
+
+        if (user == null) {
+            // 회원가입 처리
+            user = new User(
+                    null,
+                    email,
+                    "default_password",
+                    nickname,
+                    true,
+                    LocalDateTime.now(),
+                    null,
+                    false,
+                    Role.USER
+            );
+            userRepository.save(user);
+        }
+
+        JwtTokenDTO jwtTokenDTO = jwtTokenProvider.generateToken(
+                new UsernamePasswordAuthenticationToken(user.getEmail(), "default_password"));
+
+        return "Bearer " + jwtTokenDTO.getAccessToken();
     }
 
 }

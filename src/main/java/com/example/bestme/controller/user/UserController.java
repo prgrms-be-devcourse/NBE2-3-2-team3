@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api")
@@ -23,15 +26,7 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-
-    /*
-    @Value("${kakao.client-id}")
-    private String client_id;
-
-    @Value("${kakao.redirect-uri}")
-    private String redirect_uri;
-
-     */
+    private final KakaoService kakaoService;
 
     @PostMapping("/join")
     public ResponseEntity<ApiResponse<Void>> join(@RequestBody RequestSignUpDTO to) {
@@ -47,6 +42,7 @@ public class UserController {
     public String test() {
         return "test";
     }
+
 
 
 
