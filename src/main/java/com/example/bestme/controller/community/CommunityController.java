@@ -147,4 +147,16 @@ public class CommunityController {
                 .contentType(MediaType.parseMediaType(result.getContentType()))
                 .body(result.getResource());
     }
+
+    @Operation( summary = "게시물 수정하기(테스트 순서: 4)", description = "특정 게시물 데이터 수정" )
+    @PutMapping(value = "/community/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ApiResponse<ResponseFindBoardDTO>> updateCommunity(
+            @RequestPart(name = "to") RequestModifyDTO to, // 데이터 전송 (JSON 형식)
+            @RequestPart(name = "file", required = false) MultipartFile file) // 파일 업로드 처리
+    {
+
+        ResponseFindBoardDTO result = communityService.modifyBoard(to, file);
+
+        return ResponseEntity.ok(ApiResponse.success(result));
+    }
 }

@@ -65,7 +65,7 @@ public class LocalFileService implements FileService {
     @Override
     public ResponseFileDTO fileFind(String filename) {
         File file = new File(uploadPath, filename);
-        Path path = file.toPath();
+        Path path = file.toPath();      // 파일의 path를 Path 객체로 생성
 
         // 파일 존재 및 읽기 가능 여부 확인
         if (!file.exists() || !Files.isReadable(path)) {
@@ -75,6 +75,7 @@ public class LocalFileService implements FileService {
         // Content-Type 설정 (예: image/jpeg, image/png 등)
         String contentType;
         try {
+            // Files.probeContentType(path) : 파일의 MIME 타입을 추정하는 메서드
             contentType = Files.probeContentType(path);
             if (contentType == null) { contentType = "application/octet-stream"; }
         } catch (IOException e) {
