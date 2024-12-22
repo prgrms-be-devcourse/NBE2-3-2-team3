@@ -28,9 +28,11 @@ public class WebConfig implements WebMvcConfigurer {
         converters.add(multipartJackson2HttpMessageConverter);
     }
 
-    // 'PagedResourcesAssembler<ResponseAllBoardDTO>'를 오토와이어링 할 수 없어서 직접 Bean 생성
+    // 'PagedResourcesAssembler<ResponseAllBoardDTO>'를 오토와이어링 할 수 없어서 직접 Bean 생성 ( 오류로 인해 사용 정지 )
+    /*
     @Bean
     public PagedResourcesAssembler<?> pagedResourcesAssembler() {
         return new PagedResourcesAssembler<>(null, null);
     }
+     */
 }

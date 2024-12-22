@@ -1,5 +1,6 @@
 package com.example.bestme.controller.community;
 
+import com.example.bestme.dto.community.RequestPageDTO;
 import com.example.bestme.dto.community.ResponseAllBoardDTO;
 import com.example.bestme.dto.community.RequestWriteDTO;
 import com.example.bestme.dto.community.ResponseFindBoardDTO;
@@ -27,12 +28,6 @@ public class CommunityController {
 
     private final CommunityService communityService;
     private final PagedResourcesAssembler<ResponseAllBoardDTO> assembler;
-    Integer currentPage;
-    Integer numberOfDataPerPage = 5;      // 페이지당 데이터 갯수
-    Integer numberOfPagesPerGroup = 5;    // 페이지 그룹당 페이지 갯수
-//    Integer numberPageGroup;              // 페이지 그룹 갯수
-    Integer startpageOfGroup;             // 현재 페이지 그룹의 첫 페이지 번호
-    Integer lastPageOfGroup;              // 현재 페이지 그룹의 마지막 페이지 번호
 
     public CommunityController(CommunityService communityService, PagedResourcesAssembler<ResponseAllBoardDTO> assembler) {
         this.communityService = communityService;
@@ -84,8 +79,10 @@ public class CommunityController {
             @Parameter(description = "페이지 번호", example = "1")
             @PathVariable Integer page)
     {
-        // 클라이언트가 보낸 페이지 번호는 1부터 시작하므로, 0 기반 인덱스로 변환
-        this.currentPage = page - 1;
+        // page 요청 DTO 객체 생성
+        RequestPageDTO pageDTO = new RequestPageDTO(page);
+        int currentPage = pageDTO.getCurrentPage();
+        int numberOfDataPerPage = pageDTO.getNumberOfDataPerPage();
         Page<ResponseAllBoardDTO> results = communityService.findAllBoard(currentPage, numberOfDataPerPage);
 
         // PagedModel을 사용하여 페이지화된 데이터 래핑
@@ -95,44 +92,34 @@ public class CommunityController {
 
         // 기존적으로 자동 생성되는 링크 제거
         pagedModel.removeLinks();
-
-        // 페이지 그룹 갯수 산출
-//        int totalPages = results.getTotalPages();
-//        this.numberPageGroup = ( totalPages + ( numberOfPagesPerGroup - 1 ) ) / numberOfPagesPerGroup;
+        // page 요청 DTO 객체 업데이트 및 업데이트 필드 데이터 호출
+        pageDTO.setNumberPageGroup(results.getTotalPages());
+        int originPage = pageDTO.getOriginPage();
+        int startPage = pageDTO.getStartPageOfGroup();
+        int lastPage = pageDTO.getLastPageOfGroup();
+        int numberOfPagesPerGroup = pageDTO.getNumberOfPagesPerGroup();
 
         // 현재 페이지에 따라 링크 수정
-        Link selfLink = Link.of("/community/" + page).withSelfRel();
-
-        // 'next' 링크는 마지막 페이지를 넘지 않게 처리
-        Link nextLink = null;
-        if( !results.isLast() ) nextLink = Link.of("/community/" + (page + 1)).withRel("nextPage");
+        Link selfLink = Link.of("/community/" + originPage).withSelfRel();
         // 'prev' 링크가 첫 페이지를 넘지 않게 처리
         Link prevLink = null;
-        if( !results.isFirst() ) prevLink = Link.of("/community/" + (page - 1) ).withRel("prevPage");
-
-        // 현재 페이지 그룹의 첫 번째 페이지 번호
-        this.startpageOfGroup = (currentPage - ( currentPage - 1 ) % numberOfPagesPerGroup);
-        // 현재 페이지 그룹의 마지막 페이지 번호
-        this.lastPageOfGroup = (currentPage - ( currentPage - 1 ) % numberOfPagesPerGroup + numberOfPagesPerGroup - 1);
-
+        if( !results.isFirst() ) prevLink = Link.of("/community/" + (originPage - 1) ).withRel("prevPage");
+        // 'next' 링크는 마지막 페이지를 넘지 않게 처리
+        Link nextLink = null;
+        if( !results.isLast() ) nextLink = Link.of("/community/" + (originPage + 1)).withRel("nextPage");
         // 이전 페이지 그룹의 첫 페이지 링크
         Link firstLink = Link.of("/community/1").withRel("firstPageOfPrevGroup");
-        if( startpageOfGroup != 1 ) {
-            // 현재 페이지 그룹의 첫 페이지 번호가 1이 아닐 경우 -> 이전 페이지 그룹의 첫 페이지로 이동
-            firstLink = Link.of("/community/" + (startpageOfGroup - numberOfPagesPerGroup) ).withRel("firstPageOfPrevGroup");
-        }
-
+        // 현재 페이지 그룹의 첫 페이지 번호가 1이 아닐 경우 -> 이전 페이지 그룹의 첫 페이지로 이동
+        if( startPage > 1 ) firstLink = Link.of("/community/" + (startPage - numberOfPagesPerGroup) ).withRel("firstPageOfPrevGroup");
         // 이후 페이지 그룹의 첫 페이지 링크
         Link lastLink = Link.of("/community/" + results.getTotalPages()).withRel("lastPageOfNextGroup");
-        if( lastPageOfGroup != results.getTotalPages() ) {
-            // 현재 페이지 그룹의 마지막 페이지 번호가 총 페이지 갯수가 아닐 경우 -> 다음 페이지 그룹의 첫 페이지로 이동
-            lastLink = Link.of("/community/" + (startpageOfGroup + numberOfPagesPerGroup)).withRel("lastPageOfNextGroup");
-        }
+        // 현재 페이지 그룹의 마지막 페이지 번호가 총 페이지 갯수가 아닐 경우 -> 다음 페이지 그룹의 첫 페이지로 이동
+        if( lastPage < results.getTotalPages() ) lastLink = Link.of("/community/" + (startPage + numberOfPagesPerGroup)).withRel("lastPageOfNextGroup");
 
         // 기존 링크를 수정된 링크로 교체
+        if( prevLink != null ) pagedModel.add(prevLink);
         pagedModel.add(selfLink);
         if( nextLink != null ) pagedModel.add(nextLink);
-        if( prevLink != null ) pagedModel.add(prevLink);
         pagedModel.add(firstLink);
         pagedModel.add(lastLink);
 
