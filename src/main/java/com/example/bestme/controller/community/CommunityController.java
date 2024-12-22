@@ -1,14 +1,13 @@
 package com.example.bestme.controller.community;
 
-import com.example.bestme.dto.community.RequestPageDTO;
-import com.example.bestme.dto.community.ResponseAllBoardDTO;
-import com.example.bestme.dto.community.RequestWriteDTO;
-import com.example.bestme.dto.community.ResponseFindBoardDTO;
+import com.example.bestme.dto.community.*;
 import com.example.bestme.exception.ApiResponse;
 import com.example.bestme.service.community.CommunityService;
+import com.example.bestme.service.community.LocalFileService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
@@ -19,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Tag(name = "Community", description = "커뮤니티 관련 API")
@@ -28,21 +28,20 @@ public class CommunityController {
 
     private final CommunityService communityService;
     private final PagedResourcesAssembler<ResponseAllBoardDTO> assembler;
+    private final LocalFileService localFileService;
 
-    public CommunityController(CommunityService communityService, PagedResourcesAssembler<ResponseAllBoardDTO> assembler) {
+    public CommunityController(CommunityService communityService, PagedResourcesAssembler<ResponseAllBoardDTO> assembler
+            , LocalFileService localFileService) {
         this.communityService = communityService;
         this.assembler = assembler;
+        this.localFileService = localFileService;
     }
 
-    @Operation( summary = "테스트용 게시물 생성"
-            , description = "55개의 게시물이 자동 생성됩니다" )
+    @Operation( summary = "테스트용 게시물 생성(테스트 순서: 1)", description = "55개의 게시물이 자동 생성됩니다" )
     @PostMapping( "/community/testCreate")
-    public ResponseEntity<ApiResponse<String>> testCreate(
-    ) {
+    public ResponseEntity<ApiResponse<String>> testCreate() {
         int count = 0;
-
         for( int i=0; i < 55; i++) {
-
             RequestWriteDTO to = new RequestWriteDTO();
             to.setUserId(Long.valueOf(i));
             to.setSubject("제목 " + i);
@@ -58,7 +57,7 @@ public class CommunityController {
     }
 
     // 게시물 생성 응답 메서드
-    @Operation( summary = "게시물 생성"
+    @Operation( summary = "게시물 생성(테스트 순서: 1)"
             , description = "지정된 카테고리가 없을 경우 필드를 제거해주세요.<br> imagename 및 view 필드는 지워주세요." )
     @PostMapping(value = "/community/write", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<ResponseFindBoardDTO>> communityWrite(
@@ -72,8 +71,7 @@ public class CommunityController {
     }
 
     // 게시물 목록 응답 메서드 ( 페이징 기능 추가 )
-    @Operation( summary = "게시물 목록"
-            , description = "시작 페이지 번호 1, " )
+    @Operation( summary = "게시물 목록(테스트 순서: 2)", description = "시작 페이지 번호 1" )
     @GetMapping( "/community/{page}" )
     public ResponseEntity<ApiResponse<PagedModel<EntityModel<ResponseAllBoardDTO>>>> findAllBoard(
             @Parameter(description = "페이지 번호", example = "1")
@@ -127,4 +125,26 @@ public class CommunityController {
         return ResponseEntity.ok(ApiResponse.success(pagedModel));
     }
 
+    @Operation( summary = "게시물 상세보기(테스트 순서: 2)", description = "특정 게시물의 세부 내용 확인 ( 이미지 파일 제외 )" )
+    @GetMapping( "/community/detail/{boardId}" )
+    public ResponseEntity<ApiResponse<ResponseFindBoardDTO>> communityDetail(@PathVariable String boardId) {
+
+        ResponseFindBoardDTO result = communityService.findBoardById(boardId);
+
+        return ResponseEntity.ok(ApiResponse.success(result));
+    }
+
+    @Operation( summary = "게시물 이미지 불러오기(테스트 순서: 3)", description = "특정 게시물의 이미지 확인" )
+    @GetMapping("/community/image/{fileName}")
+    public ResponseEntity<Resource> communityImage(
+            @Parameter( description = "게시물 생성 후, 반환된 imagename을 넣어주세요.", example = "e80253ce-1c81-482b-8fb8-f04b7d8117df_.jpg")
+            @PathVariable String fileName) {
+
+        ResponseFileDTO result = localFileService.fileFind(fileName);
+
+        // 이미지 타입 및 데이터만 반환
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(result.getContentType()))
+                .body(result.getResource());
+    }
 }

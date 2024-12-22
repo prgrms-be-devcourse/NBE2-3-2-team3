@@ -10,8 +10,8 @@ public class RequestPageDTO {
 
     private final int originPage;
     private final int currentPage;                  // 현재 페이지
-    private final int numberOfDataPerPage = 5;      // 페이지당 데이터 갯수
-    private final int numberOfPagesPerGroup = 5;    // 페이지 그룹당 페이지 갯수
+    private final int numberOfDataPerPage = 10;      // 페이지당 데이터 갯수
+    private final int numberOfPagesPerGroup = 10;    // 페이지 그룹당 페이지 갯수
     private int  numberPageGroup;                   // 페이지 그룹 갯수
     private int startPageOfGroup;                   // 현재 페이지 그룹의 첫 페이지 번호
     private int lastPageOfGroup;                    // 현재 페이지 그룹의 마지막 페이지 번호

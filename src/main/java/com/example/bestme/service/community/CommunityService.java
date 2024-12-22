@@ -11,21 +11,21 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
 @Service
+@Transactional      // 트랜잭션 관리 어노테이션 ( 최적화 필요 시 - @Transactional(readOnly = true)로 특정 작업 전용 설정 )
 public class CommunityService {
 
-    private final CommunityRepository communityRepositorySpy;
+    private final CommunityRepository communityRepository;
     private final LocalFileService localFileService;
     private final ModelMapper modelMapper = new ModelMapper();
-//    private final Integer numberOfDataPerPage = 10;     // 페이지당 데이터 갯수
-//    private final PagedResourcesAssembler<Community> assembler;
 
-    public CommunityService(CommunityRepository communityRepositorySpy, LocalFileService localFileService) {
-        this.communityRepositorySpy = communityRepositorySpy;
+    public CommunityService(CommunityRepository communityRepository, LocalFileService localFileService) {
+        this.communityRepository = communityRepository;
         this.localFileService = localFileService;
     }
 
@@ -44,10 +44,9 @@ public class CommunityService {
         }
 
         Community entity = modelMapper.map(to, Community.class);
-        communityRepositorySpy.save(entity);
+        communityRepository.save(entity);
 
         ResponseFindBoardDTO result = modelMapper.map(entity, ResponseFindBoardDTO.class);
-        result.setImageUrl("/upload/" + result.getImagename());
 
         return result;
     }
@@ -57,7 +56,7 @@ public class CommunityService {
 
         Pageable pageable = PageRequest.of(page, numberOfDataPerPage, Sort.by(Sort.Direction.DESC, "boardId"));
 
-        Page<Community> boards = communityRepositorySpy.findAll(pageable);
+        Page<Community> boards = communityRepository.findAll(pageable);
 
         if (boards.getNumberOfElements() == 0) {
             throw new IllegalArgumentException("존재하지 않는 페이지입니다.");
@@ -71,6 +70,22 @@ public class CommunityService {
         Page<ResponseAllBoardDTO> lists = boards.map(board -> modelMapper.map(board, ResponseAllBoardDTO.class));
 
         return lists;
+    }
+
+    // 특정 게시물 반환 기능
+    public ResponseFindBoardDTO findBoardById(String boardId) {
+
+//        Community board = communityRepository.findById(String.valueOf(boardId))       // communityRepository의 인자 타입이 Long일 때 사용
+        Community board = communityRepository.findById(boardId)         // communityRepository의 인자 타입이 String일 때 사용
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시물은 존재하지 않습니다." + boardId));
+        // 조회수 증가 ( 추후 동시성 문제 고려 )
+        board.setView( board.getView() + 1 );
+        // 업데이트 저장
+        communityRepository.save(board);
+
+        ResponseFindBoardDTO result = modelMapper.map(board, ResponseFindBoardDTO.class);
+
+        return result;
     }
 }
 

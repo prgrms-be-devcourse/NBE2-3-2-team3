@@ -3,14 +3,14 @@ package com.example.bestme.dto.community;
 import com.example.bestme.domain.community.Category;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
 @ToString
-@NoArgsConstructor
-@AllArgsConstructor
-public class ResponseFindBoardDTO {
+public class RequestDetailDTO {
 
     private Long boardId;
     private Long userId;

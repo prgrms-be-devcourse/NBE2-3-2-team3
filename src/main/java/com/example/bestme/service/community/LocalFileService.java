@@ -1,12 +1,18 @@
 package com.example.bestme.service.community;
 
+import com.example.bestme.dto.community.ResponseFileDTO;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -54,6 +60,33 @@ public class LocalFileService implements FileService {
         file.transferTo(saveFile);
 
         return fileName;
+    }
+
+    @Override
+    public ResponseFileDTO fileFind(String filename) {
+        File file = new File(uploadPath, filename);
+        Path path = file.toPath();
+
+        // 파일 존재 및 읽기 가능 여부 확인
+        if (!file.exists() || !Files.isReadable(path)) {
+            throw new IllegalArgumentException("파일을 찾을 수 없거나 읽을 수 없습니다. 파일명: " + filename);
+        }
+
+        // Content-Type 설정 (예: image/jpeg, image/png 등)
+        String contentType;
+        try {
+            contentType = Files.probeContentType(path);
+            if (contentType == null) { contentType = "application/octet-stream"; }
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Content-Type을 지정할 수 없습니다.");
+        }
+
+        // ResponseFileDTO 생성
+        ResponseFileDTO result = new ResponseFileDTO();
+        result.setResource(new FileSystemResource(file));
+        result.setContentType(contentType);
+
+        return result;
     }
 
     @Override
