@@ -12,7 +12,7 @@ public record ItemSaveRequest(
         Long categoryId,
         Long brandId
 ) {
-    
+
     public Item toEntity(Color color, Category category, Brand brand, String imageUrl) {
         return Item.builder()
                 .name(name)

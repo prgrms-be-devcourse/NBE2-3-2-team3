@@ -4,10 +4,13 @@ import com.example.bestme.domain.Brand;
 import com.example.bestme.domain.Category;
 import com.example.bestme.domain.Color;
 import com.example.bestme.domain.Item;
+import com.example.bestme.dto.request.BrandSaveRequest;
+import com.example.bestme.dto.request.CategorySaveRequest;
 import com.example.bestme.dto.request.ItemSaveRequest;
 import com.example.bestme.dto.response.BrandSelectResponse;
 import com.example.bestme.dto.response.CategoryMenuResponse;
 import com.example.bestme.dto.response.ColorSelectResponse;
+import com.example.bestme.dto.response.ItemDetailResponse;
 import com.example.bestme.repository.BrandRepository;
 import com.example.bestme.repository.CategoryRepository;
 import com.example.bestme.repository.ColorRepository;
@@ -29,8 +32,10 @@ public class AdminService {
     private final BrandRepository brandRepository;
     private final ColorRepository colorRepository;
 
-    public List<Item> getItems() {
-        return itemRepository.findAll();
+    public List<ItemDetailResponse> getItems() {
+        return itemRepository.findAll().stream()
+                .map(ItemDetailResponse::from)
+                .toList();
     }
 
     public CategoryMenuResponse getCategoryMenuResponse() {
@@ -58,5 +63,22 @@ public class AdminService {
         Item item = itemSaveRequest.toEntity(color, category, brand, imageUrl);
 
         return itemRepository.save(item).getId();
+    }
+
+    @Transactional
+    public Long saveBrand(BrandSaveRequest brandSaveRequest, String imageUrl) {
+        Brand brand = brandSaveRequest.toEntity(imageUrl);
+        return brandRepository.save(brand).getId();
+    }
+
+    @Transactional
+    public Long saveCategory(CategorySaveRequest categorySaveRequest) {
+        Category parentCategory = null;
+        if (!categorySaveRequest.parentCategoryId().equals("선택하세요")) {
+            Long parentCategoryId = Long.valueOf(categorySaveRequest.parentCategoryId());
+            parentCategory = categoryRepository.findById(parentCategoryId).orElseThrow(() -> new NoSuchElementException("카테고리 x"));
+        }
+        Category category = categorySaveRequest.toEntity(parentCategory);
+        return categoryRepository.save(category).getId();
     }
 }

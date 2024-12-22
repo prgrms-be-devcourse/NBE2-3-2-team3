@@ -18,7 +18,6 @@ public record CategoryMenuResponse(
 
     public record CategorySelectResponse(
             Long id,
-            Integer depth,
             String parentCategoryName,
             String name,
             List<CategorySelectResponse> subCategories
@@ -31,7 +30,6 @@ public record CategoryMenuResponse(
 
             return new CategorySelectResponse(
                     category.getId(),
-                    category.getDepth(),
                     category.getParentCategoryName(),
                     category.getName(),
                     subCategories
