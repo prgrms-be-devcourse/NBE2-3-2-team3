@@ -140,9 +140,9 @@
         </tr>
         </thead>
         <tbody class="table-group-divider">
-        <tr th:each="item : ${items}" th:object="${item}">
+        <tr th:each="item : ${pagingItems.getContent()}" th:object="${item}">
             <th class="text-center" th:text="*{id}"></th>
-            <td class="text-center"><img th:src="@{/images/items/{id}(id=*{id})}" alt="" style="width:100px;height:100px;"></td>
+            <td class="text-center"><img th:src="@{/images/items/{id}(id=*{id})}" alt="" style="width:50px;height:50px;"></td>
             <td class="text-center">
                 <a th:href="*{purchaseUrl}" th:text="*{name}"></a>
             </td>
@@ -160,6 +160,35 @@
         </tbody>
     </table>
 </body>
+
+<nav aria-label="Page navigation example" class="pagination justify-content-center">
+    <ul class="pagination">
+        <li class="page-item" th:classappend="${pagingItems.isFirst()} ? 'disabled'">
+            <a class="page-link" th:href="@{/admin(page=0)}" aria-label="First">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        <li class="page-item" th:classappend="${pagingItems.hasPrevious()} ? '' : 'disabled'">
+            <a class="page-link" th:href="@{/admin(page=${pagingItems.getNumber() - 1})}" aria-label="Previous">
+                <span aria-hidden="true">&lsaquo;</span>
+            </a>
+        </li>
+        <li class="page-item" th:each="i : ${#numbers.sequence(0, pagingItems.getTotalPages() - 1)}"
+            th:classappend="${pagingItems.getNumber() == i} ? 'active'">
+            <a class="page-link" th:href="@{/admin(page=${i})}" th:text="${i + 1}"></a>
+        </li>
+        <li class="page-item" th:classappend="${pagingItems.hasNext()} ? '' : 'disabled'">
+            <a class="page-link" th:href="@{/admin(page=${pagingItems.getNumber() + 1})}" aria-label="Next">
+                <span aria-hidden="true">&rsaquo;</span>
+            </a>
+        </li>
+        <li class="page-item" th:classappend="${pagingItems.isLast()} ? 'disabled'">
+            <a class="page-link" th:href="@{/admin(page=${pagingItems.getTotalPages() - 1})}" aria-label="Last">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+    </ul>
+</nav>
 </html>
 
 <script type="application/javascript">
