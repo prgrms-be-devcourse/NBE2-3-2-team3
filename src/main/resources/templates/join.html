@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>BestMe 회원가입</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/styles/modal.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/styles/header.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/styles/join.css}">
+    <script src="https://kit.fontawesome.com/5fcc17a7cc.js" crossorigin="anonymous"></script>
+    <script defer type="text/javascript" th:src="@{/scripts/modal.js}"></script>
+    <script defer type="text/javascript" th:src="@{/scripts/join.js}"></script>
+</head>
+<body>
+<header id="header">
+    <div class="header-box">
+        <a href="/">
+            <i class="fa-solid fa-droplet"></i>
+            <span>Best Me</span>
+        </a>
+    </div>
+    <div class="header-box">
+        <ul>
+            <li>
+                <a href="/">홈</a>
+            </li>
+            <li>
+                <a href="#">퍼스널컬러 테스트</a>
+            </li>
+            <li>
+                <a href="#">스타일링 추천</a>
+            </li>
+            <li>
+                <a href="#">커뮤니티</a>
+            </li>
+            <li>
+                <a href="#">마이 페이지</a>
+            </li>
+        </ul>
+    </div>
+    <div class="header-box">
+        <div class="user-box">
+            <button class="login" type="button" onclick="location.href = '/bestMeLogin'">Log in</button>
+            <button class="sign-up" type="button" onclick="location.href = '/join'">Sign up</button>
+        </div>
+    </div>
+</header>
+<main id="main">
+    <section id="join-section">
+        <form id="join-form">
+            <h1>BestMe 회원가입</h1>
+            <div class="email">
+                <span class="desc-text">이메일</span>
+                <label class="text-label">
+                    <input class="input-en" autocomplete="off" type="text" name="email" placeholder="회원가입에 필요한 이메일을 입력해주세요">
+                </label>
+            </div>
+            <div class="email">
+                <span class="desc-text">닉네임</span>
+                <label class="text-label">
+                    <input autocomplete="off" type="text" name="text" placeholder="BestMe에서 활동하실 닉네임을 입력해주세요">
+                </label>
+            </div>
+            <div class="password">
+                <span class="desc-text">비밀번호</span>
+                <label class="text-label">
+                    <input class="input-en" type="password" name="password" placeholder="비밀번호는 8 ~ 20자리 이상의 영어, 숫자, 특수문자의 조합입니다.">
+                    <button type="button"><i class="fa-solid fa-eye-slash"></i></button>
+                </label>
+            </div>
+            <div class="password-check">
+                <span class="desc-text">비밀번호 확인</span>
+                <label class="text-label">
+                    <input class="input-en" type="password" name="password" placeholder="한 번 더 입력해주세요">
+                    <button type="button"><i class="fa-solid fa-eye-slash"></i></button>
+                </label>
+            </div>
+            <button class="join-btn">회원가입</button>
+            <span class="horizontal-bar"></span>
+            <span>다른 회원가입 방법</span>
+            <button type="button" class="kakao">
+                <img th:src="@{/imgs/pngwing.com.png}" alt="">
+                <span>카카오로 회원가입하기</span>
+            </button>
+            <span class="horizontal-bar"></span>
+            <span>이미 회원이신가요?
+                <a href="#">로그인하기</a>
+            </span>
+        </form>
+    </section>
+</main>
+</body>
+</html>

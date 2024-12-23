@@ -17,7 +17,7 @@ public class CommunityDTO {
     private String subject;
     private String imagename;
     private String content;
-    private Long view = 0L; // 기본값 설정
+    private Long view;
 
     @Enumerated(EnumType.STRING)
     private Category category;

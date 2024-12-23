@@ -46,16 +46,18 @@ public class SecurityConfig {
                 // 요청에 대한 인가 규칙 설정
                 .authorizeHttpRequests(auth -> auth
                         // 권한에 따라 접근 제한
-                        .requestMatchers("/test").hasAuthority("USER")
+                        // .requestMatchers("/test").hasAuthority("USER")
                         // 여러 권한 제안할 시
                         // .requestMatchers("/test/**").hasAnyAuthority("USER", "ADMIN")
 
                         // 해당하는 요청들은 모든 사용자에게 허용
+                        .requestMatchers("/").permitAll()
+                        .requestMatchers("/styles/**", "/imgs/**", "/scripts/**","/static/**").permitAll()
                         .requestMatchers("/api/**").permitAll()
                         .requestMatchers("/v3/api-docs/**").permitAll()
                         .requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers("/main", "/main/**").permitAll()
-                        .requestMatchers("/login", "/login/**","/join").permitAll()
+                        .requestMatchers("/login", "/login/**","/join", "/bestMeLogin").permitAll()
                         .requestMatchers("/personal", "/personal/**").permitAll()
                         .requestMatchers("/style", "/style/**").permitAll()
                         .requestMatchers("/community", "/community/**").permitAll()
@@ -63,12 +65,11 @@ public class SecurityConfig {
                         .requestMatchers("/results", "/results/**").permitAll() //임시로 해놓았습니다. url 변경시 삭제
                         .requestMatchers("/manager").permitAll()
 
-                        // 다른 요청들은 인증할 것
-                        .anyRequest().authenticated()
+                        // 다른 요청들은 거부
+                        .anyRequest().denyAll()
                 )
 
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
-
                 .build();
     }
 

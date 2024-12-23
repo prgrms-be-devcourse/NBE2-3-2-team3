@@ -17,12 +17,14 @@ public class Community extends BaseEntity {
     @Column( name = "board_id" )
     private Long boardId;
 
-    /* user 테이블과 연관관계 매핑 시 적용하기
+    // user 테이블과 연관관계 매핑 시 적용
+    /*
     // Community 엔티티 설정
     // FetchType.LAZY: 연관된 데이터를 지연 로딩합니다. (UserEntity는 필요할 때만 로드)
     // referencedColumnName : 참조 대상 엔티티의 PK가 아닌 다른 컬럼을 외래 키로 참조해야 할 때 사용
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn( name = "user_id", nullable = false)    // FK 매핑
+    @OnDelete(action = OnDeleteAction.CASCADE)      // 단방향 때에도, 해당 유저가 삭제되면 게시물이 자동 삭제되게 설정
     private User user;
 
     // User 엔티티 설정 ( 양방향으로 연결할 경우 )

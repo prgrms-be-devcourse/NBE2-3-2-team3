@@ -1,0 +1,183 @@
+#main {
+    top: 4rem;
+    margin: 0 auto;
+
+    position: relative;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+#join-section {
+    width: 65rem;
+
+    padding: 5rem 1rem;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+#join-form {
+    width: 35rem;
+
+    border: 1px solid #bdbdbd;
+    border-radius: 1rem;
+
+    padding: 3rem 4rem;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+#join-form:hover,
+#join-form:focus-within {
+    box-shadow: 0 0 5px #bdbdbd;
+}
+
+#join-form label input[type="text"], input[type="password"]{
+    border: none;
+    outline: none;
+}
+
+#join-form > h1 {
+    font-size: 2rem;
+    margin-bottom: 4rem;
+}
+
+#join-form > .email {
+    width: 100%;
+
+    align-items: flex-start;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.2rem;
+}
+
+#join-form > .password,
+#join-form > .password-check {
+    width: 100%;
+
+    align-items: flex-start;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.2rem;
+}
+
+#join-form > .password button,
+#join-form > .password-check button{
+    border: none;
+    background-color: white;
+    cursor: pointer;
+}
+
+#join-form .desc-text {
+    color: #bdbdbd;
+    font-size: 0.8rem;
+}
+
+#join-form .text-label {
+    width: 100%;
+    padding: 0.5rem;
+
+    border-radius: 5px;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+#join-form .text-label > input[type="password"],
+#join-form .text-label > input[type="text"] {
+    width: 100%;
+    font-size: 0.9rem;
+    padding: 0.2rem;
+}
+
+#join-form > .email:focus-within > .desc-text,
+#join-form > .password:focus-within > .desc-text,
+#join-form > .password-check:focus-within > .desc-text {
+    color: #009963;
+}
+
+#join-form > .email > .text-label,
+#join-form > .password > .text-label,
+#join-form > .password-check > .text-label{
+    border: 1px solid #bdbdbd;
+}
+
+#join-form > .email:focus-within > .text-label,
+#join-form > .password:focus-within > .text-label,
+#join-form > .password-check:focus-within > .text-label {
+    border: 1px solid #009963;
+}
+#join-form a {
+    text-decoration: none;
+    color: #1199FF;
+    font-size: 0.9rem;
+}
+
+#join-form a:hover {
+    text-decoration: underline;
+}
+
+#join-form .join-btn {
+    width: 100%;
+    background-color: #009963ee;
+    border: 1px solid #009963ee;
+    border-radius: 10px;
+    color: white;
+    margin: 0.5rem 0;
+
+    font-size: 1.1rem;
+
+    padding: 0.8rem 1rem;
+
+    cursor: pointer;
+}
+
+#join-form .join-btn:hover {
+    background-color: #009963;
+    border: 1px solid #009963;
+}
+
+#join-form .horizontal-bar {
+    width: 100%;
+    border-bottom: 1px solid #bdbdbd;
+
+    margin: 0.5rem 0;
+}
+
+#join-form button.kakao {
+    width: 100%;
+    background-color: #FEE500;
+    border: 1px solid #FEE500;
+    border-radius: 12px;
+    cursor: pointer;
+
+    padding: 0.9rem;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 0.2rem;
+}
+
+#join-form .kakao > img {
+    width: 1rem;
+    height: 1rem;
+}
+
+#join-form .kakao > span {
+    font-size: 1.1rem;
+}

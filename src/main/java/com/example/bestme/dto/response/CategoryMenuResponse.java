@@ -5,33 +5,31 @@ import com.example.bestme.domain.Category;
 import java.util.List;
 
 public record CategoryMenuResponse(
-        List<CategoryMenu> categoryMenu
+        List<CategorySelectResponse> categories
 ) {
 
     public static CategoryMenuResponse from(List<Category> categories) {
-        List<CategoryMenu> categoryMenus = categories.stream()
-                .map(CategoryMenu::from)
+        List<CategorySelectResponse> categorySelectResponses = categories.stream()
+                .map(CategorySelectResponse::from)
                 .toList();
 
-        return new CategoryMenuResponse(categoryMenus);
+        return new CategoryMenuResponse(categorySelectResponses);
     }
 
-    public record CategoryMenu(
+    public record CategorySelectResponse(
             Long id,
-            Integer depth,
             String parentCategoryName,
             String name,
-            List<CategoryMenu> subCategories
+            List<CategorySelectResponse> subCategories
     ) {
 
-        public static CategoryMenu from(Category category) {
-            List<CategoryMenu> subCategories = category.getSubCategories().stream()
-                    .map(CategoryMenu::from)
+        public static CategorySelectResponse from(Category category) {
+            List<CategorySelectResponse> subCategories = category.getSubCategories().stream()
+                    .map(CategorySelectResponse::from)
                     .toList();
 
-            return new CategoryMenu(
+            return new CategorySelectResponse(
                     category.getId(),
-                    category.getDepth(),
                     category.getParentCategoryName(),
                     category.getName(),
                     subCategories

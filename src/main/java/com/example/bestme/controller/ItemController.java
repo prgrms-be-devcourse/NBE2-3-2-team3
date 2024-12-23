@@ -30,9 +30,9 @@ public class ItemController {
         return ApiResponse.success(response);
     }
 
-    @GetMapping("/{id}")
-    public ApiResponse<ItemDetailResponse> getItem(@PathVariable Long id) {
-        ItemDetailResponse response = itemService.getItemDetailResponse(id);
+    @GetMapping("/{itemId}")
+    public ApiResponse<ItemDetailResponse> getItem(@PathVariable Long itemId) {
+        ItemDetailResponse response = itemService.getItemDetailResponse(itemId);
         return ApiResponse.success(response);
     }
 
@@ -43,7 +43,9 @@ public class ItemController {
     }
 
     @GetMapping("/filters")
-    public ApiResponse<FilterMenuResponse> getFilterMenu(@RequestParam(required = false) Long categoryId) {
+    public ApiResponse<FilterMenuResponse> getFilterMenu(
+            @RequestParam(required = false) Long categoryId
+    ) {
         FilterMenuResponse response = itemService.getFilterMenuResponse(categoryId);
         return ApiResponse.success(response);
     }
