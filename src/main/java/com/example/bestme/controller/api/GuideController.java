@@ -1,11 +1,13 @@
 package com.example.bestme.controller.api;
 
 import com.example.bestme.domain.Guide;
+import com.example.bestme.dto.api.GuideRequest;
 import com.example.bestme.dto.api.GuideResponse;
 import com.example.bestme.dto.api.ResultResponse;
 import com.example.bestme.exception.ApiResponse;
 import com.example.bestme.service.GuideService;
 import com.example.bestme.service.ResultService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -25,6 +27,7 @@ public class GuideController {
     private final ModelMapper modelMapper = new ModelMapper();
 
     @GetMapping("/guide/{userId}")
+    @Operation( summary = "회원의 퍼스널컬러에 대한 가이드를 전체 조회하는 API입니다.", description = "(모든 카테고리 / 회원)의 스타일 가이드 " )
     public ResponseEntity<ApiResponse<List<GuideResponse.ReadGuideResponseDTO>>> readGuides(@PathVariable Long userId) {
 
         //가장 높은 빈도수의 퍼스널컬러 ID 가져오기
@@ -42,11 +45,15 @@ public class GuideController {
     }
 
     @PostMapping("/guide")
-    public ResponseEntity<ApiResponse<GuideResponse.ReadGuideResponseDTO>> createGuide() {
+    @Operation( summary = "가이드를 등록하는 API입니다.", description = "카테고리ID, 컬러ID, 설명은 필수 항목입니다. " )
+    public ResponseEntity<ApiResponse<GuideResponse.CreateGuideResponseDTO>> createGuide(@RequestBody GuideRequest.CreateGuideDTO createGuideDTO) {
+        //등록한 카테고리 아이디
+        Long categoryId = createGuideDTO.getCategory();
 
+        //가이드 등록
+        Guide guide = guideService.createGuide(createGuideDTO);
+        GuideResponse.CreateGuideResponseDTO dto = modelMapper.map(guide, GuideResponse.CreateGuideResponseDTO.class);
 
-
-
-        return ResponseEntity.ok(ApiResponse.success("사용자에게 가장 높은 빈도수의 퍼스널 컬러에 대한 가이드 조회", lists));
+        return ResponseEntity.ok(ApiResponse.success("가이드 등록에 성공했습니다. (categoryId: " + categoryId + ")", dto));
     }
 }

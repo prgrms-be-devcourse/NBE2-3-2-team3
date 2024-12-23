@@ -47,6 +47,7 @@ public class ResultController {
     }
 
     @GetMapping("/results/{userId}")
+    @Operation( summary = "진단 결과 전체 조회 API", description = "한 회원이 진단한 퍼스널컬러의 진단 결과 전체를 조회하는 API입니다." )
     public ResponseEntity<ApiResponse<List<ResultResponse.ReadResultResponseDTO>>> readResults(Long userId) {
         List<Result> results = resultService.readResults(userId);
 
@@ -59,6 +60,7 @@ public class ResultController {
     }
 
     @GetMapping("/results/color/{userId}")
+    @Operation( summary = "퍼스널 컬러 조회(가장 높은 빈도수) API", description = "한 회원이 진단했던 기록 중 가장 빈도수가 높게 진단된 퍼스널컬러가 뭔지 진단하는 API입니다." )
     public ResponseEntity<ApiResponse<ResultResponse.ReadColorResponseDTO>> readColorId(@PathVariable Long userId) {
         ResultResponse.ReadColorResponseDTO result = resultService.readColorId(userId);
 
