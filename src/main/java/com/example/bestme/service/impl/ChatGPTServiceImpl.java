@@ -40,7 +40,7 @@ public class ChatGPTServiceImpl implements ChatGPTService {
                 List.of(
                         new Message("user", userMessage)
                 ),
-                50,
+                200,
                 0.2
         );
 
