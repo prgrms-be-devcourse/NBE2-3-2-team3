@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -38,28 +37,11 @@ public class AdminService {
                 .toList();
     }
 
-    public CategoryMenuResponse getCategoryMenuResponse() {
-        List<Category> categories = categoryRepository.findAllByParentCategoryIdIsNull();
-        return CategoryMenuResponse.from(categories);
-    }
-
-    public List<BrandSelectResponse> getBrands() {
-        return brandRepository.findAll().stream()
-                .map(BrandSelectResponse::from)
-                .toList();
-    }
-
-    public List<ColorSelectResponse> getColors() {
-        return colorRepository.findAll().stream()
-                .map(ColorSelectResponse::from)
-                .toList();
-    }
-
     @Transactional
     public Long saveItem(ItemSaveRequest itemSaveRequest, String imageUrl) {
-        Color color = colorRepository.findById(itemSaveRequest.colorId()).orElseThrow(() -> new NoSuchElementException("브랜드 없음"));
-        Category category = categoryRepository.findById(itemSaveRequest.categoryId()).orElseThrow(() -> new NoSuchElementException("카테고리 없음"));
-        Brand brand = brandRepository.findById(itemSaveRequest.brandId()).orElseThrow(() -> new NoSuchElementException("브랜드 없음"));
+        Color color = colorRepository.getById(itemSaveRequest.colorId());
+        Category category = categoryRepository.getById(itemSaveRequest.categoryId());
+        Brand brand = brandRepository.getById(itemSaveRequest.brandId());
         Item item = itemSaveRequest.toEntity(color, category, brand, imageUrl);
 
         return itemRepository.save(item).getId();
@@ -76,9 +58,26 @@ public class AdminService {
         Category parentCategory = null;
         if (!categorySaveRequest.parentCategoryId().equals("선택하세요")) {
             Long parentCategoryId = Long.valueOf(categorySaveRequest.parentCategoryId());
-            parentCategory = categoryRepository.findById(parentCategoryId).orElseThrow(() -> new NoSuchElementException("카테고리 x"));
+            parentCategory = categoryRepository.getById(parentCategoryId);
         }
         Category category = categorySaveRequest.toEntity(parentCategory);
         return categoryRepository.save(category).getId();
+    }
+
+    public CategoryMenuResponse getCategoryMenu() {
+        List<Category> categories = categoryRepository.findAllByParentCategoryIdIsNull();
+        return CategoryMenuResponse.from(categories);
+    }
+
+    public List<BrandSelectResponse> getBrands() {
+        return brandRepository.findAll().stream()
+                .map(BrandSelectResponse::from)
+                .toList();
+    }
+
+    public List<ColorSelectResponse> getColors() {
+        return colorRepository.findAll().stream()
+                .map(ColorSelectResponse::from)
+                .toList();
     }
 }

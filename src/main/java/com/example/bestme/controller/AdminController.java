@@ -8,7 +8,7 @@ import com.example.bestme.dto.response.CategoryMenuResponse;
 import com.example.bestme.dto.response.ColorSelectResponse;
 import com.example.bestme.dto.response.ItemDetailResponse;
 import com.example.bestme.service.AdminService;
-import com.example.bestme.service.ImageService;
+import com.example.bestme.service.LocalImageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -27,7 +27,7 @@ import static com.example.bestme.util.ImageDirectoryUrl.ITEM_DIRECTORY;
 public class AdminController {
 
     private final AdminService adminService;
-    private final ImageService imageService;
+    private final LocalImageService imageService;
 
     @GetMapping
     public String home(Model model) {
@@ -67,7 +67,7 @@ public class AdminController {
     @GetMapping("/categories")
     @ResponseBody
     public ResponseEntity<CategoryMenuResponse> getCategories() {
-        return ResponseEntity.ok(adminService.getCategoryMenuResponse());
+        return ResponseEntity.ok(adminService.getCategoryMenu());
     }
 
     @GetMapping("/brands")
