@@ -1,21 +1,16 @@
 package com.example.bestme.service.impl;
 
-import com.example.bestme.domain.user.CustomOAuth2User;
 import com.example.bestme.domain.user.Role;
 import com.example.bestme.domain.user.User;
 import com.example.bestme.repository.user.UserRepository;
 import com.example.bestme.util.jwt.JwtTokenDTO;
 import com.example.bestme.util.jwt.JwtTokenProvider;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
-import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
@@ -28,8 +23,11 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class OAuth2UserServiceImpl extends DefaultOAuth2UserService {  // 카카오로 로그인한 사용자 정보 가져오는 클래스
 
+    /*
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider; // JWT 토큰 생성
+    //private final PasswordEncoder passwordEncoder;
+
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest request) throws OAuth2AuthenticationException {
@@ -64,4 +62,6 @@ public class OAuth2UserServiceImpl extends DefaultOAuth2UserService {  // 카카
         return customOAuth2User;
 
     }
+
+     */
 }

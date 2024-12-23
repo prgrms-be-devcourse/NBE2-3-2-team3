@@ -60,8 +60,7 @@ public class User{
         this.role = role;
     }
 
-    public User(String userId, String email, String nickname){
-        this.userId=Long.parseLong(userId);
+    public User(String email, String nickname){
         this.email = email;
         this.nickname = nickname;
     }
