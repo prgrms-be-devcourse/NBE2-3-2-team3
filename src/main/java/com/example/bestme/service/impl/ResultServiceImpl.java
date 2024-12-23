@@ -5,6 +5,7 @@ import com.example.bestme.dto.api.ResultRequest;
 import com.example.bestme.dto.api.ResultResponse;
 
 import com.example.bestme.repository.ResultRepository;
+import com.example.bestme.service.ColorService;
 import com.example.bestme.service.ResultService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ public class ResultServiceImpl implements ResultService {
 
     private final ResultRepository resultRepository;
     private final ModelMapper modelMapper = new ModelMapper();
+    private final ColorService colorService;
 
 
     @Override
@@ -47,7 +49,7 @@ public class ResultServiceImpl implements ResultService {
 
         Result result = modelMapper.map(createResultDTO, Result.class);
         result.setUserId(userId);
-        result.setColorId(colorId);
+        result.setColor(colorService.getColor(colorId));
         resultRepository.save(result);
 
         return result;

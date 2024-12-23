@@ -30,7 +30,6 @@ public class OAuth2UserServiceImpl extends DefaultOAuth2UserService {  // 카카
 
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider; // JWT 토큰 생성
-//    private final PasswordEncoder passwordEncoder;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest request) throws OAuth2AuthenticationException {

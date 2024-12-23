@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -42,8 +41,8 @@ public class ItemService {
         );
     }
 
-    public ItemDetailResponse getItemDetailResponse(Long id) {
-        Item item = itemRepository.findById(id).orElseThrow(() -> new NoSuchElementException("아이템 없음"));
+    public ItemDetailResponse getItemDetailResponse(Long itemId) {
+        Item item = itemRepository.getById(itemId);
         return ItemDetailResponse.from(item);
     }
 

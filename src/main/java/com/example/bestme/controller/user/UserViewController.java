@@ -23,9 +23,19 @@ public class UserViewController {
         return "login";
     }
 
-    @GetMapping("/main")
-    public String mainPage() {
+    @GetMapping("/")
+    public String home() {
         return "home";
+    }
+
+    @GetMapping("/bestMeLogin")
+    public String bestMeLogin() {
+        return "bestMeLogin";
+    }
+
+    @GetMapping("/join")
+    public String getJoin() {
+        return "join";
     }
 
 }
