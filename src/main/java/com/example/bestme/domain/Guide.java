@@ -1,8 +1,5 @@
-package com.example.bestme.domain.user;
+package com.example.bestme.domain;
 
-import com.example.bestme.domain.BaseEntity;
-import com.example.bestme.domain.Category;
-import com.example.bestme.domain.Color;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

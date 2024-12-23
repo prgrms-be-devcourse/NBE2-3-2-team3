@@ -5,6 +5,8 @@ import com.example.bestme.dto.api.ResultRequest;
 import com.example.bestme.dto.api.ResultResponse;
 import com.example.bestme.exception.ApiResponse;
 import com.example.bestme.service.ResultService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.modelmapper.ModelMapper;
 import org.springframework.web.bind.annotation.*;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +18,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
+@Tag(name = "Result", description = "퍼스널컬러 진단 관련 API")
 public class ResultController {
     private final ResultService resultService;
     private final ChatGPTController chatGPTController;
@@ -23,6 +26,7 @@ public class ResultController {
     private final ModelMapper modelMapper = new ModelMapper();
 
     @PostMapping("/results/{userId}")
+    @Operation( summary = "퍼스널컬러 진단 API", description = "필드에 맞는 색상코드를 전부 입력해주세요." )
     public ResponseEntity<ApiResponse<ResultResponse.CreateResultResponseDTO>> createResult(@PathVariable Long userId, @RequestBody ResultRequest.CreateResultDTO createResultDTO) {
         //Chat GPT API 내부적으로 호출
         String requestMessage = "제 피부 톤은 가장 밝은 부분이 #" + createResultDTO.getLightestSkinColor() + ", 가장 어두운 부분이 #" + createResultDTO.getDarkestSkinColor() + "입니다. " +
@@ -34,8 +38,8 @@ public class ResultController {
                 "응답 형식 예시: 번호 - 이유(3줄 정도 완성된 문장으로, 문장이 끊기지 않도록 종결어미를 포함해주세요)";
         System.out.println(chatGPTController.chat(requestMessage));
         Long colorId = null;
-        if (chatGPTController.chat(requestMessage).contains("1")) { colorId = 1L;} else if (chatGPTController.chat(requestMessage).contains("2")) {colorId = 2L;
-        } else if (chatGPTController.chat(requestMessage).contains("3")) { colorId = 3L; } else if (chatGPTController.chat(requestMessage).contains("4")) { colorId = 4L;
+        if (chatGPTController.chat(requestMessage).startsWith("1")) { colorId = 1L;} else if (chatGPTController.chat(requestMessage).startsWith("2")) {colorId = 2L;
+        } else if (chatGPTController.chat(requestMessage).startsWith("3")) { colorId = 3L; } else if (chatGPTController.chat(requestMessage).startsWith("4")) { colorId = 4L;
         } else { colorId = 5L; }
         Result result = resultService.createResult(userId, colorId, createResultDTO);
         ResultResponse.CreateResultResponseDTO dto = modelMapper.map(result, ResultResponse.CreateResultResponseDTO.class);
