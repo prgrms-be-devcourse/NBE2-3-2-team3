@@ -203,11 +203,15 @@
     gap: 0.2rem;
 }
 
-#login-form .kakao > img {
+#login-form .kakao > a {
+    width: 100%;
+}
+
+#login-form .kakao > a > img {
     width: 1rem;
     height: 1rem;
 }
 
-#login-form .kakao > span {
+#login-form .kakao > a >span {
     font-size: 1.1rem;
 }

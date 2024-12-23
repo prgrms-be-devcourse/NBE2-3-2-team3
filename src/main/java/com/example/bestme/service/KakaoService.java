@@ -121,7 +121,7 @@ public class KakaoService {
 
 
             conn.setRequestMethod("GET");
-            conn.setRequestProperty("Authorization", "Bearer " + accessToken); // 요청 헤더에 AccessToken추가
+            conn.setRequestProperty("Authorization", "Bearer " + accessToken); // 요청 헤더에 카카오AccessToken추가
             conn.setRequestProperty("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
 
             int responseCode = conn.getResponseCode();

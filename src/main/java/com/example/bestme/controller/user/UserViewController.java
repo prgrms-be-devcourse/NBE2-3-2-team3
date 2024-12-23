@@ -20,7 +20,7 @@ import java.util.Map;
 public class UserViewController {
     private final KakaoService kakaoService;
 
-    @GetMapping(value = "/login")
+    @GetMapping(value = "/bestMeLogin")
     public String login(Model model) {
 
         //String kakaoUrl = kakaoService.getKakaoLogin();
@@ -31,7 +31,7 @@ public class UserViewController {
         System.out.println("[clientID] " + kakaoService.getClient_id());
         System.out.println("[redirectUri] " + kakaoService.getRedirect_uri());
 
-        return "login";
+        return "bestMeLogin";
     }
 
     /*
@@ -57,6 +57,8 @@ public class UserViewController {
     }
 
      */
+
+    /*
 
     // 카카오 로그인 처리
     @GetMapping("/login/oauth2/code/kakao")
@@ -85,19 +87,23 @@ public class UserViewController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/main")
-    public String mainPage() {
+
+     */
+
 
     @GetMapping("/")
     public String home() {
 
         return "home";
     }
-
+    /*
     @GetMapping("/bestMeLogin")
     public String bestMeLogin() {
         return "bestMeLogin";
     }
+
+     */
+
 
     @GetMapping("/join")
     public String getJoin() {
