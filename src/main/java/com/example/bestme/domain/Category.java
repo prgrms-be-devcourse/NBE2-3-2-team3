@@ -1,5 +1,6 @@
 package com.example.bestme.domain;
 
+import com.example.bestme.domain.user.Guide;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -33,4 +34,7 @@ public class Category extends BaseEntity {
         }
         return "root";
     }
+
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY) // 1:N 관계 양방향 매핑
+    private List<Guide> guides = new ArrayList<>();
 }
