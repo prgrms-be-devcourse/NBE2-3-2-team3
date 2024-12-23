@@ -43,13 +43,4 @@ public class UserController {
         return "test";
     }
 
-
-
-    @GetMapping("/login/kakao")
-    public ResponseEntity<ApiResponse<String>> getKakaoLoginUrl() {
-        String location = "https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=" + client_id + "&redirect_uri=" + redirect_uri;
-        return ResponseEntity.ok(ApiResponse.success(location));
-    }
-
-
 }

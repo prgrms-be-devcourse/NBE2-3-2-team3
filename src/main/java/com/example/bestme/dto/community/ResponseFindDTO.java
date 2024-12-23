@@ -5,15 +5,18 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class ResponseFindBoardDTO {
+public class ResponseFindDTO {
 
     private Long boardId;
     private Long userId;
+//    private String nickname;    // user 엔티티와 연결 후 사용
     private String subject;
     private String imagename;
     private String content;
@@ -21,4 +24,7 @@ public class ResponseFindBoardDTO {
 
     @Enumerated(EnumType.STRING)
     private Category category;
+
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }

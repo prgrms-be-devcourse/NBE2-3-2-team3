@@ -85,9 +85,6 @@ public class UserViewController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/main")
-    public String mainPage() {
-
     @GetMapping("/")
     public String home() {
 
