@@ -59,6 +59,8 @@ dependencies {
     //gpt api 요청
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
 
+    // Spring HATEOAS 의존성 (PagedModel)
+    implementation 'org.springframework.boot:spring-boot-starter-hateoas'
 }
 
 tasks.named('test') {
