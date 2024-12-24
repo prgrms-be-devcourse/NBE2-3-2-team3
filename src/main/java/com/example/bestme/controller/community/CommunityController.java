@@ -18,26 +18,23 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.util.List;
-
 @Tag(name = "Community", description = "커뮤니티 관련 API")
 @RestController
 @RequestMapping("/api")
 public class CommunityController {
 
     private final CommunityService communityService;
-    private final PagedResourcesAssembler<ResponseAllBoardDTO> assembler;
+    private final PagedResourcesAssembler<ResponseAllDTO> assembler;
     private final LocalFileService localFileService;
 
-    public CommunityController(CommunityService communityService, PagedResourcesAssembler<ResponseAllBoardDTO> assembler
+    public CommunityController(CommunityService communityService, PagedResourcesAssembler<ResponseAllDTO> assembler
             , LocalFileService localFileService) {
         this.communityService = communityService;
         this.assembler = assembler;
         this.localFileService = localFileService;
     }
 
-    @Operation( summary = "테스트용 게시물 생성(테스트 순서: 1)", description = "55개의 게시물이 자동 생성됩니다" )
+    @Operation( summary = "테스트용 게시물 생성(테스트 순서: 1)", description = "55개의 게시물이 자동 생성" )
     @PostMapping( "/community/testCreate")
     public ResponseEntity<ApiResponse<String>> testCreate() {
         int count = 0;
@@ -56,24 +53,24 @@ public class CommunityController {
         return ResponseEntity.ok(ApiResponse.success("게시물 생성 완료", result));
     }
 
-    // 게시물 생성 응답 메서드
-    @Operation( summary = "게시물 생성(테스트 순서: 1)"
-            , description = "지정된 카테고리가 없을 경우 필드를 제거해주세요.<br> imagename 및 view 필드는 지워주세요." )
+    // 게시물 Create API
+    @Operation( summary = "게시물 Create API(테스트 순서: 1)"
+            , description = "지정된 카테고리가 없을 경우 필드를 제거해주세요.<br> imagename 필드는 지워주세요." )
     @PostMapping(value = "/community/write", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<ApiResponse<ResponseFindBoardDTO>> communityWrite(
+    public ResponseEntity<ApiResponse<ResponseFindDTO>> communityWrite(
             @RequestPart(name = "to") RequestWriteDTO to, // 데이터 전송 (JSON 형식)
             @RequestPart(name = "file", required = false) MultipartFile file // 파일 업로드 처리
     ) {
 
-        ResponseFindBoardDTO result = communityService.createBoard(to, file);
+        ResponseFindDTO result = communityService.createBoard(to, file);
 
         return ResponseEntity.ok(ApiResponse.success("게시물 생성 완료", result));
     }
 
-    // 게시물 목록 응답 메서드 ( 페이징 기능 추가 )
-    @Operation( summary = "게시물 목록(테스트 순서: 2)", description = "시작 페이지 번호 1" )
+    // 게시물 목록 Read API ( 페이징 기능 추가 )
+    @Operation( summary = "게시물 목록 Read API(테스트 순서: 2)", description = "시작 페이지 번호 1" )
     @GetMapping( "/community/{page}" )
-    public ResponseEntity<ApiResponse<PagedModel<EntityModel<ResponseAllBoardDTO>>>> findAllBoard(
+    public ResponseEntity<ApiResponse<PagedModel<EntityModel<ResponseAllDTO>>>> findAllBoard(
             @Parameter(description = "페이지 번호", example = "1")
             @PathVariable Integer page)
     {
@@ -81,10 +78,10 @@ public class CommunityController {
         RequestPageDTO pageDTO = new RequestPageDTO(page);
         int currentPage = pageDTO.getCurrentPage();
         int numberOfDataPerPage = pageDTO.getNumberOfDataPerPage();
-        Page<ResponseAllBoardDTO> results = communityService.findAllBoard(currentPage, numberOfDataPerPage);
+        Page<ResponseAllDTO> results = communityService.findAllBoard(currentPage, numberOfDataPerPage);
 
         // PagedModel을 사용하여 페이지화된 데이터 래핑
-        PagedModel<EntityModel<ResponseAllBoardDTO>> pagedModel = assembler
+        PagedModel<EntityModel<ResponseAllDTO>> pagedModel = assembler
                 .toModel(results, result
                         -> EntityModel.of(result, Link.of("/community/detail/" + result.getBoardId())));
 
@@ -125,38 +122,61 @@ public class CommunityController {
         return ResponseEntity.ok(ApiResponse.success(pagedModel));
     }
 
-    @Operation( summary = "게시물 상세보기(테스트 순서: 2)", description = "특정 게시물의 세부 내용 확인 ( 이미지 파일 제외 )" )
+    // 지정 게시물 Read API
+    @Operation( summary = "게시물 Read API(테스트 순서: 2)", description = "지정 게시물의 세부 내용 확인 ( 이미지 파일 제외 )" )
     @GetMapping( "/community/detail/{boardId}" )
-    public ResponseEntity<ApiResponse<ResponseFindBoardDTO>> communityDetail(@PathVariable String boardId) {
-
-        ResponseFindBoardDTO result = communityService.findBoardById(boardId);
-
+    public ResponseEntity<ApiResponse<ResponseFindDTO>> communityDetail(@PathVariable String boardId) {
+        ResponseFindDTO result = communityService.findBoardById(boardId);
         return ResponseEntity.ok(ApiResponse.success(result));
     }
 
-    @Operation( summary = "게시물 이미지 불러오기(테스트 순서: 3)", description = "특정 게시물의 이미지 확인" )
+    // 지정 게시물 이미지 파일 Read API
+    @Operation( summary = "단일 이미지 파일 Read API(테스트 순서: 3)", description = "지정 게시물의 이미지 확인" )
     @GetMapping("/community/image/{fileName}")
     public ResponseEntity<Resource> communityImage(
             @Parameter( description = "게시물 생성 후, 반환된 imagename을 넣어주세요.", example = "e80253ce-1c81-482b-8fb8-f04b7d8117df_.jpg")
-            @PathVariable String fileName) {
-
+            @PathVariable String fileName)
+    {
         ResponseFileDTO result = localFileService.fileFind(fileName);
-
         // 이미지 타입 및 데이터만 반환
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(result.getContentType()))
                 .body(result.getResource());
     }
 
-    @Operation( summary = "게시물 수정하기(테스트 순서: 4)", description = "특정 게시물 데이터 수정" )
+    // 지정 게시물 Navigation API ( 어려워서 구현 보류 )
+    /*
+    @Operation( summary = "지정 게시물 Navigation API(테스트 순서: 3)", description = "지정 게시물의 이전글, 다음글 데이터(제목, 링크) 반환" )
+    @GetMapping( "/community/detail/{boardId}/navigation" )
+    public ResponseEntity<ApiResponse<List<ResponseNavigationDTO>>> findBoardNavigation(@PathVariable Long boardId) {
+
+        List<ResponseNavigationDTO> result = communityService.boardNavigation(boardId);
+
+        result.setPrevBoardLink( result.getPrevBoardId() != null ? Link.of("/community/" + result.getPrevBoardId()) : null );
+        result.setNextBoardLink( result.getNextBoardId() != null ? Link.of("/community/" + result.getNextBoardId()) : null );
+
+        return ResponseEntity.ok(ApiResponse.success(result));
+    }
+     */
+
+    // 지정 게시물 Modify API
+    @Operation( summary = "게시물 Modify API (테스트 순서: 4)", description = "지정 게시물 수정" )
     @PutMapping(value = "/community/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<ApiResponse<ResponseFindBoardDTO>> updateCommunity(
+    public ResponseEntity<ApiResponse<ResponseFindDTO>> updateCommunity(
             @RequestPart(name = "to") RequestModifyDTO to, // 데이터 전송 (JSON 형식)
             @RequestPart(name = "file", required = false) MultipartFile file) // 파일 업로드 처리
     {
+        ResponseFindDTO result = communityService.modifyBoard(to, file);
+        return ResponseEntity.ok(ApiResponse.success(result));
+    }
 
-        ResponseFindBoardDTO result = communityService.modifyBoard(to, file);
-
+    @Operation( summary = "게시물 Delete API (테스트 순서: 5)", description = "지정 게시물 삭제" )
+    @DeleteMapping(value = "/community/delete")
+    public ResponseEntity<ApiResponse<ResponseDeleteDTO>> deleteCommunity(
+            @RequestBody RequestDeleteDTO to)           // 스웨거용 ( application/json )
+//            @ModelAttribute RequestDeleteDTO to)      // HTML용 ( multipart/form-data )
+    {
+        ResponseDeleteDTO result = communityService.deleteBoard(to);
         return ResponseEntity.ok(ApiResponse.success(result));
     }
 }
