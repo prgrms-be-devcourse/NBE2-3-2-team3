@@ -27,7 +27,7 @@ public class LocalImageService {
 
     private static final Set<String> ALLOW_IMAGE_EXTENSIONS = Set.of("jpg", "jpeg", "png");
 
-    @Value("${C:\\Users\\reski\\Desktop\\upload}")
+    @Value("${image.dir}")
     private String imageDir;
 
     private final ItemRepository itemRepository;
