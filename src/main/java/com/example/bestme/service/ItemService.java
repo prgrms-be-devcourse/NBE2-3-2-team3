@@ -14,6 +14,8 @@ import com.example.bestme.repository.CategoryRepository;
 import com.example.bestme.repository.ColorRepository;
 import com.example.bestme.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,15 +31,16 @@ public class ItemService {
     private final BrandRepository brandRepository;
     private final ColorRepository colorRepository;
 
-    public ItemsResponse getItemsResponseBySearchCondition(SearchConditionRequest searchConditionRequest) {
-        return ItemsResponse.from(getItemsBySearchCondition(searchConditionRequest));
+    public ItemsResponse getPagingItemsResponseBySearchCondition(SearchConditionRequest searchConditionRequest, Pageable pageable) {
+        return ItemsResponse.from(getPagingItemsBySearchCondition(searchConditionRequest, pageable));
     }
 
-    private List<Item> getItemsBySearchCondition(SearchConditionRequest searchConditionRequest) {
-        return itemRepository.findItemsBySearchCondition(
+    private Page<Item> getPagingItemsBySearchCondition(SearchConditionRequest searchConditionRequest, Pageable pageable) {
+        return itemRepository.findPagingItemsBySearchCondition(
                 searchConditionRequest.categoryId(),
                 searchConditionRequest.brands(),
-                searchConditionRequest.colors()
+                searchConditionRequest.colors(),
+                pageable
         );
     }
 

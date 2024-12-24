@@ -8,6 +8,9 @@ import com.example.bestme.dto.response.ItemsResponse;
 import com.example.bestme.exception.ApiResponse;
 import com.example.bestme.service.ItemService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,17 +19,18 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/items")
 public class ItemController {
-
+    
     private final ItemService itemService;
 
     @GetMapping
     public ApiResponse<ItemsResponse> getItems(
             @RequestParam(required = false) Long categoryId,
             @RequestParam(required = false) List<String> brands,
-            @RequestParam(required = false) List<String> colors
+            @RequestParam(required = false) List<String> colors,
+            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         SearchConditionRequest searchConditionRequest = SearchConditionRequest.of(categoryId, brands, colors);
-        ItemsResponse response = itemService.getItemsResponseBySearchCondition(searchConditionRequest);
+        ItemsResponse response = itemService.getPagingItemsResponseBySearchCondition(searchConditionRequest, pageable);
         return ApiResponse.success(response);
     }
 
