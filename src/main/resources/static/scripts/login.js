@@ -20,6 +20,30 @@ loginForm.onsubmit = (e) => {
     e.preventDefault();
 
 
-    const loginModal = new ModalObj();
-    loginModal.createSimpleModal('알림', '로그인했어요');
+    let requestObject = {
+        email : loginForm.email.value,
+        password : loginForm.password.value
+    }
+
+    fetch('/api/login', {
+        method : 'POST',
+        headers : {
+            'Content-Type': 'application/json'
+        },
+        body : JSON.stringify(requestObject)
+    }).then(response => response.json())
+        .then(data => {
+            const loginModal = new ModalObj();
+            if (data.code === 200) {
+                loginModal.createModal('알림', data.message, [{
+                    title : '확인',
+                    onclick : () => location.href = '/login'
+                }]);
+            }
+            if (data.code === 401) {
+                loginModal.createSimpleModal('알림', data.message);
+            }
+            console.log(data);
+        })
+        .catch(error => console.error('Error:', error));
 }

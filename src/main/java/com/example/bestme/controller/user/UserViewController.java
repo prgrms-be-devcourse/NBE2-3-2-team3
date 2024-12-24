@@ -20,7 +20,7 @@ import java.util.Map;
 public class UserViewController {
     private final KakaoService kakaoService;
 
-    @GetMapping(value = "/bestMeLogin")
+    @GetMapping(value = "/login")
     public String login(Model model) {
 
         //String kakaoUrl = kakaoService.getKakaoLogin();
@@ -31,7 +31,7 @@ public class UserViewController {
         System.out.println("[clientID] " + kakaoService.getClient_id());
         System.out.println("[redirectUri] " + kakaoService.getRedirect_uri());
 
-        return "bestMeLogin";
+        return "login";
     }
 
     /*
@@ -87,23 +87,12 @@ public class UserViewController {
         return ResponseEntity.ok(response);
     }
 
-
-     */
-
+    */
 
     @GetMapping("/")
     public String home() {
-
         return "home";
     }
-    /*
-    @GetMapping("/bestMeLogin")
-    public String bestMeLogin() {
-        return "bestMeLogin";
-    }
-
-    */
-
 
     @GetMapping("/join")
     public String getJoin() {

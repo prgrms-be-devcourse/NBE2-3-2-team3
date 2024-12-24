@@ -1,10 +1,12 @@
 package com.example.bestme.service.user;
 
+import com.example.bestme.domain.user.Gender;
 import com.example.bestme.domain.user.Role;
 import com.example.bestme.domain.user.User;
 import com.example.bestme.dto.user.RequestLoginDTO;
 import com.example.bestme.dto.user.RequestSignUpDTO;
 import com.example.bestme.exception.ApiResponse;
+import com.example.bestme.regex.UserRegex;
 import com.example.bestme.repository.user.UserRepository;
 import com.example.bestme.util.jwt.JwtTokenDTO;
 import com.example.bestme.util.jwt.JwtTokenProvider;
@@ -36,6 +38,34 @@ public class UserServiceImpl implements UserService{
     @Override
     public ResponseEntity<ApiResponse<Void>> join(RequestSignUpDTO to) {
 
+        String email = to.getEmail();
+        String nickname = to.getNickname();
+        String password = to.getPassword();
+        Gender gender = to.getGender();
+        String birth = to.getBirth();
+
+        // 각 항목들 유효성 검사
+        if (email == null || !UserRegex.email.regexTest(email)) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(ApiResponse.error(HttpStatus.CONFLICT,"잘못된 이메일 형식입니다."));
+        }
+        if (nickname == null || !UserRegex.nickname.regexTest(nickname)) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(ApiResponse.error(HttpStatus.CONFLICT,"잘못된 닉네임 형식입니다."));
+        }
+        if (password == null || !UserRegex.password.regexTest(password)) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(ApiResponse.error(HttpStatus.CONFLICT,"잘못된 비밀번호 형식입니다."));
+        }
+        if (birth == null || !UserRegex.birth.regexTest(birth)) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(ApiResponse.error(HttpStatus.CONFLICT,"잘못된 생년월일 형식입니다."));
+        }
+        if (gender == null) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(ApiResponse.error(HttpStatus.CONFLICT,"성별을 선택해주세요."));
+        }
+
         // 중복 아이디 체크
         if (userRepository.findByEmail(to.getEmail()) != null) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
@@ -57,6 +87,8 @@ public class UserServiceImpl implements UserService{
         // 빈 데이터들 입력 및 DB에 저장
         // 비밀번호 암호화
         user.setPassword(passwordEncoder.encode(to.getPassword()));
+        user.setBirth(to.getBirth());
+        user.setGender(to.getGender());
         user.setCreatedAt(LocalDateTime.now());
         user.setDeletedAt(null);
         user.setDeletedFlag(false);
@@ -66,12 +98,12 @@ public class UserServiceImpl implements UserService{
         userRepository.save(user);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.success(HttpStatus.CREATED, "회원가입에 성공하였습니다.", null));
+                .body(ApiResponse.success(HttpStatus.CREATED, "회원가입에 성공하였습니다. 확인 버튼을 누르시면 로그인 메뉴로 이동합니다.", null));
     }
 
 
     @Override
-    public ResponseEntity<ApiResponse<Void>> login(RequestLoginDTO to, HttpServletResponse response) {
+    public ResponseEntity<ApiResponse<JwtTokenDTO>> login(RequestLoginDTO to, HttpServletResponse response) {
 
         // 입력한 이메일을 바탕으로 DB에 존재하는 User 검색
         User user = userRepository.findByEmail(to.getEmail());
@@ -81,7 +113,7 @@ public class UserServiceImpl implements UserService{
         // (순서 지키기) - (입력한 비밀번호, DB에 존재하는 User 의 암호화된 비밀번호)
         if (user == null || !passwordEncoder.matches(to.getPassword(), user.getPassword())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(ApiResponse.error(HttpStatus.UNAUTHORIZED, "잘못된 이메일 또는 비밀번호로 로그인에 실패하였습니다.", null));
+                    .body(ApiResponse.error(HttpStatus.UNAUTHORIZED, "잘못된 이메일 또는 비밀번호로 인해 로그인에 실패하였습니다.", null));
         }
 
         // jwt 토큰 생성
@@ -93,7 +125,7 @@ public class UserServiceImpl implements UserService{
         response.addHeader("Access-Control-Expose-Headers","Authorization, refresh");
 
         // ApiResponse 에 토큰 반환
-        return ResponseEntity.ok(ApiResponse.success("로그인에 성공하였습니다.", null));
+        return ResponseEntity.ok(ApiResponse.success("로그인에 성공하였습니다. 확인 버튼을 누르시면 홈으로 이동합니다.", jwtTokenDTO));
     }
 
     // 토큰 생성 메서드

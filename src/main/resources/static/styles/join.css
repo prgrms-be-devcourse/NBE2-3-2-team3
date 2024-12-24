@@ -51,18 +51,7 @@
     margin-bottom: 4rem;
 }
 
-#join-form > .email {
-    width: 100%;
-
-    align-items: flex-start;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 0.2rem;
-}
-
-#join-form > .password,
-#join-form > .password-check {
+#join-form > .valid-check {
     width: 100%;
 
     align-items: flex-start;
@@ -81,7 +70,7 @@
 
 #join-form .desc-text {
     color: #bdbdbd;
-    font-size: 0.8rem;
+    font-size: 0.9rem;
 }
 
 #join-form .text-label {
@@ -96,30 +85,73 @@
     justify-content: flex-start;
 }
 
+#join-form .gender-div {
+    width: 100%;
+    padding: 0.7rem 2.5rem;
+
+    border-radius: 5px;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+#join-form .radio-label {
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.2rem;
+}
+
+#join-form .radio-label > input[type="radio"] {
+    cursor: pointer;
+}
+
+#join-form .radio-label > span {
+    cursor: pointer;
+    font-size: 1rem;
+    color: #bdbdbd;
+}
+
 #join-form .text-label > input[type="password"],
 #join-form .text-label > input[type="text"] {
     width: 100%;
-    font-size: 0.9rem;
+    font-size: 1rem;
     padding: 0.2rem;
 }
 
-#join-form > .email:focus-within > .desc-text,
-#join-form > .password:focus-within > .desc-text,
-#join-form > .password-check:focus-within > .desc-text {
+
+#join-form > .valid-check:focus-within > .desc-text,
+#join-form > .identification > .valid-check:focus-within > .desc-text {
     color: #009963;
 }
 
-#join-form > .email > .text-label,
-#join-form > .password > .text-label,
-#join-form > .password-check > .text-label{
+
+#join-form > .valid-check > .text-label,
+#join-form > .identification > .valid-check > .text-label,
+#join-form > .identification > .valid-check > .gender-div {
     border: 1px solid #bdbdbd;
 }
 
-#join-form > .email:focus-within > .text-label,
-#join-form > .password:focus-within > .text-label,
-#join-form > .password-check:focus-within > .text-label {
+
+#join-form > .valid-check:focus-within > .text-label,
+#join-form > .identification > .valid-check:focus-within > .text-label,
+#join-form > .identification > .valid-check:focus-within > .gender-div {
     border: 1px solid #009963;
 }
+
+#join-form > .identification {
+    width: 100%;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+}
+
 #join-form a {
     text-decoration: none;
     color: #1199FF;
@@ -138,7 +170,7 @@
     color: white;
     margin: 0.5rem 0;
 
-    font-size: 1.1rem;
+    font-size: 1.2rem;
 
     padding: 0.8rem 1rem;
 
@@ -179,5 +211,24 @@
 }
 
 #join-form .kakao > span {
-    font-size: 1.1rem;
+    font-size: 1.2rem;
+}
+
+#join-form .warning {
+    color: red;
+    font-size: 0.9rem;
+    display: none;
+}
+
+#join-form .valid-check.-invalid > span {
+    color: red;
+}
+
+#join-form .valid-check.-invalid > .text-label,
+#join-form .valid-check.-invalid > .gender-div{
+    border: 1px solid red;
+}
+
+#join-form .valid-check.-invalid > .warning {
+    display: inline-block;
 }

@@ -23,7 +23,7 @@ class ModalObj {
 
         const buttonContainer = modal.querySelector('.button-container');
         for (const buttonOption of buttonOptions) {
-            const button = ModalObj.createButton(buttonOption.title, buttonOption.onclick);
+            const button = this.createButton(buttonOption.title, buttonOption.onclick);
             buttonContainer.append(button);
         }
 

@@ -32,6 +32,13 @@ public class User{
     private String nickname;
 
     @Column(nullable = false)
+    private String birth;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+
+    @Column(nullable = false)
     @ColumnDefault("0")
     private boolean kakaoFlag;
 

@@ -61,7 +61,7 @@
 }
 
 #main > .section-container > .main-img > .text-box > .big {
-    font-size: 2.5rem;
+    font-size: 3rem;
     margin-bottom: 0.5rem;
 }
 
@@ -78,7 +78,7 @@
 }
 
 #main > .section-container > .featured-post > .title{
-    font-size: 1.5rem;
+    font-size: 1.8rem;
     font-weight: 600;
 }
 
@@ -115,12 +115,12 @@
 
 #main > .section-container > .featured-post > .post-container > .post > .subject {
     font-weight: 300;
-    font-size: 1rem;
+    font-size: 1.2rem;
     text-decoration: none;
 }
 
 #main > .section-container > .featured-post > .post-container > .post > .writer,.views {
     font-weight: 300;
-    font-size: 0.8rem;
+    font-size: 1rem;
     color: #A1824A;
 }

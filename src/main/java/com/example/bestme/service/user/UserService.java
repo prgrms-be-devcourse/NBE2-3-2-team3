@@ -12,5 +12,5 @@ public interface UserService {
     ResponseEntity<ApiResponse<Void>> join(RequestSignUpDTO to);
 
     // 로그인
-    ResponseEntity<ApiResponse<Void>> login(RequestLoginDTO to, HttpServletResponse response);
+    ResponseEntity<ApiResponse<JwtTokenDTO>> login(RequestLoginDTO to, HttpServletResponse response);
 }
