@@ -33,4 +33,7 @@ public class Category extends BaseEntity {
         }
         return "root";
     }
+
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY) // 1:N 관계 양방향 매핑
+    private List<Guide> guides = new ArrayList<>();
 }

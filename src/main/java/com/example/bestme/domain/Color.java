@@ -27,6 +27,9 @@ public class Color extends BaseEntity {
     @OneToMany(mappedBy = "color", fetch = FetchType.LAZY) // 1:N 관계 양방향 매핑
     private List<Result> results = new ArrayList<>();
 
+    @OneToMany(mappedBy = "color", fetch = FetchType.LAZY) // 1:N 관계 양방향 매핑
+    private List<Guide> guides = new ArrayList<>();
+
     public Color(Long id, String name) {
         this.id = id;
         this.name = name;

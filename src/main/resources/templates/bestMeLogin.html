@@ -74,8 +74,10 @@
             <span class="horizontal-bar"></span>
             <span>다른 로그인 방법</span>
             <button type="button" class="kakao">
-                <img th:src="@{/imgs/pngwing.com.png}" alt="">
-                <span>카카오로 로그인하기</span>
+                <a th:href="|https://kauth.kakao.com/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=account_email|">
+                    <img th:src="@{/imgs/pngwing.com.png}" alt="">
+                    <span>카카오로 로그인하기</span>
+                </a>
             </button>
             <span class="horizontal-bar"></span>
             <span>회원이 아니신가요?
