@@ -8,7 +8,7 @@ import com.example.bestme.dto.api.ResultResponse;
 import java.util.List;
 
 public interface ResultService {
-    //결과 생성 - 추후 impl에서 챗gpt api와 연결 예정
+    //결과 생성
     Result createResult(Long userId, Long colorId, ResultRequest.CreateResultDTO createResultDTO);
 
     //결과 전체 조회
