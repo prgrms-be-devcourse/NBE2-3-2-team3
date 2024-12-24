@@ -26,9 +26,6 @@ public class UserViewController {
         model.addAttribute("clientId", kakaoService.getClient_id());
         model.addAttribute("redirectUri", kakaoService.getRedirect_uri());
 
-        System.out.println("[clientID] " + kakaoService.getClient_id());
-        System.out.println("[redirectUri] " + kakaoService.getRedirect_uri());
-
         return "login";
     }
 

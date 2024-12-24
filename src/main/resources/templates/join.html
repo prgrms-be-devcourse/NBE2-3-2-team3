@@ -37,11 +37,7 @@
             </li>
         </ul>
     </div>
-    <div class="header-box">
-        <div class="user-box">
-            <button class="login" type="button" onclick="location.href = '/login'">Log in</button>
-            <button class="sign-up" type="button" onclick="location.href = '/join'">Sign up</button>
-        </div>
+    <div class="header-box login">
     </div>
 </header>
 <main id="main">
@@ -109,12 +105,6 @@
                 </div>
             </div>
             <button class="join-btn">회원가입</button>
-            <span class="horizontal-bar"></span>
-            <span>다른 회원가입 방법</span>
-            <button type="button" class="kakao">
-                <img th:src="@{/imgs/pngwing.com.png}" alt="">
-                <span>카카오로 회원가입하기</span>
-            </button>
             <span class="horizontal-bar"></span>
             <span>이미 회원이신가요?
                 <a href="/login">로그인하기</a>

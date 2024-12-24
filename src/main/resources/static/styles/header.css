@@ -80,6 +80,11 @@ body {
     justify-content: center;
 }
 
+#header > .header-box  > a:hover > i,
+#header > .header-box  > a:hover > span {
+    text-shadow: 0 0 2px #bdbdbd;
+}
+
 #header > .header-box  > ul {
     align-self: center;
     display: flex;
@@ -97,9 +102,17 @@ body {
     text-decoration: none;
 }
 
+#header > .header-box  > ul > li > a:hover {
+    text-shadow: 0 0 1px black;
+}
+
 #header > .header-box  > ul > li.sel > a{
     color: #009963;
     font-weight: 600;
+}
+
+#header > .header-box  > ul > li.sel > a:hover{
+    text-shadow: 0 0 1px #009963;
 }
 
 #header > .header-box  > .spring {
@@ -128,7 +141,17 @@ body {
     color: white;
 }
 
-#header > .header-box  > .user-box > .sign-up {
+#header > .header-box  > .user-box > .login:hover {
+    box-shadow: 0 0 5px #009963;
+}
+
+#header > .header-box  > .user-box > .sign-up,
+#header > .header-box  > .user-box > .logout {
     border: none;
     background: #dddddd;
+}
+
+#header > .header-box  > .user-box > .sign-up:hover,
+#header > .header-box  > .user-box > .logout:hover {
+    box-shadow: 0 0 5px black;
 }

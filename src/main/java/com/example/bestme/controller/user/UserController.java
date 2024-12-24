@@ -37,11 +37,6 @@ public class UserController {
         return userService.login(to, response);
     }
 
-    @PostMapping("/test")
-    public String test() {
-        return "test";
-    }
-
     // 카카오 로그인 처리
     @GetMapping("/auth/kakao/callback")
     public ResponseEntity<Map<String, String>> kakaoLogin(@RequestParam String code) {
