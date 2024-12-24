@@ -16,6 +16,8 @@ import com.example.bestme.repository.CategoryRepository;
 import com.example.bestme.repository.ColorRepository;
 import com.example.bestme.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,9 +33,25 @@ public class AdminService {
     private final BrandRepository brandRepository;
     private final ColorRepository colorRepository;
 
-    public List<ItemDetailResponse> getItems() {
-        return itemRepository.findAll().stream()
-                .map(ItemDetailResponse::from)
+    public Page<ItemDetailResponse> getPagingItems(Pageable pageable) {
+        return itemRepository.findAll(pageable)
+                .map(ItemDetailResponse::from);
+    }
+
+    public CategoryMenuResponse getCategoryMenu() {
+        List<Category> categories = categoryRepository.findAllByParentCategoryIdIsNull();
+        return CategoryMenuResponse.from(categories);
+    }
+
+    public List<BrandSelectResponse> getBrands() {
+        return brandRepository.findAll().stream()
+                .map(BrandSelectResponse::from)
+                .toList();
+    }
+
+    public List<ColorSelectResponse> getColors() {
+        return colorRepository.findAll().stream()
+                .map(ColorSelectResponse::from)
                 .toList();
     }
 
@@ -62,22 +80,5 @@ public class AdminService {
         }
         Category category = categorySaveRequest.toEntity(parentCategory);
         return categoryRepository.save(category).getId();
-    }
-
-    public CategoryMenuResponse getCategoryMenu() {
-        List<Category> categories = categoryRepository.findAllByParentCategoryIdIsNull();
-        return CategoryMenuResponse.from(categories);
-    }
-
-    public List<BrandSelectResponse> getBrands() {
-        return brandRepository.findAll().stream()
-                .map(BrandSelectResponse::from)
-                .toList();
-    }
-
-    public List<ColorSelectResponse> getColors() {
-        return colorRepository.findAll().stream()
-                .map(ColorSelectResponse::from)
-                .toList();
     }
 }
