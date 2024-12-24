@@ -93,6 +93,14 @@ public class LocalFileService implements FileService {
     @Override
     public void fileDelete(String filename) {
         File file = new File(uploadPath, filename);
-        file.delete();
+
+        if (file.exists()) {
+            boolean deleted = file.delete();
+            if (!deleted) {
+                throw new IllegalArgumentException("파일 삭제에 실패했습니다. " + filename);
+            }
+        } else {
+            throw new IllegalArgumentException("파일이 존재하지 않습니다. " + filename);
+        }
     }
 }

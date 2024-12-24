@@ -26,6 +26,9 @@ public class UserViewController {
         model.addAttribute("clientId", kakaoService.getClient_id());
         model.addAttribute("redirectUri", kakaoService.getRedirect_uri());
 
+        System.out.println("[clientID] " + kakaoService.getClient_id());
+        System.out.println("[redirectUri] " + kakaoService.getRedirect_uri());
+
         return "login";
     }
 
@@ -53,6 +56,8 @@ public class UserViewController {
 
      */
 
+    /*
+
     // 카카오 로그인 처리
     @GetMapping("/login/oauth2/code/kakao")
     public ResponseEntity<Map<String, String>> kakaoLogin(@RequestParam String code) {
@@ -79,6 +84,9 @@ public class UserViewController {
 
         return ResponseEntity.ok(response);
     }
+
+    */
+
     @GetMapping("/")
     public String home() {
         return "home";
