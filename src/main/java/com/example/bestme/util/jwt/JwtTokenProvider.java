@@ -50,10 +50,13 @@ public class JwtTokenProvider {
 
         LocalDateTime now = LocalDateTime.now();
 
+        com.example.bestme.domain.user.User user = userRepository.findByEmail(authentication.getName());
+
         // 30 분의 유효기간 - accessToken
         LocalDateTime accessTokenExpire = now.plusMinutes(30);
         String accessToken = Jwts.builder()
-                .setSubject(authentication.getName()) // user 의 email
+                .setId(String.valueOf(user.getUserId())) // user 의 id
+                .setSubject(user.getEmail()) // user 의 email
                 .claim("auth", authorities) // user 의 role
                 .setExpiration(Date.from(accessTokenExpire.atZone(ZoneId.systemDefault()).toInstant())) // 만료기간 설정
                 .signWith(key, SignatureAlgorithm.HS256)
@@ -62,7 +65,8 @@ public class JwtTokenProvider {
         // 1 주일의 유효기간 - refreshToken
         LocalDateTime refreshTokenExpire = now.plusDays(7);
         String refreshToken = Jwts.builder()
-                .setSubject(authentication.getName()) // user 의 email
+                .setId(String.valueOf(user.getUserId())) // user 의 id
+                .setSubject(user.getEmail()) // user 의 email
                 .claim("auth", authorities) // user 의 role
                 .setExpiration(Date.from(refreshTokenExpire.atZone(ZoneId.systemDefault()).toInstant())) // 만료기간 설정
                 .signWith(key, SignatureAlgorithm.HS256)
@@ -122,6 +126,7 @@ public class JwtTokenProvider {
         // 30 분의 유효기간 - accessToken
         LocalDateTime accessTokenExpire = now.plusMinutes(30);
         String accessToken = Jwts.builder()
+                .setId(String.valueOf(user.getUserId()))
                 .setSubject(user.getEmail())
                 .claim("auth", user.getRole())
                 .setExpiration(Date.from(accessTokenExpire.atZone(ZoneId.systemDefault()).toInstant()))
@@ -131,6 +136,7 @@ public class JwtTokenProvider {
         // 1 주일의 유효기간 - refreshToken
         LocalDateTime refreshTokenExpire = now.plusDays(7);
         String refreshToken = Jwts.builder()
+                .setId(String.valueOf(user.getUserId()))
                 .setSubject(user.getEmail())
                 .claim("auth", user.getRole())
                 .setExpiration(Date.from(refreshTokenExpire.atZone(ZoneId.systemDefault()).toInstant()))
@@ -154,6 +160,7 @@ public class JwtTokenProvider {
         // 30 분의 유효기간 - accessToken
         LocalDateTime accessTokenExpire = now.plusMinutes(30);
         String accessToken = Jwts.builder()
+                .setId(claims.getId())
                 .setSubject(claims.getSubject())
                 .claim("auth", claims.get("auth"))
                 .setExpiration(Date.from(accessTokenExpire.atZone(ZoneId.systemDefault()).toInstant()))
@@ -163,6 +170,7 @@ public class JwtTokenProvider {
         // 1 주일의 유효기간 - refreshToken
         LocalDateTime refreshTokenExpire = now.plusDays(7);
         String newRefreshToken = Jwts.builder()
+                .setId(claims.getId())
                 .setSubject(claims.getSubject())
                 .claim("auth", claims.get("auth"))
                 .setExpiration(Date.from(refreshTokenExpire.atZone(ZoneId.systemDefault()).toInstant()))
@@ -177,7 +185,7 @@ public class JwtTokenProvider {
     }
 
     // accessToken
-    private Claims parseClaims(String accessToken) {
+    public Claims parseClaims(String accessToken) {
         try {
             return Jwts.parserBuilder()
                     .setSigningKey(key)
@@ -189,4 +197,3 @@ public class JwtTokenProvider {
         }
     }
 }
-
