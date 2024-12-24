@@ -4,6 +4,10 @@ const passwordLabel= joinForm.querySelector('.password > .text-label');
 const passwordCheckLabel = joinForm.querySelector('.password-check > .text-label');
 const validChecks =  joinForm.querySelectorAll('div.valid-check');
 
+if (checkLogin()) {
+    alert('이미 로그인했습니다.');
+    location.href = "/";
+}
 
 passwordLabel.querySelector('button').onclick = () => {
     if (passwordLabel.querySelector('button > i').classList.contains('fa-eye')) {

@@ -45,26 +45,26 @@ public class UserServiceImpl implements UserService{
         String birth = to.getBirth();
 
         // 각 항목들 유효성 검사
-        if (email == null || !UserRegex.email.regexTest(email)) {
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(ApiResponse.error(HttpStatus.CONFLICT,"잘못된 이메일 형식입니다."));
-        }
-        if (nickname == null || !UserRegex.nickname.regexTest(nickname)) {
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(ApiResponse.error(HttpStatus.CONFLICT,"잘못된 닉네임 형식입니다."));
-        }
-        if (password == null || !UserRegex.password.regexTest(password)) {
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(ApiResponse.error(HttpStatus.CONFLICT,"잘못된 비밀번호 형식입니다."));
-        }
-        if (birth == null || !UserRegex.birth.regexTest(birth)) {
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(ApiResponse.error(HttpStatus.CONFLICT,"잘못된 생년월일 형식입니다."));
-        }
-        if (gender == null) {
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(ApiResponse.error(HttpStatus.CONFLICT,"성별을 선택해주세요."));
-        }
+        // if (email == null || !UserRegex.email.regexTest(email)) {
+        //     return ResponseEntity.status(HttpStatus.CONFLICT)
+        //             .body(ApiResponse.error(HttpStatus.CONFLICT,"잘못된 이메일 형식입니다."));
+        // }
+        // if (nickname == null || !UserRegex.nickname.regexTest(nickname)) {
+        //     return ResponseEntity.status(HttpStatus.CONFLICT)
+        //             .body(ApiResponse.error(HttpStatus.CONFLICT,"잘못된 닉네임 형식입니다."));
+        // }
+        // if (password == null || !UserRegex.password.regexTest(password)) {
+        //     return ResponseEntity.status(HttpStatus.CONFLICT)
+        //             .body(ApiResponse.error(HttpStatus.CONFLICT,"잘못된 비밀번호 형식입니다."));
+        // }
+        // if (birth == null || !UserRegex.birth.regexTest(birth)) {
+        //     return ResponseEntity.status(HttpStatus.CONFLICT)
+        //             .body(ApiResponse.error(HttpStatus.CONFLICT,"잘못된 생년월일 형식입니다."));
+        // }
+        // if (gender == null) {
+        //     return ResponseEntity.status(HttpStatus.CONFLICT)
+        //             .body(ApiResponse.error(HttpStatus.CONFLICT,"성별을 선택해주세요."));
+        // }
 
         // 중복 아이디 체크
         if (userRepository.findByEmail(to.getEmail()) != null) {
