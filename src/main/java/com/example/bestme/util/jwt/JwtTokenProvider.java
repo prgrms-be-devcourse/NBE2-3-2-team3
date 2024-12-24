@@ -1,5 +1,6 @@
 package com.example.bestme.util.jwt;
 
+import com.example.bestme.repository.user.UserRepository;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -28,12 +29,14 @@ public class JwtTokenProvider {
 
     private final Key key;
     private final InMemoryClientRegistrationRepository clientRegistrationRepository;
+    private final UserRepository userRepository;
 
     // application.properties 의 시크릿 키 값 가져와서 key 에 저장
-    public JwtTokenProvider(@Value("${jwt.secret.key}") String secretKey, InMemoryClientRegistrationRepository clientRegistrationRepository) {
+    public JwtTokenProvider(@Value("${jwt.secret.key}") String secretKey, InMemoryClientRegistrationRepository clientRegistrationRepository, UserRepository userRepository) {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
         this.clientRegistrationRepository = clientRegistrationRepository;
+        this.userRepository = userRepository;
     }
 
 
@@ -110,6 +113,37 @@ public class JwtTokenProvider {
         return false;
     }
 
+    public JwtTokenDTO generateTokenSimple(String email) {
+
+        com.example.bestme.domain.user.User user = userRepository.findByEmail(email);
+
+        LocalDateTime now = LocalDateTime.now();
+
+        // 30 분의 유효기간 - accessToken
+        LocalDateTime accessTokenExpire = now.plusMinutes(30);
+        String accessToken = Jwts.builder()
+                .setSubject(user.getEmail())
+                .claim("auth", user.getRole())
+                .setExpiration(Date.from(accessTokenExpire.atZone(ZoneId.systemDefault()).toInstant()))
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+
+        // 1 주일의 유효기간 - refreshToken
+        LocalDateTime refreshTokenExpire = now.plusDays(7);
+        String refreshToken = Jwts.builder()
+                .setSubject(user.getEmail())
+                .claim("auth", user.getRole())
+                .setExpiration(Date.from(refreshTokenExpire.atZone(ZoneId.systemDefault()).toInstant()))
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+
+        return JwtTokenDTO.builder()
+                .grantType("Bearer")
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
+    }
+
     // 기존 refreshToken 정보를 가지고 다시 accessToken, refreshToken 생성
     public JwtTokenDTO reGenerateToken(String refreshToken) {
 
@@ -117,9 +151,8 @@ public class JwtTokenProvider {
 
         LocalDateTime now = LocalDateTime.now();
 
-        // 1 시간의 유효기간 - accessToken
-
-        LocalDateTime accessTokenExpire = now.plusHours(1);
+        // 30 분의 유효기간 - accessToken
+        LocalDateTime accessTokenExpire = now.plusMinutes(30);
         String accessToken = Jwts.builder()
                 .setSubject(claims.getSubject())
                 .claim("auth", claims.get("auth"))
@@ -127,8 +160,8 @@ public class JwtTokenProvider {
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
 
-        // 1 일의 유효기간 - refreshToken
-        LocalDateTime refreshTokenExpire = now.plusDays(1);
+        // 1 주일의 유효기간 - refreshToken
+        LocalDateTime refreshTokenExpire = now.plusDays(7);
         String newRefreshToken = Jwts.builder()
                 .setSubject(claims.getSubject())
                 .claim("auth", claims.get("auth"))
@@ -139,7 +172,7 @@ public class JwtTokenProvider {
         return JwtTokenDTO.builder()
                 .grantType("Bearer")
                 .accessToken(accessToken)
-                .refreshToken(refreshToken)
+                .refreshToken(newRefreshToken)
                 .build();
     }
 
