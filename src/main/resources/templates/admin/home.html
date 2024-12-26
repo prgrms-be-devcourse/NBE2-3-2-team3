@@ -173,7 +173,7 @@
                 <span aria-hidden="true">&lsaquo;</span>
             </a>
         </li>
-        <li class="page-item" th:each="i : ${#numbers.sequence(0, pagingItems.getTotalPages() - 1)}"
+        <li class="page-item" th:each="i : ${#numbers.sequence(0, (pagingItems.getTotalPages() > 0 ? pagingItems.getTotalPages() - 1 : 0))}"
             th:classappend="${pagingItems.getNumber() == i} ? 'active'">
             <a class="page-link" th:href="@{/admin(page=${i})}" th:text="${i + 1}"></a>
         </li>
