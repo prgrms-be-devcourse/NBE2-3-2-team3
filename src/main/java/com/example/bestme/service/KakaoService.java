@@ -1,5 +1,6 @@
 package com.example.bestme.service;
 
+import com.example.bestme.domain.user.Gender;
 import com.example.bestme.domain.user.Role;
 import com.example.bestme.domain.user.User;
 import com.example.bestme.repository.user.UserRepository;
@@ -181,6 +182,8 @@ public class KakaoService {
                     email,
                     "default_password",
                     nickname,
+                    "000000",
+                    Gender.U,
                     true,
                     LocalDateTime.now(),
                     null,
