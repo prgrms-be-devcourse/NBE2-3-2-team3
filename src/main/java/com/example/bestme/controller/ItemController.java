@@ -1,12 +1,14 @@
 package com.example.bestme.controller;
 
 import com.example.bestme.dto.request.SearchConditionRequest;
-import com.example.bestme.dto.response.CategoryMenuResponse;
-import com.example.bestme.dto.response.FilterMenuResponse;
-import com.example.bestme.dto.response.ItemDetailResponse;
-import com.example.bestme.dto.response.ItemsResponse;
+import com.example.bestme.dto.response.*;
 import com.example.bestme.exception.ApiResponse;
 import com.example.bestme.service.ItemService;
+import com.example.bestme.service.LikeService;
+import com.example.bestme.util.jwt.JwtAuthenticationFilter;
+import com.example.bestme.util.jwt.JwtTokenProvider;
+import io.jsonwebtoken.Claims;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -21,6 +23,8 @@ import java.util.List;
 public class ItemController {
     
     private final ItemService itemService;
+    private final LikeService likeService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @GetMapping
     public ApiResponse<ItemsResponse> getItems(
@@ -37,6 +41,21 @@ public class ItemController {
     @GetMapping("/{itemId}")
     public ApiResponse<ItemDetailResponse> getItem(@PathVariable Long itemId) {
         ItemDetailResponse response = itemService.getItemDetailResponse(itemId);
+        return ApiResponse.success(response);
+    }
+
+    @PutMapping("/{itemId}/like")
+    public ApiResponse<LikeResponse> clickItemLike(
+            @PathVariable Long itemId,
+//            HttpServletRequest request
+            @RequestParam Long userId
+    ) {
+//        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(jwtTokenProvider);
+//        String accessToken = jwtAuthenticationFilter.resolveToken(request);
+//        Claims claims = jwtTokenProvider.parseClaims(accessToken);
+//        Long userId = Long.valueOf(claims.getId());
+
+        LikeResponse response = likeService.clickItemLike(itemId, userId);
         return ApiResponse.success(response);
     }
 

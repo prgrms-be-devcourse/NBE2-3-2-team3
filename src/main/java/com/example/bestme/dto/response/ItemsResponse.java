@@ -22,14 +22,18 @@ public record ItemsResponse(
     public record ItemResponse(
             Long id,
             String imageUrl,
-            String itemName
+            String brandName,
+            String itemName,
+            int likeCount
     ) {
 
         public static ItemResponse from(Item item) {
             return new ItemResponse(
                     item.getId(),
                     item.getImageUrl(),
-                    item.getName()
+                    item.getBrand().getName(),
+                    item.getName(),
+                    item.getLikeCount()
             );
         }
     }

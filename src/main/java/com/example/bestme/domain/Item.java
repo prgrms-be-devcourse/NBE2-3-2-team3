@@ -23,6 +23,9 @@ public class Item extends BaseEntity {
     @Column(length = 2083)
     private String imageUrl;
 
+    @Column(nullable = false)
+    private int likeCount = 0;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "color_id")
     private Color color;
