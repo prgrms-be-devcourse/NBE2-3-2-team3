@@ -43,7 +43,7 @@ loginForm.onsubmit = (e) => {
     }).then(response => response.json())
         .then(data => {
             const loginModal = new ModalObj();
-            if (data.code === 200) {
+            if (data.success === true) {
                 if (loginForm.querySelector('input[name="remember"]').checked) {
                     setCookie('email', loginForm.email.value, {'max-age': 999999});
                 } else {
@@ -52,13 +52,13 @@ loginForm.onsubmit = (e) => {
                 loginModal.createModal('알림', data.message, [{
                     title: '확인',
                     onclick: () => {
-                        const Authorization = data.data.grantType + " " + data.data.accessToken;
+                        const Authorization = data.data;
                         localStorage.setItem("Authorization", Authorization);
                         location.href = '/';
                     }
                 }]);
             }
-            if (data.code === 401) {
+            if (data.success === false) {
                 loginModal.createSimpleModal('알림', data.message);
             }
         })
