@@ -6,12 +6,14 @@
     <link rel="stylesheet" type="text/css" th:href="@{/styles/header.css}">
 
     <script src="https://kit.fontawesome.com/5fcc17a7cc.js" crossorigin="anonymous"></script>
+    <script defer type="text/javascript" th:src="@{/scripts/login.js}"></script>
     <style>
         .parent{
             display: flex;
             height: 70vh;
         }
         .sidebar {
+            /*background-color: blue;*/
             width: 14%;
             height: 100%;
             border-radius: 20px;
@@ -34,48 +36,30 @@
         .title{
             padding-left: 12%;
             font-size: 30px;
-            margin-bottom: 14%;
             margin-top: 10%;
         }
         .content{
-            /*background-color: #FEE500;*/
             flex-grow: 1;
             height: 100%;
-        }
-        .content-row {
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
             align-items: center;
-            gap: 20px;
-        }
-        .content-history{
-            padding: 10px;
-            flex: 1;
-            align-items: center;
-            justify-content: center;
             text-align: center;
-            font-size: 25px;
         }
         .highlight {
             font-size: 1.5em;
             font-weight: bold;
             color: #6384FB;
         }
-        .content-recommend {
-            background-color: lightblue;
-            padding: 10px;
-            flex: 1;
-            text-align: center;
+        .confirm{
+            margin-left: 12%;
         }
-        .content-recommend img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .content-recommend-text {
-            margin-top: 10px;
-            font-size: 20px;
-            text-align: center;
+        .kakao{
+            margin-left: 12%;
+            margin-top: 4%;
+            align-items: center; /* 버튼 내부 아이템 중앙 정렬 */
+            justify-content: center;
+            border-color: white;
         }
     </style>
 </head>
@@ -132,20 +116,13 @@
         </ul>
     </div>
     <div class="content">
-        <h3 class="title">나의 진단 결과 히스토리</h3>
-        <div class="content-row">
-            <div class="content-history">
-                닉네임 님의 커스널 컬러는 <br>
-                <span class="highlight">"여름 쿨톤"</span> <br>
-                으로 추정됩니다
-            </div>
-            <div class="content-recommend">
-                <img src="#" alt="추천 아이템 이미지">
-                <div class="content-recommend-text">
-                    이런 아이템이 어울려요~
-                </div>
-            </div>
+        <h3 class="title">회원 탈퇴</h3>
+        <div class="confirm">
+            정말 탈퇴하시겠습니까?
         </div>
+        <button type="button" class="kakao">
+            <img th:src="@{/imgs/kakao_login_medium_narrow.png}" alt="">
+        </button>
     </div>
 </div>
 

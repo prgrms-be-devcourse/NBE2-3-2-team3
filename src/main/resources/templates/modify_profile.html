@@ -12,6 +12,7 @@
             height: 70vh;
         }
         .sidebar {
+            /*background-color: blue;*/
             width: 14%;
             height: 100%;
             border-radius: 20px;
@@ -34,7 +35,6 @@
         .title{
             padding-left: 12%;
             font-size: 30px;
-            margin-bottom: 14%;
             margin-top: 10%;
         }
         .content{
@@ -42,40 +42,27 @@
             flex-grow: 1;
             height: 100%;
         }
-        .content-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 20px;
-        }
-        .content-history{
-            padding: 10px;
-            flex: 1;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            font-size: 25px;
-        }
         .highlight {
             font-size: 1.5em;
             font-weight: bold;
             color: #6384FB;
         }
-        .content-recommend {
-            background-color: lightblue;
-            padding: 10px;
-            flex: 1;
-            text-align: center;
+        .subtitle{
+            font-size: 19px;
+            padding-left: 12%;
+            margin-top: 2%;
         }
-        .content-recommend img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+        .nickname_input{
+            margin-left: 12%;
+            margin-top: 2%;
+            height: 30px;
         }
-        .content-recommend-text {
-            margin-top: 10px;
-            font-size: 20px;
-            text-align: center;
+        .nickname_btn{
+            height: 32px;
+            background-color: #588AFE;
+            border: white;
+            font-weight: bold;
+            width: 40px;
         }
     </style>
 </head>
@@ -132,20 +119,14 @@
         </ul>
     </div>
     <div class="content">
-        <h3 class="title">나의 진단 결과 히스토리</h3>
-        <div class="content-row">
-            <div class="content-history">
-                닉네임 님의 커스널 컬러는 <br>
-                <span class="highlight">"여름 쿨톤"</span> <br>
-                으로 추정됩니다
-            </div>
-            <div class="content-recommend">
-                <img src="#" alt="추천 아이템 이미지">
-                <div class="content-recommend-text">
-                    이런 아이템이 어울려요~
-                </div>
-            </div>
+        <h3 class="title">내 정보 변경</h3>
+        <div class="subtitle">
+            닉네임 변경
         </div>
+        <form method="post" name="nickname">
+            <input class="nickname_input" type="text" name="nickname">
+            <input class="nickname_btn" type="submit" value="변경">
+        </form>
     </div>
 </div>
 
