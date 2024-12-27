@@ -117,6 +117,10 @@
     color: #bdbdbd;
 }
 
+#join-form .radio-label > input[type="radio"]:checked + span {
+    color: black;
+}
+
 #join-form .text-label > input[type="password"],
 #join-form .text-label > input[type="text"] {
     width: 100%;

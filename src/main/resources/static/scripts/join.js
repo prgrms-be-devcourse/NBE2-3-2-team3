@@ -4,6 +4,10 @@ const passwordLabel= joinForm.querySelector('.password > .text-label');
 const passwordCheckLabel = joinForm.querySelector('.password-check > .text-label');
 const validChecks =  joinForm.querySelectorAll('div.valid-check');
 
+if (checkLogin()) {
+    alert('이미 로그인했습니다.');
+    location.href = "/";
+}
 
 passwordLabel.querySelector('button').onclick = () => {
     if (passwordLabel.querySelector('button > i').classList.contains('fa-eye')) {
@@ -44,12 +48,12 @@ joinForm.onsubmit = (e) => {
 
     let validCount = 0;
 
-    const eVC = document.querySelector('.email.valid-check');
-    const nVC = document.querySelector('.nickname.valid-check');
-    const pwVC = document.querySelector('.password.valid-check');
-    const pwCheckVC = document.querySelector('.password-check.valid-check');
-    const bVC = document.querySelector('.birth.valid-check');
-    const gVC = document.querySelector('.gender.valid-check');
+    const eVC = joinForm.querySelector('.email.valid-check');
+    const nVC = joinForm.querySelector('.nickname.valid-check');
+    const pwVC = joinForm.querySelector('.password.valid-check');
+    const pwCheckVC = joinForm.querySelector('.password-check.valid-check');
+    const bVC = joinForm.querySelector('.birth.valid-check');
+    const gVC = joinForm.querySelector('.gender.valid-check');
 
     const eInput = eVC.querySelector('input');
     const nInput = nVC.querySelector('input');
@@ -62,7 +66,7 @@ joinForm.onsubmit = (e) => {
     const pwRegex = new RegExp(pwInput.dataset.regex);
     const bRegex = new RegExp(bInput.dataset.regex);
 
-    const gs = document.querySelectorAll('[name="gender"]');
+    const gs = joinForm.querySelectorAll('[name="gender"]');
     let gender = '';
 
     for (const g of gs) {
@@ -70,6 +74,13 @@ joinForm.onsubmit = (e) => {
             gender = g.value;
         }
     }
+
+    eVC.classList.remove('-invalid');
+    nVC.classList.remove('-invalid');
+    pwVC.classList.remove('-invalid');
+    pwCheckVC.classList.remove('-invalid');
+    bVC.classList.remove('-invalid');
+    gVC.classList.remove('-invalid');
 
     /*
 
@@ -97,7 +108,7 @@ joinForm.onsubmit = (e) => {
         validCount++;
     }
 
-    if (bInput.value === '' || !bRegex.test(bInput.value)) {
+    if (bInput.value === '' || !bRegex.test(bInput.value) || !checkBirth(bInput.value)) {
         bVC.classList.add('-invalid');
         bVC.querySelector('.warning').innerText = '잘못된 생년월일 형식입니다.';
         validCount++;
@@ -136,13 +147,13 @@ joinForm.onsubmit = (e) => {
                 body : JSON.stringify(requestObject)
             }).then(response => response.json())
                 .then(data => {
-                    if (data.code === 201) {
+                    if (data.success === true) {
                         joinModal.createModal('알림', data.message, [{
                             title : '확인',
                             onclick : () => location.href = '/login'
                         }]);
                     }
-                    if (data.code === 409) {
+                    if (data.success === false) {
                         joinModal.createSimpleModal('알림', data.message);
                     }
                 })

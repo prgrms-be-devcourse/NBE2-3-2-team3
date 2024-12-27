@@ -57,7 +57,7 @@ public class SecurityConfig {
                         .requestMatchers("/v3/api-docs/**").permitAll()
                         .requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers("/main", "/main/**").permitAll()
-                        .requestMatchers("/login", "/login/**","/join", "/bestMeLogin").permitAll()
+                        .requestMatchers("/login", "/login/**","/join", "/resetPassword").permitAll()
                         .requestMatchers("/personal", "/personal/**").permitAll()
                         .requestMatchers("/style", "/style/**").permitAll()
                         .requestMatchers("/community", "/community/**").permitAll()
@@ -67,9 +67,8 @@ public class SecurityConfig {
                         .requestMatchers("/auth/kakao/callback").permitAll()
 
                         // 다른 요청들은 거부
-                        .anyRequest().denyAll()
+                        .anyRequest().permitAll()
                 )
-
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
