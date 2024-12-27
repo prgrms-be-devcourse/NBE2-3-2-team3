@@ -1,8 +1,8 @@
 package com.example.bestme.repository;
 
 import com.example.bestme.domain.Item;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -54,8 +54,8 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
             JOIN brand b ON i.brand_id = b.id
             JOIN color co ON i.color_id = co.id
             WHERE (:categoryId IS NULL OR i.category_id IN (SELECT id FROM cte))
-            AND (:brands IS NULL OR b.name IN (:brands))
-            AND (:colors IS NULL OR co.name IN (:colors))
+            AND (COALESCE(:brands) IS NULL OR b.name IN (:brands))
+            AND (COALESCE(:colors) IS NULL OR co.name IN (:colors))
             """,
             countQuery = """
             WITH RECURSIVE cte (id) AS (
@@ -74,9 +74,9 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
                     JOIN brand b ON i.brand_id = b.id
                     JOIN color co ON i.color_id = co.id
                     WHERE (:categoryId IS NULL OR i.category_id IN (SELECT id FROM cte))
-                    AND (:brands IS NULL OR b.name IN (:brands))
-                    AND (:colors IS NULL OR co.name IN (:colors))
+                    AND (COALESCE(:brands) IS NULL OR b.name IN (:brands))
+                    AND (COALESCE(:colors) IS NULL OR co.name IN (:colors))
             """
             ,nativeQuery = true)
-    Page<Item> findPagingItemsBySearchCondition(Long categoryId, List<String> brands, List<String> colors, Pageable pageable);
+    Slice<Item> findSliceItemsBySearchCondition(Long categoryId, List<String> brands, List<String> colors, Pageable pageable);
 }
