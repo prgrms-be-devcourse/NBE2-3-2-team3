@@ -16,28 +16,29 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
                 .orElseThrow(() -> new NoSuchElementException("아이템을 찾을 수 없음"));
     }
 
-    @Query(value = """
-        WITH RECURSIVE cte (id) AS (
-            SELECT id
-            FROM category
-            WHERE :categoryId IS NULL OR id = :categoryId
-    
-            UNION ALL
-    
-            SELECT ca.id
-            FROM category ca
-            JOIN cte ON ca.parent_category_id = cte.id
-        )
-        SELECT DISTINCT i.*
-        FROM item i
-        JOIN brand b ON i.brand_id = b.id
-        JOIN color co ON i.color_id = co.id
-        WHERE (:categoryId IS NULL OR i.category_id IN (SELECT id FROM cte))
-        AND (:brands IS NULL OR b.name IN (:brands))
-        AND (:colors IS NULL OR co.name IN (:colors))
-    """,
-            countQuery = """
-    WITH RECURSIVE cte (id) AS (
+    @Query(
+            value = """
+            UPDATE item
+            SET like_count = like_count + 1
+            WHERE id = :itemId
+            """,
+            nativeQuery = true
+    )
+    void increaseLike(Long itemId);
+
+    @Query(
+            value = """
+            UPDATE item
+            SET like_count = like_count - 1
+            WHERE id = :itemId
+            """,
+            nativeQuery = true
+    )
+    void decreaseLike(Long itemId);
+
+    @Query(
+            value = """
+            WITH RECURSIVE cte (id) AS (
                 SELECT id
                 FROM category
                 WHERE :categoryId IS NULL OR id = :categoryId
@@ -48,14 +49,34 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
                 FROM category ca
                 JOIN cte ON ca.parent_category_id = cte.id
             )
-            SELECT COUNT(DISTINCT i.id)
+            SELECT DISTINCT i.*
             FROM item i
             JOIN brand b ON i.brand_id = b.id
             JOIN color co ON i.color_id = co.id
             WHERE (:categoryId IS NULL OR i.category_id IN (SELECT id FROM cte))
             AND (:brands IS NULL OR b.name IN (:brands))
             AND (:colors IS NULL OR co.name IN (:colors))
-    """
+            """,
+            countQuery = """
+            WITH RECURSIVE cte (id) AS (
+                        SELECT id
+                        FROM category
+                        WHERE :categoryId IS NULL OR id = :categoryId
+                
+                        UNION ALL
+                
+                        SELECT ca.id
+                        FROM category ca
+                        JOIN cte ON ca.parent_category_id = cte.id
+                    )
+                    SELECT COUNT(DISTINCT i.id)
+                    FROM item i
+                    JOIN brand b ON i.brand_id = b.id
+                    JOIN color co ON i.color_id = co.id
+                    WHERE (:categoryId IS NULL OR i.category_id IN (SELECT id FROM cte))
+                    AND (:brands IS NULL OR b.name IN (:brands))
+                    AND (:colors IS NULL OR co.name IN (:colors))
+            """
             ,nativeQuery = true)
     Page<Item> findPagingItemsBySearchCondition(Long categoryId, List<String> brands, List<String> colors, Pageable pageable);
 }

@@ -5,6 +5,7 @@ import com.example.bestme.domain.Item;
 public record ItemDetailResponse(
         Long id,
         String name,
+        int likeCount,
         String imageUrl,
         String purchaseUrl,
         String brandImageUrl,
@@ -17,6 +18,7 @@ public record ItemDetailResponse(
         return new ItemDetailResponse(
                 item.getId(),
                 item.getName(),
+                item.getLikeCount(),
                 item.getImageUrl(),
                 item.getPurchaseUrl(),
                 item.getBrand().getImageUrl(),

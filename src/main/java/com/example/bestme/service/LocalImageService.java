@@ -39,7 +39,7 @@ public class LocalImageService {
             Path fullPath = Paths.get(imageDir, targetDir)
                     .resolve(storeImageName)
                     .toAbsolutePath();
-            image.transferTo(new File(fullPath.toString()));
+            image.transferTo(fullPath.toFile());
             return fullPath.toUri().toURL().toString();
         } catch (IOException e) {
             throw new RuntimeException(e);
