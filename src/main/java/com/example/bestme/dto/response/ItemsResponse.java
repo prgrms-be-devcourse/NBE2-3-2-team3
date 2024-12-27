@@ -1,20 +1,20 @@
 package com.example.bestme.dto.response;
 
 import com.example.bestme.domain.Item;
-import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Slice;
 
 import java.util.List;
 
 public record ItemsResponse(
         List<ItemResponse> items,
-        ItemPagingInfo pagingInfo
+        ItemSliceInfo sliceInfo
 ) {
 
-    public static ItemsResponse from(Page<Item> pagingItem) {
-        List<ItemResponse> items = pagingItem.getContent().stream()
+    public static ItemsResponse from(Slice<Item> sliceItem) {
+        List<ItemResponse> items = sliceItem.getContent().stream()
                 .map(ItemResponse::from)
                 .toList();
-        ItemPagingInfo pagingInfo = ItemPagingInfo.from(pagingItem);
+        ItemSliceInfo pagingInfo = ItemSliceInfo.from(sliceItem);
 
         return new ItemsResponse(items, pagingInfo);
     }
@@ -38,23 +38,15 @@ public record ItemsResponse(
         }
     }
 
-    public record ItemPagingInfo(
+    public record ItemSliceInfo(
             int curPage,
-            int totalPages,
-            boolean hasPrev,
-            boolean hasNext,
-            boolean isFirst,
-            boolean isLast
+            boolean hasNext
     ) {
 
-        public static ItemPagingInfo from(Page<Item> pagingItem) {
-            return new ItemPagingInfo(
-                    pagingItem.getNumber(),
-                    pagingItem.getTotalPages(),
-                    pagingItem.hasPrevious(),
-                    pagingItem.hasNext(),
-                    pagingItem.isFirst(),
-                    pagingItem.isLast()
+        public static ItemSliceInfo from(Slice<Item> sliceItem) {
+            return new ItemSliceInfo(
+                    sliceItem.getNumber(),
+                    sliceItem.hasNext()
             );
         }
     }
