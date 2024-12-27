@@ -1,11 +1,17 @@
 package com.example.bestme.util.jwt;
 
+import com.example.bestme.exception.ApiResponse;
 import com.example.bestme.repository.user.UserRepository;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -14,6 +20,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.security.Key;
 import java.time.LocalDateTime;
@@ -184,6 +191,20 @@ public class JwtTokenProvider {
                 .build();
     }
 
+    // 토큰 재발급 메서드
+    public ResponseEntity<ApiResponse<String>> refresh(HttpServletRequest request, HttpServletResponse response) {
+        String Token = getRefreshToken(request);
+        if (Token == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(ApiResponse.error(HttpStatus.UNAUTHORIZED, "실패", null));
+        }
+        JwtTokenDTO jwtTokenDTO = reGenerateToken(Token);
+        String accessToken = jwtTokenDTO.getGrantType() + " " + jwtTokenDTO.getAccessToken();
+        saveRefreshToken(response, jwtTokenDTO.getRefreshToken());
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ApiResponse.success(accessToken));
+    }
+
     // accessToken
     public Claims parseClaims(String accessToken) {
         try {
@@ -195,6 +216,43 @@ public class JwtTokenProvider {
         } catch (ExpiredJwtException e) {
             return e.getClaims();
         }
+    }
+
+    // request 의 header 에서 토큰 정보 추출
+    public String resolveToken(HttpServletRequest request) {
+        String token = request.getHeader("Authorization");
+        if (StringUtils.hasText(token) && token.startsWith("Bearer")) {
+            return token.substring(7);
+        }
+        return null;
+    }
+
+    public void saveRefreshToken(HttpServletResponse response, String refreshToken) {
+        Cookie cookie = new Cookie("refresh", refreshToken);
+        cookie.setMaxAge(60*60*24*7); // 일주일
+        cookie.setPath("/");
+        response.addCookie(cookie);
+    }
+
+    public String getRefreshToken(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                String name = cookie.getName();
+                String value = cookie.getValue();
+                if (name.equals("refresh")) {
+                    return value;
+                }
+            }
+        }
+        return null;
+    }
+
+    public void deleteRefreshToken(HttpServletResponse response) {
+        Cookie cookie = new Cookie("refresh", null);
+        cookie.setMaxAge(0);
+        cookie.setPath("/");
+        response.addCookie(cookie);
     }
 }
 
