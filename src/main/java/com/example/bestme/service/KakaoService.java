@@ -183,7 +183,7 @@ public class KakaoService {
                     "default_password",
                     nickname,
                     "000000",
-                    Gender.F,
+                    Gender.U,
                     true,
                     LocalDateTime.now(),
                     null,
