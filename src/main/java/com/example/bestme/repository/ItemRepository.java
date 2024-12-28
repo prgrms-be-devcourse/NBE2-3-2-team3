@@ -79,4 +79,15 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
             """
             ,nativeQuery = true)
     Slice<Item> findSliceItemsBySearchCondition(Long categoryId, List<String> brands, List<String> colors, Pageable pageable);
+
+    @Query(
+            value = """
+                    SELECT i.*
+                    FROM item i
+                    WHERE i.category_id = :categoryId
+                    LIMIT 3
+                    """
+            , nativeQuery = true
+    )
+    List<Item> findRecommendItemsByCategory(Long categoryId);
 }

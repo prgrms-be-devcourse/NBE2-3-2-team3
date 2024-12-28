@@ -214,11 +214,10 @@
 
   document.getElementById("heart-icon").addEventListener("click", function () {
     const itemId = document.getElementById("itemId").value;
-    const userId = 1;
     const heartIcon = document.getElementById("heart-icon");
     const likeCountElement = document.getElementById("like-count");
 
-    fetch(`/api/items/${itemId}/like?userId=${userId}`, { method: "PUT" })
+    fetch(`/api/items/${itemId}/like`, { method: "PUT" })
             .then(response => response.json())
             .then(data => {
               if (data.success && data.code === 200) {
