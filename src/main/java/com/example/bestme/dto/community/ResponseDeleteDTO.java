@@ -9,6 +9,6 @@ import lombok.*;
 @AllArgsConstructor
 public class ResponseDeleteDTO {
 
-//    private String nickname;    // user 엔티티와 연결 후 사용
+    private String nickname;    // user 엔티티와 연결 후 사용
     private String subject;
 }

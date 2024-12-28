@@ -2,6 +2,8 @@ package com.example.bestme.repository;
 
 import com.example.bestme.domain.community.Community;
 import com.example.bestme.dto.community.ResponseNavigationDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -14,6 +16,9 @@ public interface CommunityRepository extends JpaRepository<Community, String> {
     @Modifying
     @Query("update board b set b.view = b.view + 1 where b.boardId = :boardId")
     int updateView(@Param("boardId") Long boardId);
+
+    @Query( "select b, u.nickname from board b join User u order by b.boardId" )
+    Page<Object[]> findAllBoard(Pageable pageable);
 
 //    @Query(value = "SELECT " +
 //            "(SELECT c.board_id FROM board c WHERE c.board_id < :boardId ORDER BY c.board_id DESC limit 1 ) AS prevBoardId, " +

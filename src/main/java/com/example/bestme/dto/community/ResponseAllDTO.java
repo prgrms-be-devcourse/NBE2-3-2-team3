@@ -15,8 +15,7 @@ import java.time.LocalDateTime;
 public class ResponseAllDTO {
 
     private Long boardId;
-    private Long userId;
-//    private String nickname;    // user 엔티티와 연결 후 사용
+    private String nickname;    // user 엔티티와 연결 후 사용
     private String subject;
     private Long view;
 

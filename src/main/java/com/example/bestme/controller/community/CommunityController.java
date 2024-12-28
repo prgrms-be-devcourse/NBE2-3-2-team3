@@ -7,6 +7,9 @@ import com.example.bestme.service.community.LocalFileService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -15,10 +18,15 @@ import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.net.Authenticator;
+
 @Tag(name = "Community", description = "커뮤니티 관련 API")
+@RequiredArgsConstructor        // final 필드 또는 @NonNull로 지정된 필드만을 매개변수로 받는 생성자를 자동으로 생성
 @RestController
 @RequestMapping("/api")
 public class CommunityController {
@@ -27,12 +35,15 @@ public class CommunityController {
     private final PagedResourcesAssembler<ResponseAllDTO> assembler;
     private final LocalFileService localFileService;
 
+    // 생성자 ( 사용 x )
+    /*
     public CommunityController(CommunityService communityService, PagedResourcesAssembler<ResponseAllDTO> assembler
             , LocalFileService localFileService) {
         this.communityService = communityService;
         this.assembler = assembler;
         this.localFileService = localFileService;
     }
+     */
 
     @Operation( summary = "테스트용 게시물 생성(테스트 순서: 1)", description = "55개의 게시물이 자동 생성" )
     @PostMapping( "/community/testCreate")
@@ -55,13 +66,15 @@ public class CommunityController {
 
     // 게시물 Create API
     @Operation( summary = "게시물 Create API(테스트 순서: 1)"
-            , description = "지정된 카테고리가 없을 경우 필드를 제거해주세요.<br> imagename 필드는 지워주세요." )
+            , description = "지정된 카테고리가 없을 경우 필드를 제거해주세요.<br> id와 imagename 필드는 지워주세요." )
     @PostMapping(value = "/community/write", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<ResponseFindDTO>> communityWrite(
             @RequestPart(name = "to") RequestWriteDTO to, // 데이터 전송 (JSON 형식)
-            @RequestPart(name = "file", required = false) MultipartFile file // 파일 업로드 처리
+            @RequestPart(name = "file", required = false) MultipartFile file, // 파일 업로드 처리
+            Authentication authentication       // 인증객체 :  UserServiceImpl - createToken에서 만든 토큰 가져오기
     ) {
 
+        to.setUserId(Long.valueOf(authentication.getName()));       // 인증객체에 있는 user_id를 DTO에 삽입
         ResponseFindDTO result = communityService.createBoard(to, file);
 
         return ResponseEntity.ok(ApiResponse.success("게시물 생성 완료", result));
@@ -69,11 +82,15 @@ public class CommunityController {
 
     // 게시물 목록 Read API ( 페이징 기능 추가 )
     @Operation( summary = "게시물 목록 Read API(테스트 순서: 2)", description = "시작 페이지 번호 1" )
-    @GetMapping( "/community/{page}" )
+    @GetMapping( "/community" )
     public ResponseEntity<ApiResponse<PagedModel<EntityModel<ResponseAllDTO>>>> findAllBoard(
             @Parameter(description = "페이지 번호", example = "1")
-            @PathVariable Integer page)
+            HttpSession session)
     {
+        // 세션에서 현재 페이지 번호 가져오기
+        Integer page = (Integer) session.getAttribute("currentPage");
+        if (page == null) page = 1; // 세션에 page 데이터가 없을 경우 (기본값 설정)
+
         // page 요청 DTO 객체 생성
         RequestPageDTO pageDTO = new RequestPageDTO(page);
         int currentPage = pageDTO.getCurrentPage();
@@ -163,20 +180,28 @@ public class CommunityController {
     @Operation( summary = "게시물 Modify API (테스트 순서: 4)", description = "지정 게시물 수정" )
     @PutMapping(value = "/community/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<ResponseFindDTO>> updateCommunity(
-            @RequestPart(name = "to") RequestModifyDTO to, // 데이터 전송 (JSON 형식)
-            @RequestPart(name = "file", required = false) MultipartFile file) // 파일 업로드 처리
-    {
+            @RequestPart(name = "to") RequestModifyDTO to,                           // 데이터 전송 (JSON 형식)
+            @RequestPart(name = "file", required = false) MultipartFile file,        // 파일 업로드 처리
+            Authentication authentication                                            // 인증객체 :  UserServiceImpl - createToken에서 만든 토큰 가져오기
+    ) {
+
+        to.setUserId(Long.valueOf(authentication.getName()));               // 인증객체에 있는 user_id를 DTO에 삽입
         ResponseFindDTO result = communityService.modifyBoard(to, file);
+
         return ResponseEntity.ok(ApiResponse.success(result));
     }
 
     @Operation( summary = "게시물 Delete API (테스트 순서: 5)", description = "지정 게시물 삭제" )
     @DeleteMapping(value = "/community/delete")
     public ResponseEntity<ApiResponse<ResponseDeleteDTO>> deleteCommunity(
-            @RequestBody RequestDeleteDTO to)           // 스웨거용 ( application/json )
-//            @ModelAttribute RequestDeleteDTO to)      // HTML용 ( multipart/form-data )
-    {
+            @RequestBody RequestDeleteDTO to,                       // 스웨거용 ( application/json )
+//            @ModelAttribute RequestDeleteDTO to,                  // HTML용 ( multipart/form-data )
+            Authentication authentication                           // 인증객체 :  UserServiceImpl - createToken에서 만든 토큰 가져오기
+    ) {
+
+        to.setUserId(Long.valueOf(authentication.getName()));       // 인증객체에 있는 user_id를 DTO에 삽입
         ResponseDeleteDTO result = communityService.deleteBoard(to);
+
         return ResponseEntity.ok(ApiResponse.success(result));
     }
 }
