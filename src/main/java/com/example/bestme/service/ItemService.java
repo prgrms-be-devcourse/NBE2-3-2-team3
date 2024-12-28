@@ -5,10 +5,7 @@ import com.example.bestme.domain.Category;
 import com.example.bestme.domain.Color;
 import com.example.bestme.domain.Item;
 import com.example.bestme.dto.request.SearchConditionRequest;
-import com.example.bestme.dto.response.CategoryMenuResponse;
-import com.example.bestme.dto.response.FilterMenuResponse;
-import com.example.bestme.dto.response.ItemDetailResponse;
-import com.example.bestme.dto.response.ItemsResponse;
+import com.example.bestme.dto.response.*;
 import com.example.bestme.repository.BrandRepository;
 import com.example.bestme.repository.CategoryRepository;
 import com.example.bestme.repository.ColorRepository;
@@ -19,7 +16,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -58,5 +55,19 @@ public class ItemService {
         List<Brand> brands = brandRepository.findAllByCategoryId(categoryId);
         List<Color> colors = colorRepository.findAll();
         return FilterMenuResponse.of(brands, colors);
+    }
+
+    public RecommendItemsResponse getRecommendItemsResponse() {
+        List<Category> categories = categoryRepository.findAllByParentCategoryIdIsNull();
+        Map<String, List<Item>> items = new HashMap<>();
+
+        for (Category category : categories) {
+            items.put(
+                    category.getName(),
+                    itemRepository.findRecommendItemsByCategory(category.getId())
+            );
+        }
+
+        return RecommendItemsResponse.of(categories, items);
     }
 }

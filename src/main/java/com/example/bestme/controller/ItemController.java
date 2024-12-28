@@ -6,6 +6,8 @@ import com.example.bestme.exception.ApiResponse;
 import com.example.bestme.service.ItemService;
 import com.example.bestme.service.LikeService;
 import com.example.bestme.util.jwt.JwtTokenProvider;
+import io.jsonwebtoken.Claims;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -48,15 +50,19 @@ public class ItemController {
     @PutMapping("/{itemId}/like")
     public ApiResponse<LikeResponse> clickItemLike(
             @PathVariable Long itemId,
-//            HttpServletRequest request
-            @RequestParam Long userId
+            HttpServletRequest request
     ) {
-//        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(jwtTokenProvider);
-//        String accessToken = jwtAuthenticationFilter.resolveToken(request);
-//        Claims claims = jwtTokenProvider.parseClaims(accessToken);
-//        Long userId = Long.valueOf(claims.getId());
+        String accessToken = jwtTokenProvider.resolveToken(request);
+        Claims claims = jwtTokenProvider.parseClaims(accessToken);
+        Long userId = Long.valueOf(claims.getId());
 
         LikeResponse response = likeService.clickItemLike(itemId, userId);
+        return ApiResponse.success(response);
+    }
+
+    @GetMapping("/recommend")
+    public ApiResponse<RecommendItemsResponse> getRecommendItems() {
+        RecommendItemsResponse response = itemService.getRecommendItemsResponse();
         return ApiResponse.success(response);
     }
 
