@@ -1,12 +1,15 @@
 package com.example.bestme.service.impl;
 
 import com.example.bestme.domain.Result;
+import com.example.bestme.domain.user.User;
 import com.example.bestme.dto.api.ResultRequest;
 import com.example.bestme.dto.api.ResultResponse;
 
 import com.example.bestme.repository.ResultRepository;
+import com.example.bestme.repository.user.UserRepository;
 import com.example.bestme.service.ColorService;
 import com.example.bestme.service.ResultService;
+import com.example.bestme.service.user.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,6 +26,7 @@ public class ResultServiceImpl implements ResultService {
     private final ResultRepository resultRepository;
     private final ModelMapper modelMapper = new ModelMapper();
     private final ColorService colorService;
+    private final UserService userService;
 
 
     @Override
@@ -48,7 +52,7 @@ public class ResultServiceImpl implements ResultService {
         }
 
         Result result = modelMapper.map(createResultDTO, Result.class);
-        result.setUserId(userId);
+        result.setUser(userService.getUser(userId));
         result.setColor(colorService.getColor(colorId));
         resultRepository.save(result);
 
@@ -58,7 +62,7 @@ public class ResultServiceImpl implements ResultService {
     @Override
     @Transactional(readOnly = true)
     public List<Result> readResults(Long userId) {
-        List<Result> results = resultRepository.findAllByUserId(userId);
+        List<Result> results = resultRepository.findAllByUser_UserId(userId);
         //결과가 없는 경우
         if (results.isEmpty()) {
             throw new EntityNotFoundException("해당 유저의 퍼스널 컬러 진단 결과가 존재하지 않습니다. (userId: " + userId + ")");

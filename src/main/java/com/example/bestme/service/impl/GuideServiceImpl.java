@@ -26,9 +26,7 @@ public class GuideServiceImpl implements GuideService {
     private final GuideRepository guideRepository;
     private final CategoryRepository categoryRepository;
     private final ColorRepository colorRepository;
-    private final ColorService colorService;
-    private final CategoryService categoryService;
-    private final ModelMapper modelMapper = new ModelMapper();
+
 
     @Override
     @Transactional(readOnly = true)

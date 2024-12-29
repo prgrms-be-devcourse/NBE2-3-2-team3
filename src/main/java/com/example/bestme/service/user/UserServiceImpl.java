@@ -20,6 +20,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -127,6 +128,14 @@ public class UserServiceImpl implements UserService{
         // ApiResponse 에 토큰 반환
         return ResponseEntity.ok(ApiResponse.success("로그인에 성공하였습니다. 확인 버튼을 누르시면 홈으로 이동합니다.", jwtTokenDTO));
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public User getUser(Long userId) {
+        User user = userRepository.findById(String.valueOf(userId)).orElseThrow(() -> new IllegalArgumentException("user를 찾을 수 없습니다."));
+        return user;
+    }
+
 
     // 토큰 생성 메서드
     public JwtTokenDTO createToken(RequestLoginDTO to) {
