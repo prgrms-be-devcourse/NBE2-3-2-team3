@@ -1,0 +1,72 @@
+<!-- community_main.html -->
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{community/community_base :: head(~{::title},~{::link}, ~{::script})}">
+    <title>BestMe - Community</title>
+    <!--css, js 추가 시 사용-->
+    <link rel="stylesheet" type="text/css" th:href="@{/styles/community/board_view.css}">
+    <!--<script></script>-->
+</head>
+<body th:replace="~{community/community_base :: body}">
+    <!-- 실제 페이지 내용 -->
+    <div th:fragment="content">
+        <main id="main">
+            <!-- 페이지 내용 추가 -->
+            <!-- 상단 디자인 -->
+            <div class="contents1">
+                <div class="contents_sub">
+                    <!--게시판-->
+                    <div class="board_view">
+                        <table>
+                            <tr>
+                                <th width="10%">제목</th>
+                                <td width="60%">제주 올레길 좋아요(000.000.000.000)</td>
+                                <th width="10%">등록일</th>
+                                <td width="20%">2016.03.02 21:11</td>
+                            </tr>
+                            <tr>
+                                <th>글쓴이</th>
+                                <td>여행자</td>
+                                <th>조회</th>
+                                <td>345</td>
+                            </tr>
+                            <tr>
+                                <td colspan="4" height="200" valign="top" style="padding:20px; line-height:160%">
+                                    <div id="bbs_file_wrap">
+                                        <div>
+                                            <img src="./upload/607927_1.jpg" width="900" onerror="" /><br />
+                                        </div>
+                                    </div>
+                                    시간이 되면 또 걷고 싶은 길이네요
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="btn_area">
+                        <div class="align_left">
+                            <input type="button" value="목록" class="btn_list btn_txt02" style="cursor: pointer;" onclick="location.href='list.do'" />
+                        </div>
+                        <div class="align_right">
+                            <input type="button" value="수정" class="btn_list btn_txt02" style="cursor: pointer;" onclick="location.href='modify.do'" />
+                            <input type="button" value="삭제" class="btn_list btn_txt02" style="cursor: pointer;" onclick="location.href='delete.do'" />
+                            <input type="button" value="쓰기" class="btn_write btn_txt01" style="cursor: pointer;" onclick="location.href='write.do'" />
+                        </div>
+                    </div>
+                    <!--//게시판-->
+
+                    <!-- 이전글 / 다음글(구현 보류) -->
+                    <!--
+                    <div class="next_data_area">
+                        <span class="b">다음글 | </span><a href="view.do">다음글이 없습니다.</a>
+                    </div>
+                    <div class="prev_data_area">
+                        <span class="b">이전글 | </span><a href="view.do">이전글이 없습니다.</a>
+                    </div>
+                    -->
+                </div>
+                <!-- 하단 디자인 -->
+            </div>
+        </main>
+    </div>
+</body>
+</html>

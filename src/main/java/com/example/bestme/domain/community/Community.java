@@ -31,19 +31,6 @@ public class Community extends BaseEntity {
     @OnDelete(action = OnDeleteAction.CASCADE)      // 단방향 때에도, 해당 유저가 삭제되면 게시물이 자동 삭제되게 설정
     private User user;
 
-    // 양방향 연관관계 시 ( User Entity 옵션 사항 )
-    /*
-    // User 엔티티 설정 ( 양방향으로 연결할 경우 )
-    // FetchType.LAZY (기본값): 연관된 데이터가 필요할 때만 로드됩니다.
-    // CascadeType.ALL: 부모 엔티티의 변경 사항(저장, 삭제 등)이 자식 엔티티에 전파됩니다.
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JsonIgnore     // Json 변환 과정에서 무한 루프 방지
-    private List<Community> boards = new ArrayList<>();
-     */
-
-//    @Column( name = "user_id", nullable = false )
-//    private Long userId;
-
     @Column( length = 10, nullable = false )
     private String subject;
 

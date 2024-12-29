@@ -4,6 +4,9 @@ import com.example.bestme.dto.community.*;
 import com.example.bestme.exception.ApiResponse;
 import com.example.bestme.service.community.CommunityService;
 import com.example.bestme.service.community.LocalFileService;
+import com.example.bestme.util.jwt.JwtAuthenticationFilter;
+import com.example.bestme.util.jwt.JwtTokenProvider;
+import io.jsonwebtoken.Claims;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -34,68 +37,18 @@ public class CommunityController {
     private final CommunityService communityService;
     private final PagedResourcesAssembler<ResponseAllDTO> assembler;
     private final LocalFileService localFileService;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    // 생성자 ( 사용 x )
-    /*
-    public CommunityController(CommunityService communityService, PagedResourcesAssembler<ResponseAllDTO> assembler
-            , LocalFileService localFileService) {
-        this.communityService = communityService;
-        this.assembler = assembler;
-        this.localFileService = localFileService;
-    }
-     */
-
-    @Operation( summary = "테스트용 게시물 생성(테스트 순서: 1)", description = "55개의 게시물이 자동 생성" )
-    @PostMapping( "/community/testCreate")
-    public ResponseEntity<ApiResponse<String>> testCreate() {
-        int count = 0;
-        for( int i=0; i < 55; i++) {
-            RequestWriteDTO to = new RequestWriteDTO();
-            to.setUserId(Long.valueOf(i));
-            to.setSubject("제목 " + i);
-            to.setContent("내용 " + i);
-            MultipartFile file = null;
-            communityService.createBoard(to, file);
-            count++;
-        }
-
-        String result = "테스트 데이터 " + count + " 개 생성 완료";
-
-        return ResponseEntity.ok(ApiResponse.success("게시물 생성 완료", result));
+    // user_id 추출 메서드 ( request -> 엑세스 토큰 -> user_id )
+    public Long getUserId(HttpServletRequest request) {
+        String token = jwtTokenProvider.resolveToken(request);
+        Claims claims = jwtTokenProvider.parseClaims(token);
+        Long userId = Long.valueOf(claims.getId());
+        return userId;
     }
 
-    // 게시물 Create API
-    @Operation( summary = "게시물 Create API(테스트 순서: 1)"
-            , description = "지정된 카테고리가 없을 경우 필드를 제거해주세요.<br> id와 imagename 필드는 지워주세요." )
-    @PostMapping(value = "/community/write", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<ApiResponse<ResponseFindDTO>> communityWrite(
-            @RequestPart(name = "to") RequestWriteDTO to, // 데이터 전송 (JSON 형식)
-            @RequestPart(name = "file", required = false) MultipartFile file, // 파일 업로드 처리
-            Authentication authentication       // 인증객체 :  UserServiceImpl - createToken에서 만든 토큰 가져오기
-    ) {
-
-        to.setUserId(Long.valueOf(authentication.getName()));       // 인증객체에 있는 user_id를 DTO에 삽입
-        ResponseFindDTO result = communityService.createBoard(to, file);
-
-        return ResponseEntity.ok(ApiResponse.success("게시물 생성 완료", result));
-    }
-
-    // 게시물 목록 Read API ( 페이징 기능 추가 )
-    @Operation( summary = "게시물 목록 Read API(테스트 순서: 2)", description = "시작 페이지 번호 1" )
-    @GetMapping( "/community" )
-    public ResponseEntity<ApiResponse<PagedModel<EntityModel<ResponseAllDTO>>>> findAllBoard(
-            @Parameter(description = "페이지 번호", example = "1")
-            HttpSession session)
-    {
-        // 세션에서 현재 페이지 번호 가져오기
-        Integer page = (Integer) session.getAttribute("currentPage");
-        if (page == null) page = 1; // 세션에 page 데이터가 없을 경우 (기본값 설정)
-
-        // page 요청 DTO 객체 생성
-        RequestPageDTO pageDTO = new RequestPageDTO(page);
-        int currentPage = pageDTO.getCurrentPage();
-        int numberOfDataPerPage = pageDTO.getNumberOfDataPerPage();
-        Page<ResponseAllDTO> results = communityService.findAllBoard(currentPage, numberOfDataPerPage);
+    // 페이지 API의 응답 DTO 세팅 메서드 ( + 링크 생성 )
+    public PagedModel<EntityModel<ResponseAllDTO>> responsePageDtoSetting( Page<ResponseAllDTO> results, RequestPageDTO pageDTO ) {
 
         // PagedModel을 사용하여 페이지화된 데이터 래핑
         PagedModel<EntityModel<ResponseAllDTO>> pagedModel = assembler
@@ -134,6 +87,68 @@ public class CommunityController {
         if( nextLink != null ) pagedModel.add(nextLink);
         pagedModel.add(firstLink);
         pagedModel.add(lastLink);
+
+        return pagedModel;
+    }
+
+    // 테스트용 게시물 55개 생성 API
+    @Operation( summary = "테스트용 게시물 생성(테스트 순서: 1)", description = "55개의 게시물이 자동 생성" )
+    @PostMapping( "/community/testCreate")
+    public ResponseEntity<ApiResponse<String>> testCreate() {
+        int count = 0;
+        for( int i=0; i < 55; i++) {
+            RequestWriteDTO to = new RequestWriteDTO();
+            to.setUserId(1L);
+            to.setNickname("bbb");
+            to.setPassword("bumtaehyun37!");
+            to.setSubject("제목 " + i);
+            to.setContent("내용 " + i);
+            MultipartFile file = null;
+            communityService.createBoard(to, file);
+            count++;
+        }
+
+        String result = "테스트 데이터 " + count + " 개 생성 완료";
+
+        return ResponseEntity.ok(ApiResponse.success("게시물 생성 완료", result));
+    }
+
+    // 게시물 Create API
+    @Operation( summary = "게시물 Create API(테스트 순서: 1)"
+            , description = "지정된 카테고리가 없을 경우 필드를 제거해주세요.<br> id와 imagename 필드는 지워주세요." )
+    @PostMapping(value = "/community/write", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ApiResponse<ResponseFindDTO>> communityWrite(
+            @RequestPart(name = "to") RequestWriteDTO to, // 데이터 전송 (JSON 형식)
+            @RequestPart(name = "file", required = false) MultipartFile file, // 파일 업로드 처리
+            HttpServletRequest request
+    ) {
+        // 요청 내 토큰에서 userId 추출
+        Long userId = getUserId(request);
+        to.setUserId(userId);
+        ResponseFindDTO result = communityService.createBoard(to, file);
+
+        return ResponseEntity.ok(ApiResponse.success("게시물 생성 완료", result));
+    }
+
+    // 게시물 목록 Read API ( 페이징 기능 추가 )
+    @Operation( summary = "게시물 목록 Read API(테스트 순서: 2)", description = "세션에 있는 페이지 번호 사용(기본 페이지 번호 : 1)" )
+    @GetMapping( "/community" )
+    public ResponseEntity<ApiResponse<PagedModel<EntityModel<ResponseAllDTO>>>> findAllBoard(
+            @Parameter(description = "페이지 번호", example = "1")
+            HttpSession session)
+    {
+        // 세션에서 현재 페이지 번호 가져오기
+        Integer page = (Integer) session.getAttribute("currentPageNumber");
+        if (page == null) page = 1; // 세션에 page 데이터가 없을 경우 (기본값 설정)
+
+        // page 요청 DTO 객체 생성
+        RequestPageDTO pageDTO = new RequestPageDTO(page);
+        int currentPage = pageDTO.getCurrentPage();
+        int numberOfDataPerPage = pageDTO.getNumberOfDataPerPage();
+        Page<ResponseAllDTO> results = communityService.findAllBoard(currentPage, numberOfDataPerPage);
+
+        // Page 응답용 DTO로 변환 및 생성
+        PagedModel<EntityModel<ResponseAllDTO>> pagedModel = responsePageDtoSetting(results, pageDTO);
 
         // ApiResponse에 PagedModel을 넣어서 반환
         return ResponseEntity.ok(ApiResponse.success(pagedModel));
@@ -182,26 +197,56 @@ public class CommunityController {
     public ResponseEntity<ApiResponse<ResponseFindDTO>> updateCommunity(
             @RequestPart(name = "to") RequestModifyDTO to,                           // 데이터 전송 (JSON 형식)
             @RequestPart(name = "file", required = false) MultipartFile file,        // 파일 업로드 처리
-            Authentication authentication                                            // 인증객체 :  UserServiceImpl - createToken에서 만든 토큰 가져오기
+            HttpServletRequest request
     ) {
-
-        to.setUserId(Long.valueOf(authentication.getName()));               // 인증객체에 있는 user_id를 DTO에 삽입
+        // 요청 내 토큰에서 userId 추출
+        Long userId = getUserId(request);
+        to.setUserId(userId);
         ResponseFindDTO result = communityService.modifyBoard(to, file);
 
         return ResponseEntity.ok(ApiResponse.success(result));
     }
 
+    // 지정 게시물 Delete API
     @Operation( summary = "게시물 Delete API (테스트 순서: 5)", description = "지정 게시물 삭제" )
     @DeleteMapping(value = "/community/delete")
     public ResponseEntity<ApiResponse<ResponseDeleteDTO>> deleteCommunity(
             @RequestBody RequestDeleteDTO to,                       // 스웨거용 ( application/json )
 //            @ModelAttribute RequestDeleteDTO to,                  // HTML용 ( multipart/form-data )
-            Authentication authentication                           // 인증객체 :  UserServiceImpl - createToken에서 만든 토큰 가져오기
+            HttpServletRequest request
     ) {
-
-        to.setUserId(Long.valueOf(authentication.getName()));       // 인증객체에 있는 user_id를 DTO에 삽입
+        // 요청 내 토큰에서 userId 추출
+        Long userId = getUserId(request);
+        to.setUserId(userId);
         ResponseDeleteDTO result = communityService.deleteBoard(to);
 
         return ResponseEntity.ok(ApiResponse.success(result));
+    }
+
+    // 현재 User가 작성한 게시물 목록 API
+    @Operation( summary = "현재 유저가 작성한 게시물 목록 Read API", description = "세션에 있는 페이지 번호 사용(기본 페이지 번호 : 1)" )
+    @GetMapping( "/community/my_boards" )
+    public ResponseEntity<ApiResponse<PagedModel<EntityModel<ResponseAllDTO>>>> findAllBoardByUserId(
+            @Parameter(description = "페이지 번호", example = "1")
+            HttpSession session,
+            HttpServletRequest request)
+    {
+        // 세션에서 현재 페이지 번호 가져오기
+        Integer page = (Integer) session.getAttribute("userPageNumber");
+        if (page == null) page = 1; // 세션에 page 데이터가 없을 경우 (기본값 설정)
+        // 요청 내 토큰에서 userId 추출
+        Long userId = getUserId(request);
+
+        // page 요청 DTO 객체 생성
+        RequestPageDTO pageDTO = new RequestPageDTO(page);
+        int currentPage = pageDTO.getCurrentPage();
+        int numberOfDataPerPage = pageDTO.getNumberOfDataPerPage();
+        Page<ResponseAllDTO> results = communityService.findAllBoardByUserId(currentPage, numberOfDataPerPage, userId);
+
+        // Page 응답용 DTO로 변환 및 생성
+        PagedModel<EntityModel<ResponseAllDTO>> pagedModel = responsePageDtoSetting(results, pageDTO);
+
+        // ApiResponse에 PagedModel을 넣어서 반환
+        return ResponseEntity.ok(ApiResponse.success(pagedModel));
     }
 }

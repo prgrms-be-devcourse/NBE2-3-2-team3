@@ -1,0 +1,56 @@
+<!-- community_main.html -->
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{community/community_base :: head(~{::title},~{::link}, ~{::script})}">
+    <title>BestMe - Community</title>
+    <!--css, js 추가 시 사용-->
+    <link rel="stylesheet" type="text/css" th:href="@{/styles/community/board.css}">
+    <!--<script></script>-->
+</head>
+<body th:replace="~{community/community_base :: body}">
+    <!-- 실제 페이지 내용 -->
+    <div th:fragment="content">
+        <main id="main">
+            <!-- 페이지 내용 추가 -->
+            <!-- 상단 디자인 -->
+            <div class="con_title">
+                <h3>게시물 삭제</h3>
+            </div>
+            <div class="con_txt">
+                <form action="" method="post" name="">
+                    <div class="contents_sub">
+                        <!--게시판-->
+                        <div class="board_write">
+                            <table>
+                                <tr>
+                                    <th class="top">글쓴이</th>
+                                    <td class="top"><input type="text" name="writer" value="" class="board_view_input_mail" maxlength="5" readonly/></td>
+                                </tr>
+                                <tr>
+                                    <th>제목</th>
+                                    <td><input type="text" name="subject" value="" class="board_view_input" readonly/></td>
+                                </tr>
+                                <tr>
+                                    <th>비밀번호</th>
+                                    <td><input type="password" name="password" value="" class="board_view_input_mail"/></td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div class="btn_area">
+                            <div class="align_left">
+                                <input type="button" value="목록" class="btn_list btn_txt02" style="cursor: pointer;" onclick="location.href='list.do'" />
+                                <input type="button" value="보기" class="btn_list btn_txt02" style="cursor: pointer;" onclick="location.href='view.do'" />
+                            </div>
+                            <div class="align_right">
+                                <input type="button" value="삭제" class="btn_write btn_txt01" style="cursor: pointer;" />
+                            </div>
+                        </div>
+                        <!--//게시판-->
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+</body>
+</html>
