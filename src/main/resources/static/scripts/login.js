@@ -1,6 +1,15 @@
 const loginForm = document.getElementById('login-form');
-const passwordLabel= loginForm.querySelector('.password > .text-label');
+const passwordLabel = loginForm.querySelector('.password > .text-label');
 
+if (checkLogin()) {
+    alert('이미 로그인했습니다.');
+    location.href = "/";
+}
+
+if (getCookie('email') !== undefined) {
+    loginForm.email.value = getCookie('email');
+    loginForm.remember.checked = true;
+}
 
 passwordLabel.querySelector('button').onclick = () => {
     if (passwordLabel.querySelector('button > i').classList.contains('fa-eye')) {
@@ -21,29 +30,37 @@ loginForm.onsubmit = (e) => {
 
 
     let requestObject = {
-        email : loginForm.email.value,
-        password : loginForm.password.value
+        email: loginForm.email.value,
+        password: loginForm.password.value
     }
 
     fetch('/api/login', {
-        method : 'POST',
-        headers : {
+        method: 'POST',
+        headers: {
             'Content-Type': 'application/json'
         },
-        body : JSON.stringify(requestObject)
+        body: JSON.stringify(requestObject)
     }).then(response => response.json())
         .then(data => {
             const loginModal = new ModalObj();
-            if (data.code === 200) {
+            if (data.success === true) {
+                if (loginForm.querySelector('input[name="remember"]').checked) {
+                    setCookie('email', loginForm.email.value, {'max-age': 999999});
+                } else {
+                    deleteCookie('email');
+                }
                 loginModal.createModal('알림', data.message, [{
-                    title : '확인',
-                    onclick : () => location.href = '/login'
+                    title: '확인',
+                    onclick: () => {
+                        const Authorization = data.data;
+                        localStorage.setItem("Authorization", Authorization);
+                        location.href = '/';
+                    }
                 }]);
             }
-            if (data.code === 401) {
+            if (data.success === false) {
                 loginModal.createSimpleModal('알림', data.message);
             }
-            console.log(data);
         })
         .catch(error => console.error('Error:', error));
 }

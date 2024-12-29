@@ -58,11 +58,13 @@ public class User{
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    public User(Long userId, String email, String password, String nickname, boolean kakaoFlag, LocalDateTime createdAt, LocalDateTime deletedAt, boolean deletedFlag, Role role) {
+    public User(Long userId, String email, String password, String nickname, String birth, Gender gender, boolean kakaoFlag, LocalDateTime createdAt, LocalDateTime deletedAt, boolean deletedFlag, Role role) {
         this.userId = userId;
         this.email = email;
         this.password = password;
         this.nickname = nickname;
+        this.birth = birth;
+        this.gender = gender;
         this.kakaoFlag = kakaoFlag;
         this.createdAt = createdAt;
         this.deletedAt = deletedAt;
@@ -70,10 +72,6 @@ public class User{
         this.role = role;
     }
 
-    public User(String email, String nickname){
-        this.email = email;
-        this.nickname = nickname;
-    }
 
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)

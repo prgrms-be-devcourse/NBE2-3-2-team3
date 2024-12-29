@@ -27,7 +27,7 @@ public class LocalImageService {
 
     private static final Set<String> ALLOW_IMAGE_EXTENSIONS = Set.of("jpg", "jpeg", "png");
 
-    @Value("${C:\\Users\\reski\\Desktop\\upload}")
+    @Value("${image.dir}")
     private String imageDir;
 
     private final ItemRepository itemRepository;
@@ -39,7 +39,7 @@ public class LocalImageService {
             Path fullPath = Paths.get(imageDir, targetDir)
                     .resolve(storeImageName)
                     .toAbsolutePath();
-            image.transferTo(new File(fullPath.toString()));
+            image.transferTo(fullPath.toFile());
             return fullPath.toUri().toURL().toString();
         } catch (IOException e) {
             throw new RuntimeException(e);

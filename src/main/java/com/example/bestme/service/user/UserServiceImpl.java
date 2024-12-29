@@ -4,12 +4,18 @@ import com.example.bestme.domain.user.Gender;
 import com.example.bestme.domain.user.Role;
 import com.example.bestme.domain.user.User;
 import com.example.bestme.dto.user.RequestLoginDTO;
+import com.example.bestme.dto.user.RequestIdentifyUserDTO;
+import com.example.bestme.dto.user.RequestResetPasswordDTO;
 import com.example.bestme.dto.user.RequestSignUpDTO;
 import com.example.bestme.exception.ApiResponse;
 import com.example.bestme.regex.UserRegex;
 import com.example.bestme.repository.user.UserRepository;
+import com.example.bestme.util.jwt.JwtAuthenticationFilter;
 import com.example.bestme.util.jwt.JwtTokenDTO;
 import com.example.bestme.util.jwt.JwtTokenProvider;
+import io.jsonwebtoken.Claims;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,35 +52,35 @@ public class UserServiceImpl implements UserService{
         String birth = to.getBirth();
 
         // 각 항목들 유효성 검사
-        if (email == null || !UserRegex.email.regexTest(email)) {
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(ApiResponse.error(HttpStatus.CONFLICT,"잘못된 이메일 형식입니다."));
-        }
-        if (nickname == null || !UserRegex.nickname.regexTest(nickname)) {
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(ApiResponse.error(HttpStatus.CONFLICT,"잘못된 닉네임 형식입니다."));
-        }
-        if (password == null || !UserRegex.password.regexTest(password)) {
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(ApiResponse.error(HttpStatus.CONFLICT,"잘못된 비밀번호 형식입니다."));
-        }
-        if (birth == null || !UserRegex.birth.regexTest(birth)) {
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(ApiResponse.error(HttpStatus.CONFLICT,"잘못된 생년월일 형식입니다."));
-        }
-        if (gender == null) {
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(ApiResponse.error(HttpStatus.CONFLICT,"성별을 선택해주세요."));
-        }
+        // if (email == null || !UserRegex.email.regexTest(email)) {
+        //     return ResponseEntity.status(HttpStatus.CONFLICT)
+        //             .body(ApiResponse.error(HttpStatus.CONFLICT,"잘못된 이메일 형식입니다."));
+        // }
+        // if (nickname == null || !UserRegex.nickname.regexTest(nickname)) {
+        //     return ResponseEntity.status(HttpStatus.CONFLICT)
+        //             .body(ApiResponse.error(HttpStatus.CONFLICT,"잘못된 닉네임 형식입니다."));
+        // }
+        // if (password == null || !UserRegex.password.regexTest(password)) {
+        //     return ResponseEntity.status(HttpStatus.CONFLICT)
+        //             .body(ApiResponse.error(HttpStatus.CONFLICT,"잘못된 비밀번호 형식입니다."));
+        // }
+        // if (birth == null || !UserRegex.birth.regexTest(birth)) {
+        //     return ResponseEntity.status(HttpStatus.CONFLICT)
+        //             .body(ApiResponse.error(HttpStatus.CONFLICT,"잘못된 생년월일 형식입니다."));
+        // }
+        // if (gender == null) {
+        //     return ResponseEntity.status(HttpStatus.CONFLICT)
+        //             .body(ApiResponse.error(HttpStatus.CONFLICT,"성별을 선택해주세요."));
+        // }
 
         // 중복 아이디 체크
-        if (userRepository.findByEmail(to.getEmail()) != null) {
+        if (userRepository.findByEmail(email) != null) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body(ApiResponse.error(HttpStatus.CONFLICT,"중복된 아이디입니다."));
         }
 
         // 중복 닉네임 체크
-        if (userRepository.findByNickname(to.getNickname()) != null) {
+        if (userRepository.findByNickname(nickname) != null) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body(ApiResponse.error(HttpStatus.CONFLICT,"중복된 닉네임입니다."));
         }
@@ -104,7 +110,7 @@ public class UserServiceImpl implements UserService{
 
 
     @Override
-    public ResponseEntity<ApiResponse<JwtTokenDTO>> login(RequestLoginDTO to, HttpServletResponse response) {
+    public ResponseEntity<ApiResponse<String>> login(RequestLoginDTO to, HttpServletResponse response) {
 
         // 입력한 이메일을 바탕으로 DB에 존재하는 User 검색
         User user = userRepository.findByEmail(to.getEmail());
@@ -119,14 +125,80 @@ public class UserServiceImpl implements UserService{
 
         // jwt 토큰 생성
         JwtTokenDTO jwtTokenDTO = createToken(to);
-
-        // header 에 토큰 저장
-        response.setHeader("Authorization", jwtTokenDTO.getGrantType() + " " + jwtTokenDTO.getAccessToken());
-        response.setHeader("refresh", jwtTokenDTO.getGrantType() + " " + jwtTokenDTO.getRefreshToken());
-        response.addHeader("Access-Control-Expose-Headers","Authorization, refresh");
+        String accessToken = jwtTokenDTO.getGrantType() + " " + jwtTokenDTO.getAccessToken();
+        jwtTokenProvider.saveRefreshToken(response, jwtTokenDTO.getRefreshToken());
 
         // ApiResponse 에 토큰 반환
-        return ResponseEntity.ok(ApiResponse.success("로그인에 성공하였습니다. 확인 버튼을 누르시면 홈으로 이동합니다.", jwtTokenDTO));
+        return ResponseEntity.ok(ApiResponse.success("로그인에 성공하였습니다. 확인 버튼을 누르시면 홈으로 이동합니다.", accessToken));
+    }
+
+    // 비밀번호 재설정 계정 확인
+    @Override
+    public ResponseEntity<ApiResponse<Long>> identifyUser(RequestIdentifyUserDTO to) {
+        String email = to.getEmail();
+        String birth = to.getBirth();
+
+        //if (email == null ||
+        //        birth == null ||
+        //        !UserRegex.email.regexTest(email) ||
+        //        !UserRegex.birth.regexTest(birth) ) {
+        //    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        //            .body(ApiResponse.error(HttpStatus.BAD_REQUEST, "입력하신 내용에 올바르지 않은 형식이 있습니다.", null));
+        //}
+
+        User user = userRepository.findByEmail(email);
+
+        if (user == null || !birth.equals(user.getBirth())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(ApiResponse.error(HttpStatus.BAD_REQUEST, "입력하신 회원은 존재하지 않는 회원입니다.", null));
+        }
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ApiResponse.success(HttpStatus.OK, "계정 확인 완료", user.getUserId()));
+    }
+
+    // 비밀번호 재설정하기
+    @Override
+    public ResponseEntity<ApiResponse<Void>> resetPassword(RequestResetPasswordDTO to) {
+        // if (to.getPassword() == null || !UserRegex.password.regexTest(to.getPassword())) {
+        //     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        //             .body(ApiResponse.error(HttpStatus.BAD_REQUEST, "잘못된 비밀번호 형식입니다."));
+        // }
+
+        User user = userRepository.findByUserId(to.getUserId());
+        user.setPassword(passwordEncoder.encode(to.getPassword()));
+        userRepository.save(user);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ApiResponse.success(HttpStatus.OK, "비밀번호 재설정에 성공하였습니다.", null));
+    }
+
+    // 회원탈퇴
+    @Override
+    public ResponseEntity<ApiResponse<Void>> deleteUser(HttpServletRequest request) {
+        String accessToken = jwtTokenProvider.resolveToken(request);
+        Claims claims = jwtTokenProvider.parseClaims(accessToken);
+        Long id = Long.valueOf(claims.getId());
+        User user = userRepository.findByUserId(id);
+
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(ApiResponse.error(HttpStatus.NOT_FOUND, "존재하지 않는 회원이거나 이미 탈퇴한 회원입니다."));
+        }
+
+        user.setDeletedFlag(true);
+        user.setDeletedAt(LocalDateTime.now());
+
+        userRepository.save(user);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ApiResponse.success(HttpStatus.OK, "회원탈퇴에 성공하였습니다.", null));
+    }
+
+    // 토큰 재발급
+    @Override
+    public ResponseEntity<ApiResponse<String>> refresh(HttpServletRequest request, HttpServletResponse response) {
+        return jwtTokenProvider.refresh(request, response);
     }
 
     @Override

@@ -1,3 +1,4 @@
+// 모달 관련
 class ModalObj {
     cover = null;
 
@@ -19,7 +20,7 @@ class ModalObj {
             <div class="modal-main">${content}</div>
             <div class="button-container"></div>
         </div>
-        `,'text/html').querySelector('.modal');
+        `, 'text/html').querySelector('.modal');
 
         const buttonContainer = modal.querySelector('.button-container');
         for (const buttonOption of buttonOptions) {
@@ -41,7 +42,7 @@ class ModalObj {
                 <button type="button">닫기</button>
             </div>
         </div>
-        `,'text/html').querySelector('.modal');
+        `, 'text/html').querySelector('.modal');
 
         simpleModal.querySelector('button').onclick = () => {
             this.delete();
