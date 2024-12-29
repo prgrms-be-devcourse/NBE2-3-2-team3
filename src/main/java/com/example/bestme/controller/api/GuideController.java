@@ -36,8 +36,7 @@ public class GuideController {
     public ResponseEntity<ApiResponse<List<GuideResponse.ReadGuideResponseDTO>>> readGuides(HttpServletRequest request) {
 
         //user의 ID 가져오기 --->
-        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(jwtTokenProvider);
-        String accessToken = jwtAuthenticationFilter.resolveToken(request);
+        String accessToken = jwtTokenProvider.resolveToken(request);
         Claims claims = jwtTokenProvider.parseClaims(accessToken);
         Long userId = Long.valueOf(claims.getId());
         //<---

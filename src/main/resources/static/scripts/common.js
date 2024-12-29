@@ -84,7 +84,6 @@ function logout() {
             fetch('/api/logout')
                 .then(response => response.json())
                 .then(data => {
-                    console.log(data);
                     if (data.success === true) {
                         logoutModal.createModal('알림', '로그아웃에 성공하였습니다.', [{
                             title: '확인',
@@ -138,5 +137,40 @@ function refresh() {
         })
         .catch(error => console.error('Error:', error));
 }
+
+async function getLoginInfo() {
+    const token = localStorage.getItem("Authorization");
+
+    try {
+        const response = await fetch('/api/loginUser', {
+            headers: {
+                Authorization: token
+            }
+        });
+
+        const data = await response.json();  // JSON 응답을 바로 받아옴
+
+        if (data.success === true) {
+            return data.data;  // data.data 를 반환
+        } else {
+            console.log("로그인 유저 정보 호출 실패");
+            return null;  // 실패 시 null 반환
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        return null;  // 에러 발생 시 null 반환
+    }
+}
+
+// getLoginInfo 함수의 사용 예시입니다.
+
+// 1.
+// getLoginInfo().then(userInfo => console.log(userInfo));
+// userInfo 에는 id, nickname, gender, birth 의 값이 있으며
+// 로그인 중인 사용자의 정보가 js 의 log 에 나타납니다.
+
+// 2.
+// getLoginInfo().then(userInfo => alert(userInfo.nickname));
+// 로그인 중인 사용자의 nickname 이 알림창에 표시됩니다.
 
 setLoginBox();

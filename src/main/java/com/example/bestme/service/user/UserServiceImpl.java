@@ -3,18 +3,12 @@ package com.example.bestme.service.user;
 import com.example.bestme.domain.user.Gender;
 import com.example.bestme.domain.user.Role;
 import com.example.bestme.domain.user.User;
-import com.example.bestme.dto.user.RequestLoginDTO;
-import com.example.bestme.dto.user.RequestIdentifyUserDTO;
-import com.example.bestme.dto.user.RequestResetPasswordDTO;
-import com.example.bestme.dto.user.RequestSignUpDTO;
+import com.example.bestme.dto.user.*;
 import com.example.bestme.exception.ApiResponse;
-import com.example.bestme.regex.UserRegex;
 import com.example.bestme.repository.user.UserRepository;
-import com.example.bestme.util.jwt.JwtAuthenticationFilter;
 import com.example.bestme.util.jwt.JwtTokenDTO;
 import com.example.bestme.util.jwt.JwtTokenProvider;
 import io.jsonwebtoken.Claims;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.modelmapper.ModelMapper;
@@ -208,6 +202,26 @@ public class UserServiceImpl implements UserService{
         return user;
     }
 
+    @Override
+    public ResponseEntity<ApiResponse<ResponseUserDTO>> getLoginUser(HttpServletRequest request) {
+        String token = jwtTokenProvider.resolveToken(request);
+
+        Claims claims = jwtTokenProvider.parseClaims(token);
+
+        User user = userRepository.findByUserId(Long.valueOf(claims.getId()));
+
+        if (user == null) {
+           return ResponseEntity.ok(ApiResponse.error(HttpStatus.BAD_REQUEST, "로그인 유저 정보 호출 실패", null));
+        }
+
+        ResponseUserDTO responseUserDTO = new ResponseUserDTO(
+                user.getUserId(),
+                user.getNickname(),
+                user.getBirth(),
+                user.getGender());
+
+        return ResponseEntity.ok(ApiResponse.success(responseUserDTO));
+    }
 
     // 토큰 생성 메서드
     public JwtTokenDTO createToken(RequestLoginDTO to) {

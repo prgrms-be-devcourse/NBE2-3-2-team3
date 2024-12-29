@@ -49,11 +49,11 @@ loginForm.onsubmit = (e) => {
                 } else {
                     deleteCookie('email');
                 }
+                const Authorization = data.data;
+                localStorage.setItem("Authorization", Authorization);
                 loginModal.createModal('알림', data.message, [{
                     title: '확인',
                     onclick: () => {
-                        const Authorization = data.data;
-                        localStorage.setItem("Authorization", Authorization);
                         location.href = '/';
                     }
                 }]);

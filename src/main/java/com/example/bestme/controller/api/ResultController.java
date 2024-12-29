@@ -35,8 +35,7 @@ public class ResultController {
     @Operation( summary = "퍼스널컬러 진단 API", description = "필드에 맞는 색상코드를 전부 입력해주세요." )
     public ResponseEntity<ApiResponse<ResultResponse.CreateResultResponseDTO>> createResult(HttpServletRequest request, @RequestBody ResultRequest.CreateResultDTO createResultDTO) {
         //user의 ID 가져오기 --->
-        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(jwtTokenProvider);
-        String accessToken = jwtAuthenticationFilter.resolveToken(request);
+        String accessToken = jwtTokenProvider.resolveToken(request);
         Claims claims = jwtTokenProvider.parseClaims(accessToken);
         Long userId = Long.valueOf(claims.getId());
         //<---
@@ -63,8 +62,7 @@ public class ResultController {
     public ResponseEntity<ApiResponse<List<ResultResponse.ReadResultResponseDTO>>> readResults(HttpServletRequest request) {
 
         //user의 ID 가져오기 --->
-        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(jwtTokenProvider);
-        String accessToken = jwtAuthenticationFilter.resolveToken(request);
+        String accessToken = jwtTokenProvider.resolveToken(request);
         Claims claims = jwtTokenProvider.parseClaims(accessToken);
         Long userId = Long.valueOf(claims.getId());
         //<---
@@ -83,8 +81,7 @@ public class ResultController {
     @Operation( summary = "퍼스널 컬러 조회(가장 높은 빈도수) API", description = "한 회원이 진단했던 기록 중 가장 빈도수가 높게 진단된 퍼스널컬러가 뭔지 진단하는 API입니다." )
     public ResponseEntity<ApiResponse<ResultResponse.ReadColorResponseDTO>> readColorId(HttpServletRequest request) {
         //user의 ID 가져오기 --->
-        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(jwtTokenProvider);
-        String accessToken = jwtAuthenticationFilter.resolveToken(request);
+        String accessToken = jwtTokenProvider.resolveToken(request);
         Claims claims = jwtTokenProvider.parseClaims(accessToken);
         Long userId = Long.valueOf(claims.getId());
         //<---

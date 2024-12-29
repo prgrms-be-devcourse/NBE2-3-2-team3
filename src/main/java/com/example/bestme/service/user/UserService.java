@@ -1,13 +1,8 @@
 package com.example.bestme.service.user;
 
-import com.example.bestme.domain.Color;
 import com.example.bestme.domain.user.User;
-import com.example.bestme.dto.user.RequestLoginDTO;
-import com.example.bestme.dto.user.RequestIdentifyUserDTO;
-import com.example.bestme.dto.user.RequestResetPasswordDTO;
-import com.example.bestme.dto.user.RequestSignUpDTO;
+import com.example.bestme.dto.user.*;
 import com.example.bestme.exception.ApiResponse;
-import com.example.bestme.util.jwt.JwtTokenDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
@@ -34,4 +29,6 @@ public interface UserService {
     // user 가져오기
     User getUser(Long userId);
 
+    // user 가져오기 (프론트)
+    ResponseEntity<ApiResponse<ResponseUserDTO>> getLoginUser(HttpServletRequest request);
 }
