@@ -13,24 +13,24 @@ public class CommunityViewController {
     @RequestMapping( "/community/{page}" )
     public String communityMain(@PathVariable(required = false) String page, Model model, HttpSession session) {
         // 현재 페이지 초기화
-        String currentPage;
+        String currentPageNumber;
 
         if (page == null) {
             // URL 파라미터가 없을 때, 세션 값 사용 또는 기본값 설정
-            currentPage = (String) session.getAttribute("currentPage");
-            if (currentPage == null) {
-                currentPage = "1"; // 기본값 설정
+            currentPageNumber = (String) session.getAttribute("currentPageNumber");
+            if (currentPageNumber == null) {
+                currentPageNumber = "1"; // 기본값 설정
             }
         } else {
             // URL에서 받은 값을 사용
-            currentPage = page;
+            currentPageNumber = page;
         }
 
         // 세션에 현재 페이지 저장
-        session.setAttribute("currentPage", currentPage);
+        session.setAttribute("currentPageNumber", currentPageNumber);
 
         // 모델에 현재 페이지 추가 (뷰에서 사용할 데이터)
-        model.addAttribute("currentPage", currentPage);
+        model.addAttribute("currentPageNumber", currentPageNumber);
 
         return "communityMain";
     }
@@ -60,5 +60,32 @@ public class CommunityViewController {
     public String communityDelete(@PathVariable String boardId, Model model) {
         model.addAttribute("boardId", boardId);
         return "communityDelete";
+    }
+
+    // 현재 User가 작성한 게시물 목록 view
+    @RequestMapping( "/community/my_boards/{page}" )
+    public String communityMyBoards(@PathVariable(required = false) String page, Model model, HttpSession session) {
+
+        // 현재 페이지 초기화
+        String userPageNumber;
+
+        if (page == null) {
+            // URL 파라미터가 없을 때, 세션 값 사용 또는 기본값 설정
+            userPageNumber = (String) session.getAttribute("userPageNumber");
+            if (userPageNumber == null) {
+                userPageNumber = "1"; // 기본값 설정
+            }
+        } else {
+            // URL에서 받은 값을 사용
+            userPageNumber = page;
+        }
+
+        // 세션에 현재 페이지 저장
+        session.setAttribute("userPageNumber", userPageNumber);
+
+        // 모델에 현재 페이지 추가 (뷰에서 사용할 데이터)
+        model.addAttribute("userPageNumber", userPageNumber);
+
+        return "communityMyBoards";
     }
 }
