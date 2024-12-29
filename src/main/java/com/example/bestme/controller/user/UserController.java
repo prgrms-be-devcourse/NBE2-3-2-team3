@@ -1,9 +1,7 @@
 package com.example.bestme.controller.user;
 
-import com.example.bestme.dto.user.RequestLoginDTO;
-import com.example.bestme.dto.user.RequestIdentifyUserDTO;
-import com.example.bestme.dto.user.RequestResetPasswordDTO;
-import com.example.bestme.dto.user.RequestSignUpDTO;
+import com.example.bestme.domain.user.User;
+import com.example.bestme.dto.user.*;
 import com.example.bestme.exception.ApiResponse;
 import com.example.bestme.service.KakaoService;
 import com.example.bestme.service.user.UserService;
@@ -33,7 +31,6 @@ public class UserController {
     @Autowired
     private UserService userService;
     private final KakaoService kakaoService;
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
@@ -65,7 +62,7 @@ public class UserController {
             HttpServletRequest request) {
         System.out.println("[UserController] kakaoLogin() 실행 ");
 
-        String existingToken = jwtAuthenticationFilter.resolveToken(request);
+        String existingToken = jwtTokenProvider.resolveToken(request);
         if(existingToken != null) {
             System.out.println("이미 token 있는 회원");
             return ResponseEntity.ok(Map.of("token", existingToken));
@@ -112,6 +109,11 @@ public class UserController {
     @DeleteMapping("/user")
     public ResponseEntity<ApiResponse<Void>> deleteUser(HttpServletRequest request) {
         return userService.deleteUser(request);
+    }
+
+    @GetMapping("/loginUser")
+    public ResponseEntity<ApiResponse<ResponseUserDTO>> getLoginUser(HttpServletRequest request) {
+        return userService.getLoginUser(request);
     }
 
 
