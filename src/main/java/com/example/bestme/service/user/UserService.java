@@ -1,5 +1,7 @@
 package com.example.bestme.service.user;
 
+import com.example.bestme.domain.Color;
+import com.example.bestme.domain.user.User;
 import com.example.bestme.dto.user.RequestLoginDTO;
 import com.example.bestme.dto.user.RequestIdentifyUserDTO;
 import com.example.bestme.dto.user.RequestResetPasswordDTO;
@@ -15,6 +17,7 @@ public interface UserService {
     ResponseEntity<ApiResponse<Void>> join(RequestSignUpDTO to);
 
     // 로그인
+
     ResponseEntity<ApiResponse<String>> login(RequestLoginDTO to, HttpServletResponse response);
 
     // 비밀번호 재설정 계정 확인
@@ -27,4 +30,8 @@ public interface UserService {
     ResponseEntity<ApiResponse<Void>> deleteUser(HttpServletRequest request);
 
     ResponseEntity<ApiResponse<String>> refresh(HttpServletRequest request, HttpServletResponse response);
+  
+    // user 가져오기
+    User getUser(Long userId);
+
 }

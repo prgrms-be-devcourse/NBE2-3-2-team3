@@ -37,6 +37,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         // 다음 필터 호출
         filterChain.doFilter(request, response);
     }
+
 }
 
 

@@ -7,8 +7,12 @@ import com.example.bestme.dto.api.ResultResponse;
 import com.example.bestme.exception.ApiResponse;
 import com.example.bestme.service.GuideService;
 import com.example.bestme.service.ResultService;
+import com.example.bestme.util.jwt.JwtAuthenticationFilter;
+import com.example.bestme.util.jwt.JwtTokenProvider;
+import io.jsonwebtoken.Claims;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
@@ -24,11 +28,19 @@ import java.util.stream.Collectors;
 public class GuideController {
     private final GuideService guideService;
     private final ResultService resultService;
+    private final JwtTokenProvider jwtTokenProvider;
     private final ModelMapper modelMapper = new ModelMapper();
 
-    @GetMapping("/guide/{userId}")
+    @GetMapping("/guide")
     @Operation( summary = "회원의 퍼스널컬러에 대한 가이드를 전체 조회하는 API입니다.", description = "(모든 카테고리 / 회원)의 스타일 가이드 " )
-    public ResponseEntity<ApiResponse<List<GuideResponse.ReadGuideResponseDTO>>> readGuides(@PathVariable Long userId) {
+    public ResponseEntity<ApiResponse<List<GuideResponse.ReadGuideResponseDTO>>> readGuides(HttpServletRequest request) {
+
+        //user의 ID 가져오기 --->
+        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(jwtTokenProvider);
+        String accessToken = jwtAuthenticationFilter.resolveToken(request);
+        Claims claims = jwtTokenProvider.parseClaims(accessToken);
+        Long userId = Long.valueOf(claims.getId());
+        //<---
 
         //가장 높은 빈도수의 퍼스널컬러 ID 가져오기
         ResultResponse.ReadColorResponseDTO result = resultService.readColorId(userId);

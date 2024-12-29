@@ -217,7 +217,6 @@ public class JwtTokenProvider {
             return e.getClaims();
         }
     }
-
     // request 의 header 에서 토큰 정보 추출
     public String resolveToken(HttpServletRequest request) {
         String token = request.getHeader("Authorization");

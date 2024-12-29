@@ -1,5 +1,6 @@
 package com.example.bestme.domain.user;
 
+import com.example.bestme.domain.Result;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,6 +9,8 @@ import lombok.ToString;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -69,4 +72,8 @@ public class User{
         this.role = role;
     }
 
+
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Result> results = new ArrayList<>();
 }
