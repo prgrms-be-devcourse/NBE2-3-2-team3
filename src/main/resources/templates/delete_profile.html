@@ -34,7 +34,7 @@
             text-decoration: none;
         }
         .title{
-            padding-left: 12%;
+            /*padding-left: 12%;*/
             font-size: 30px;
             margin-top: 10%;
         }
@@ -52,14 +52,25 @@
             color: #6384FB;
         }
         .confirm{
-            margin-left: 12%;
+            /*margin-left: 12%;*/
+            margin-top: 10px;
+            margin-bottom: 20px;
         }
-        .kakao{
-            margin-left: 12%;
-            margin-top: 4%;
-            align-items: center; /* 버튼 내부 아이템 중앙 정렬 */
+        .kakao {
+            width: 200px;
+            height: 50px;
+            font-size: 1.2em;
+            color: white;
+            background-color: #6384FB;
+            border: none;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
             justify-content: center;
-            border-color: white;
+            cursor: pointer;
+        }
+        .kakao:hover {
+            background-color: #6384FB;
         }
     </style>
 </head>
@@ -117,12 +128,8 @@
     </div>
     <div class="content">
         <h3 class="title">회원 탈퇴</h3>
-        <div class="confirm">
-            정말 탈퇴하시겠습니까?
-        </div>
-        <button type="button" class="kakao">
-            <img th:src="@{/imgs/kakao_login_medium_narrow.png}" alt="">
-        </button>
+        <div class="confirm">정말 탈퇴하시겠습니까?</div>
+        <button type="button" class="kakao">탈퇴하기</button>
     </div>
 </div>
 
