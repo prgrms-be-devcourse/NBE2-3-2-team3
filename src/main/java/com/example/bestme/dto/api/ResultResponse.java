@@ -11,6 +11,7 @@ public class ResultResponse {
     @Setter
     public static class CreateResultResponseDTO {
         private Long resultId;
+        private Long colorId;
         private LocalDateTime createdAt;
     }
 

@@ -38,9 +38,10 @@ public class ChatGPTServiceImpl implements ChatGPTService {
         ChatRequest request = new ChatRequest(
                 modelName,
                 List.of(
-                        new Message("user", userMessage)
+                        new Message("user", userMessage),
+                        new Message("system",  "당신은 퍼스널 컬러 진단을 해주는 퍼스널컬러 전문가입니다.")
                 ),
-                200,
+                300,
                 0.2
         );
 
