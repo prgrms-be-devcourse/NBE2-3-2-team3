@@ -96,7 +96,7 @@ public class CommunityController {
     @PostMapping( "/community/testCreate")
     public ResponseEntity<ApiResponse<String>> testCreate() {
         int count = 0;
-        for( int i=0; i < 55; i++) {
+        for( int i=1; i < 55; i++) {
             RequestWriteDTO to = new RequestWriteDTO();
             to.setUserId(1L);
             to.setNickname("bbb");
@@ -137,6 +137,7 @@ public class CommunityController {
             @Parameter(description = "페이지 번호", example = "1")
             HttpSession session)
     {
+
         // 세션에서 현재 페이지 번호 가져오기
         Integer page = (Integer) session.getAttribute("currentPageNumber");
         if (page == null) page = 1; // 세션에 page 데이터가 없을 경우 (기본값 설정)

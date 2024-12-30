@@ -13,17 +13,17 @@ public class CommunityViewController {
     @RequestMapping( value = {"/community", "/community/{page}"} )
     public String communityMain(@PathVariable(required = false) String page, Model model, HttpSession session) {
         // 현재 페이지 초기화
-        String currentPageNumber;
+        Integer currentPageNumber;
 
         if (page == null || page.equals("0")) {
             // URL 파라미터가 없을 때, 세션 값 사용 또는 기본값 설정
-            currentPageNumber = (String) session.getAttribute("currentPageNumber");
+            currentPageNumber = (Integer) session.getAttribute("currentPageNumber");
             if (currentPageNumber == null) {
-                currentPageNumber = "1"; // 기본값 설정
+                currentPageNumber = 1; // 기본값 설정
             }
         } else {
             // URL에서 받은 값을 사용
-            currentPageNumber = page;
+            currentPageNumber = Integer.parseInt(page);
         }
 
         // 세션에 현재 페이지 저장
@@ -31,8 +31,6 @@ public class CommunityViewController {
 
         // 모델에 현재 페이지 추가 (뷰에서 사용할 데이터)
         model.addAttribute("currentPageNumber", currentPageNumber);
-
-        System.out.println(currentPageNumber);
 
         return "community/community_main";
     }

@@ -35,12 +35,25 @@
                                     <td><input type="password" name="password" value="" class="board_view_input_mail"/></td>
                                 </tr>
                                 <tr>
+                                    <th>첨부파일</th>
+                                    <td>
+                                        <input type="file" name="upload" value="" />
+                                    </td>
+                                </tr>
+                                <tr>
                                     <th>내용</th>
                                     <td><textarea name="content" class="board_editor_area"></textarea></td>
                                 </tr>
+                                <!--이미지 파일 로드-->
                                 <tr>
-                                    <th>이메일</th>
-                                    <td><input type="text" name="mail1" value="" class="board_view_input_mail"/> @ <input type="text" name="mail2" value="" class="board_view_input_mail"/></td>
+                                    <th>이미지 파일</th>
+                                    <td colspan="4" height="200" valign="top" style="padding:20px; line-height:160%">
+                                        <div id="bbs_file_wrap">
+                                            <div>
+                                                <img src="./upload/607927_1.jpg" width="900" onerror="" /><br />
+                                            </div>
+                                        </div>
+                                    </td>
                                 </tr>
                             </table>
                         </div>

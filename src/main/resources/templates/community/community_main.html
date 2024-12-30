@@ -5,7 +5,7 @@
     <title>BestMe - Community</title>
     <!--css, js 추가 시 사용-->
     <link rel="stylesheet" type="text/css" th:href="@{/styles/community/board.css}">
-    <!--<script></script>-->
+    <script defer type="text/javascript" th:src="@{/scripts/community/main.js}"></script>
 </head>
 <body th:replace="~{community/community_base :: body}">
     <!-- 실제 페이지 내용 -->
@@ -18,51 +18,52 @@
             </div>
             <div class="con_txt">
                 <div class="contents_sub">
-                    <div class="board_top">
-                        <div class="bold">총 <span class="txt_orange">1</span>건</div>
+                    <!--게시물 총 갯수-->
+                    <div class="board_top" id="boards-count">
                     </div>
-
-                    <!--게시판-->
+                    <!--게시물 리스트-->
                     <div class="board">
                         <table>
-                            <tr>
-                                <th width="3%">&nbsp;</th>
-                                <th width="5%">번호</th>
-                                <th>제목</th>
-                                <th width="10%">글쓴이</th>
-                                <th width="17%">등록일</th>
-                                <th width="5%">조회</th>
-                                <th width="3%">&nbsp;</th>
-                            </tr>
-                            <tr>
+                            <thead>
+                                <tr>
+                                    <th width="3%">&nbsp;</th>
+                                    <th width="5%">번호</th>
+                                    <th>제목</th>
+                                    <th width="10%">작성자</th>
+                                    <th width="17%">등록일</th>
+                                    <th width="5%">조회</th>
+                                    <th width="3%">&nbsp;</th>
+                                </tr>
+                            </thead>
+                            <tbody id="post-list">
+                            <!-- 게시물 리스트가 여기서 동적으로 추가됨 -->
+                            </tbody>
+                            <!--view 컨트롤러와 api 컨트롤러 합칠 때 사용-->
+                            <!--
+                            <tr th:each="post : ${posts}">
                                 <td>&nbsp;</td>
-                                <td>1</td>
-                                <td class="left"><a href="view.do">adfas</a>&nbsp;<img th:src="@{/imgs/community/icon_new.gif}" alt="NEW"></td>
-                                <td>asdfa</td>
-                                <td>2017-01-31</td>
-                                <td>6</td>
-                                <td>&nbsp;</td>
-                            </tr>
-                            <tr>
-                                <td>&nbsp;</td>
-                                <td>1</td>
-                                <td class="left"><a href="view.do">adfas</a>&nbsp;<img th:src="@{/imgs/community/icon_new.gif}" alt="NEW"></td>
-                                <td>asdfa</td>
-                                <td>2017-01-31</td>
-                                <td>6</td>
+                                <td th:text="${post.id}"></td>
+                                <td class="left"><a th:href="${post.link}" th:text="${post.title}"></a>&nbsp;<img th:src="@{/imgs/community/icon_new.gif}" alt="NEW"></td>
+                                <td th:text="${post.nickname}"></td>
+                                <td th:text="${post.date}"></td>
+                                <td th:text="${post.view}"></td>
                                 <td>&nbsp;</td>
                             </tr>
+                            -->
                         </table>
                     </div>
-
                     <div class="btn_area">
                         <div class="align_right">
-                            <input type="button" value="쓰기" class="btn_write btn_txt01" style="cursor: pointer;" onclick="location.href='write.do'" />
+                            <input type="button" value="쓰기" class="btn_write btn_txt01" style="cursor: pointer;" onclick="location.href='/community_write'" />
                         </div>
                     </div>
                     <!--//게시판-->
                 </div>
             </div>
+            <!--페이지넘버-->
+            <div class="paginate_regular" id="page-nav">
+            </div>
+            <!--//페이지넘버-->
         </main>
     </div>
 </body>

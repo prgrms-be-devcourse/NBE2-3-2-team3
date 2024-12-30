@@ -55,6 +55,12 @@ a:active { color:#0b96d4; text-decoration: none;}
 
 .paginate_regular .direction:hover, .paginate_regular .direction:active, .paginate_regular .direction:focus { background-color:#ffffff; color:#333333; }
 
+a.disabled {
+    color: #cccccc;
+    pointer-events: none;
+    text-decoration: none;
+}
+
 .board_write { border-top:1px solid #464646; }
 .board_write th, .board_write td {height:25px; text-align:left; padding:8px; border-bottom:1px solid #dadada;}
 .board_write th { color:#464646; font-weight:600; background-color:#f9f9fb; }

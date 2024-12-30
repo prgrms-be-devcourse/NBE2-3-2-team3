@@ -17,10 +17,10 @@ public interface CommunityRepository extends JpaRepository<Community, String> {
     @Query("update board b set b.view = b.view + 1 where b.boardId = :boardId")
     int updateView(@Param("boardId") Long boardId);
 
-    @Query( "select b, u.nickname from board b join b.user u order by b.boardId" )
+    @Query( "select b, u.nickname from board b join b.user u order by b.boardId desc " )
     Page<Object[]> findAllBoard(Pageable pageable);
 
-    @Query( "select b, u.nickname from board b join b.user u where u.userId = :userId order by b.boardId" )
+    @Query( "select b, u.nickname from board b join b.user u where u.userId = :userId order by b.boardId desc " )
     Page<Object[]> findAllBoardByUserId(Pageable pageable, Long userId);
 
     // 지정 게시물 Navigation API ( 어려워서 구현 보류 )
