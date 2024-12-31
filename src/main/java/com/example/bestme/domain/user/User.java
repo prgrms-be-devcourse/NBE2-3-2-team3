@@ -20,7 +20,7 @@ public class User{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
-    private Long userId;
+    private Long id;
 
     @Column(nullable = false, unique = true)
     private String email;
@@ -56,7 +56,7 @@ public class User{
     private Role role;
 
     public User(Long userId, String email, String password, String nickname, String birth, Gender gender, boolean kakaoFlag, LocalDateTime createdAt, LocalDateTime deletedAt, boolean deletedFlag, Role role) {
-        this.userId = userId;
+        this.id = userId;
         this.email = email;
         this.password = password;
         this.nickname = nickname;

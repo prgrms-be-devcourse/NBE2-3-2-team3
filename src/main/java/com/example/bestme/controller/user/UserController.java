@@ -33,7 +33,6 @@ public class UserController {
     @Autowired
     private UserService userService;
     private final KakaoService kakaoService;
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
@@ -65,7 +64,7 @@ public class UserController {
             HttpServletRequest request) {
         System.out.println("[UserController] kakaoLogin() 실행 ");
 
-        String existingToken = jwtAuthenticationFilter.resolveToken(request);
+        String existingToken = jwtTokenProvider.resolveToken(request);
         if(existingToken != null) {
             System.out.println("이미 token 있는 회원");
             return ResponseEntity.ok(Map.of("token", existingToken));
