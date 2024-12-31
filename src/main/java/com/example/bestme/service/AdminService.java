@@ -82,4 +82,9 @@ public class AdminService {
 
         return categoryRepository.save(category).getId();
     }
+
+    @Transactional
+    public void deleteItem(Long itemId) {
+        itemRepository.deleteById(itemId);
+    }
 }

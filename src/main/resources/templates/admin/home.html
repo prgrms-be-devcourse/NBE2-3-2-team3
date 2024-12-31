@@ -153,7 +153,7 @@
             <td>
                 <div class="d-grid gap-2 d-md-block text-center align-middle">
                     <button class="btn btn-light" type="button">수정</button>
-                    <button class="btn btn-light" type="button">삭제</button>
+                    <button class="btn btn-light sendItemDelete" th:attr="data-item-id=*{id}" type="button">삭제</button>
                 </div>
             </td>
         </tr>
@@ -288,6 +288,7 @@
             success: function(response) {
                 alert("상품 추가 완료");
                 $("#itemModal").modal("hide");
+                location.reload();
             }
         });
     });
@@ -318,6 +319,7 @@
             success: function() {
                 alert("브랜드 추가 완료");
                 $("#brandModal").modal("hide");
+                location.reload();
             }
         });
     });
@@ -370,6 +372,23 @@
             success: function(response) {
                 alert("카테고리 추가 완료");
                 $("#categoryModal").modal("hide");
+                location.reload();
+            }
+        });
+    });
+
+    $(document).on("click", ".sendItemDelete", function () {
+        let itemId = $(this).data('item-id');
+
+        $.ajax({
+            url: `/admin/items/${itemId}`,
+            type: "DELETE",
+            success: function () {
+                alert("삭제를 성공했습니다.");
+                location.reload();
+            },
+            error: function () {
+                alert('데이터 삭제를 실패했습니다.');
             }
         });
     });
