@@ -14,8 +14,8 @@ public class UserRegex {
     public static final Regex email = new Regex("^([\\da-zA-Z_.]{2,20})@([\\da-z\\-]{2,20})?([\\da-z]{1,20})\\.([a-z]{2,10})$");
 
     // 닉네임 정규식 설명
-    // 숫자 영소문자 영대문자 한글 특수문자 - 특수문자 _ 로 이루어진 그룹 2 ~ 50자
-    public static final Regex nickname = new Regex("^([\\da-zA-Z가-힣\\-_]{2,50})$");
+    // 숫자 영소문자 영대문자 한글 특수문자 - 특수문자 _ 로 이루어진 그룹 2 ~ 8자
+    public static final Regex nickname = new Regex("^([\\da-zA-Z가-힣\\-_]{2,8})$");
 
     // 비밀번호 설명
     // 영대소문자 숫자 각종 특수문자를 1개 이상 포함하고 이들로 이루어진 그룹 8 ~ 20자

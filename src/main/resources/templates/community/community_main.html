@@ -1,69 +1,142 @@
 <!-- community_main.html -->
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{community/community_base :: head(~{::title},~{::link}, ~{::script})}">
+<head>
+    <meta charset="UTF-8">
     <title>BestMe - Community</title>
-    <!--css, js 추가 시 사용-->
-    <link rel="stylesheet" type="text/css" th:href="@{/styles/community/board.css}">
-    <!--<script></script>-->
+    <link rel="stylesheet" type="text/css" th:href="@{/styles/header.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/styles/modal.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/styles/community/index.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/styles/community/main.css}">
+    <script src="https://kit.fontawesome.com/5fcc17a7cc.js" crossorigin="anonymous"></script>
+    <script defer type="text/javascript" th:src="@{/scripts/common.js}"></script>
+    <script defer type="text/javascript" th:src="@{/scripts/modal.js}"></script>
 </head>
 <body th:replace="~{community/community_base :: body}">
-    <!-- 실제 페이지 내용 -->
-    <div th:fragment="content">
-        <main id="main">
-            <!-- 페이지 내용 추가 -->
-            <!-- 상단 디자인 -->
-            <div class="con_title">
-                <h1>Community</h1>
-            </div>
-            <div class="con_txt">
-                <div class="contents_sub">
-                    <div class="board_top">
-                        <div class="bold">총 <span class="txt_orange">1</span>건</div>
-                    </div>
-
-                    <!--게시판-->
-                    <div class="board">
-                        <table>
-                            <tr>
-                                <th width="3%">&nbsp;</th>
-                                <th width="5%">번호</th>
-                                <th>제목</th>
-                                <th width="10%">글쓴이</th>
-                                <th width="17%">등록일</th>
-                                <th width="5%">조회</th>
-                                <th width="3%">&nbsp;</th>
-                            </tr>
-                            <tr>
-                                <td>&nbsp;</td>
-                                <td>1</td>
-                                <td class="left"><a href="view.do">adfas</a>&nbsp;<img th:src="@{/imgs/community/icon_new.gif}" alt="NEW"></td>
-                                <td>asdfa</td>
-                                <td>2017-01-31</td>
-                                <td>6</td>
-                                <td>&nbsp;</td>
-                            </tr>
-                            <tr>
-                                <td>&nbsp;</td>
-                                <td>1</td>
-                                <td class="left"><a href="view.do">adfas</a>&nbsp;<img th:src="@{/imgs/community/icon_new.gif}" alt="NEW"></td>
-                                <td>asdfa</td>
-                                <td>2017-01-31</td>
-                                <td>6</td>
-                                <td>&nbsp;</td>
-                            </tr>
-                        </table>
-                    </div>
-
-                    <div class="btn_area">
-                        <div class="align_right">
-                            <input type="button" value="쓰기" class="btn_write btn_txt01" style="cursor: pointer;" onclick="location.href='write.do'" />
-                        </div>
-                    </div>
-                    <!--//게시판-->
-                </div>
-            </div>
-        </main>
+<!-- 실제 페이지 내용 -->
+<main id="main" th:fragment="content">
+    <!-- 페이지 내용 추가 -->
+    <!-- 상단 디자인 -->
+    <div class="com_head">
+        <h1>Community</h1>
+        <button type="button" id="wbtn" class="green" onclick="location.href = '/community/write'">글 작성</button>
     </div>
+    <div class="con_txt">
+        <div class="contents_sub">
+            <!--게시판-->
+            <div class="board">
+                <table>
+                    <thead>
+                    <tr>
+                        <th width="5%">번호</th>
+                        <th>제목</th>
+                        <th width="12%">글쓴이</th>
+                        <th width="12%">등록일</th>
+                        <th width="5%">조회</th>
+                        <th width="5%">추천</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>8</td>
+                        <td class="left"><a href="view.do">adfas</a>&nbsp;<img th:src="@{/imgs/community/icon_new.gif}"
+                                                                               alt="NEW"></td>
+                        <td>아아아아아아아아</td>
+                        <td>2017-01-31</td>
+                        <td>6</td>
+                        <td>6</td>
+                    </tr>
+                    <tr>
+                        <td>7</td>
+                        <td class="left"><a href="view.do">adfas</a>&nbsp;<img th:src="@{/imgs/community/icon_new.gif}"
+                                                                               alt="NEW"></td>
+                        <td>아아아아아아아</td>
+                        <td>2017-01-31</td>
+                        <td>6</td>
+                        <td>6</td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td class="left"><a href="view.do">adfas</a>&nbsp;<img th:src="@{/imgs/community/icon_new.gif}"
+                                                                               alt="NEW"></td>
+                        <td>아아아아아아</td>
+                        <td>2017-01-31</td>
+                        <td>6</td>
+                        <td>6</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td class="left"><a href="view.do">adfas</a>&nbsp;<img th:src="@{/imgs/community/icon_new.gif}"
+                                                                               alt="NEW"></td>
+                        <td>아아아아아</td>
+                        <td>2017-01-31</td>
+                        <td>6</td>
+                        <td>6</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td class="left"><a href="view.do">adfas</a>&nbsp;<img th:src="@{/imgs/community/icon_new.gif}"
+                                                                               alt="NEW"></td>
+                        <td>아아아아</td>
+                        <td>2017-01-31</td>
+                        <td>6</td>
+                        <td>6</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td class="left"><a href="view.do">adfas</a>&nbsp;<img th:src="@{/imgs/community/icon_new.gif}"
+                                                                               alt="NEW"></td>
+                        <td>아아아</td>
+                        <td>2017-01-31</td>
+                        <td>6</td>
+                        <td>6</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td class="left"><a href="view.do">adfas</a>&nbsp;<img th:src="@{/imgs/community/icon_new.gif}"
+                                                                               alt="NEW"></td>
+                        <td>아아</td>
+                        <td>2017-01-31</td>
+                        <td>6</td>
+                        <td>6</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td class="left"><a href="view.do">adfas</a>&nbsp;<img th:src="@{/imgs/community/icon_new.gif}"
+                                                                               alt="NEW"></td>
+                        <td>아</td>
+                        <td>2017-01-31</td>
+                        <td>6</td>
+                        <td>6</td>
+                    </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr class="paging">
+                            <td colspan="6">
+                                <div class="paging-div">
+                                    <i class="fa-solid fa-angles-left"></i>
+                                    <i class="fa-solid fa-angle-left"></i>
+                                    <a href="#" class="page-btn sel">1</a>
+                                    <a href="#" class="page-btn">2</a>
+                                    <a href="#" class="page-btn">3</a>
+                                    <a href="#" class="page-btn">4</a>
+                                    <a href="#" class="page-btn">5</a>
+                                    <a href="#" class="page-btn">6</a>
+                                    <a href="#" class="page-btn">7</a>
+                                    <a href="#" class="page-btn">8</a>
+                                    <a href="#" class="page-btn">9</a>
+                                    <a href="#" class="page-btn">10</a>
+                                    <i class="fa-solid fa-angle-right"></i>
+                                    <i class="fa-solid fa-angles-right"></i>
+                                </div>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <!--//게시판-->
+        </div>
+    </div>
+</main>
 </body>
 </html>
