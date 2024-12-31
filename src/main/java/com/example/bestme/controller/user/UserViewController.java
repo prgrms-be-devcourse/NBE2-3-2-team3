@@ -35,29 +35,30 @@ public class UserViewController {
         return "join";
     }
 
+    @GetMapping("/resetPassword")
+    public String resetPassword() {
+        return "resetPassword";
+    }
+
     @GetMapping("/member")
     public String member() {
-        return "member";
+        return "mypage/member";
     }
 
     @GetMapping("/member/my_posting")
     public String MyPosting(Model model) {
         // DB에서 자기가 쓴 게시물 불러와서
         // model.addAttribute로 넘겨줘야할듯
-        return "my_posting";
+        return "mypage/my_posting";
     }
 
     @GetMapping("/member/modify_profile")
     public String modifyProfile() {
-        return "modify_profile";
+        return "mypage/modify_profile";
     }
 
     @GetMapping("/member/delete_profile")
     public String deleteProfile() {
-        return "delete_profile";
-    }
-    @GetMapping("/resetPassword")
-    public String resetPassword() {
-        return "resetPassword";
+        return "mypage/delete_profile";
     }
 }

@@ -80,7 +80,7 @@
 
 #login-form .desc-text {
     color: #bdbdbd;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
 }
 
 #login-form .text-label {
@@ -98,7 +98,7 @@
 #login-form .text-label > input[type="password"],
 #login-form .text-label > input[type="text"] {
     width: 100%;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     padding: 0.4rem;
 }
 
@@ -128,12 +128,16 @@
 
 #login-form > .email-remember > label {
     cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.2rem;
 }
 
 #login-form > .email-remember > label > .ckBox {
     border: 1px solid #bdbdbd;
-    padding: 0.1rem 0.2rem;
-    font-size: 0.9rem;
+    padding: 0 0.2rem;
+    font-size: 0.8rem;
 }
 
 #login-form > .email-remember > label > .ckBox > i {
@@ -141,13 +145,13 @@
 }
 
 #login-form > .email-remember > label > span {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
 }
 
 #login-form a {
     text-decoration: none;
     color: #1199FF;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
 }
 
 #login-form a:hover {
@@ -168,7 +172,7 @@
     margin-top: -0.5rem;
     margin-bottom: 0.5rem;
 
-    font-size: 1.1rem;
+    font-size: 1rem;
 
     padding: 0.8rem 1rem;
 
@@ -194,7 +198,7 @@
     border-radius: 12px;
     cursor: pointer;
 
-    padding: 0.9rem;
+    padding: 0.8rem;
 
     display: flex;
     flex-direction: row;
@@ -219,5 +223,5 @@
 }
 
 #login-form .kakao > a >span {
-    font-size: 1.1rem;
+    font-size: 1rem;
 }
