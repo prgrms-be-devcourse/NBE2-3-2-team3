@@ -148,7 +148,7 @@ public class UserServiceImpl implements UserService{
         }
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(ApiResponse.success(HttpStatus.OK, "계정 확인 완료", user.getUserId()));
+                .body(ApiResponse.success(HttpStatus.OK, "계정 확인 완료", user.getId()));
     }
 
     // 비밀번호 재설정하기

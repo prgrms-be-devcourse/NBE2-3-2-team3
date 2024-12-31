@@ -62,7 +62,7 @@ public class JwtTokenProvider {
         // 30 분의 유효기간 - accessToken
         LocalDateTime accessTokenExpire = now.plusMinutes(30);
         String accessToken = Jwts.builder()
-                .setId(String.valueOf(user.getUserId())) // user 의 id
+                .setId(String.valueOf(user.getId())) // user 의 id
                 .setSubject(user.getEmail()) // user 의 email
                 .claim("auth", authorities) // user 의 role
                 .setExpiration(Date.from(accessTokenExpire.atZone(ZoneId.systemDefault()).toInstant())) // 만료기간 설정
@@ -72,7 +72,7 @@ public class JwtTokenProvider {
         // 1 주일의 유효기간 - refreshToken
         LocalDateTime refreshTokenExpire = now.plusDays(7);
         String refreshToken = Jwts.builder()
-                .setId(String.valueOf(user.getUserId())) // user 의 id
+                .setId(String.valueOf(user.getId())) // user 의 id
                 .setSubject(user.getEmail()) // user 의 email
                 .claim("auth", authorities) // user 의 role
                 .setExpiration(Date.from(refreshTokenExpire.atZone(ZoneId.systemDefault()).toInstant())) // 만료기간 설정
@@ -133,7 +133,7 @@ public class JwtTokenProvider {
         // 30 분의 유효기간 - accessToken
         LocalDateTime accessTokenExpire = now.plusMinutes(30);
         String accessToken = Jwts.builder()
-                .setId(String.valueOf(user.getUserId()))
+                .setId(String.valueOf(user.getId()))
                 .setSubject(user.getEmail())
                 .claim("auth", user.getRole())
                 .setExpiration(Date.from(accessTokenExpire.atZone(ZoneId.systemDefault()).toInstant()))
@@ -143,7 +143,7 @@ public class JwtTokenProvider {
         // 1 주일의 유효기간 - refreshToken
         LocalDateTime refreshTokenExpire = now.plusDays(7);
         String refreshToken = Jwts.builder()
-                .setId(String.valueOf(user.getUserId()))
+                .setId(String.valueOf(user.getId()))
                 .setSubject(user.getEmail())
                 .claim("auth", user.getRole())
                 .setExpiration(Date.from(refreshTokenExpire.atZone(ZoneId.systemDefault()).toInstant()))
