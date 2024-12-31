@@ -24,6 +24,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     User findByNickname(String nickname);
 
     // userId 로 유저를 찾는 쿼리
-    @Query(value = "select u from User u where u.userId = ?1 and u.deletedFlag = false")
+    @Query(value = "select u from User u where u.id = ?1 and u.deletedFlag = false")
     User findByUserId(Long id);
 }

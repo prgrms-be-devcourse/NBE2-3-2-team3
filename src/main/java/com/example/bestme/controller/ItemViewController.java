@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/view/items")
+@RequestMapping("/items")
 public class ItemViewController {
 
     @GetMapping
