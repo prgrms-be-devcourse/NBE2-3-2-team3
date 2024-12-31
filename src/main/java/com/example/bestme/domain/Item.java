@@ -2,6 +2,7 @@ package com.example.bestme.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Getter
@@ -23,7 +24,7 @@ public class Item extends BaseEntity {
     @Column(length = 2083)
     private String imageUrl;
 
-    @Column(nullable = false)
+    @ColumnDefault(value = "0")
     private int likeCount = 0;
 
     @ManyToOne(fetch = FetchType.LAZY)

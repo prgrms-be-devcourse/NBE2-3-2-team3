@@ -19,8 +19,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.net.URI;
+import java.text.MessageFormat;
 import java.util.List;
 
 import static com.example.bestme.util.ImageDirectoryUrl.BRAND_DIRECTORY;
@@ -44,51 +45,55 @@ public class AdminController {
         return "admin/home";
     }
 
-    @GetMapping("/categories")
     @ResponseBody
+    @GetMapping("/categories")
     public ResponseEntity<CategoryMenuResponse> getCategories() {
         return ResponseEntity.ok(adminService.getCategoryMenu());
     }
 
-    @GetMapping("/brands")
     @ResponseBody
+    @GetMapping("/brands")
     public ResponseEntity<List<BrandSelectResponse>> getBrands() {
         return ResponseEntity.ok(adminService.getBrands());
     }
 
-    @GetMapping("/colors")
     @ResponseBody
+    @GetMapping("/colors")
     public ResponseEntity<List<ColorSelectResponse>> getColors() {
         return ResponseEntity.ok(adminService.getColors());
     }
 
     @PostMapping("/items")
-    public String saveItem(
+    public ResponseEntity<Void> saveItem(
             @RequestPart ItemSaveRequest itemSaveRequest,
-            @RequestPart MultipartFile image,
-            RedirectAttributes redirectAttributes
+            @RequestPart MultipartFile image
     ) {
         String imageUrl = imageService.save(image, ITEM_DIRECTORY);
-        adminService.saveItem(itemSaveRequest, imageUrl);
-        redirectAttributes.addAttribute("page", 0);
-        return "redirect:/admin";
+        Long itemId = adminService.saveItem(itemSaveRequest, imageUrl);
+        return ResponseEntity.created(URI.create(MessageFormat.format("/api/items/{0}", itemId))).build();
     }
 
     @PostMapping("/brands")
-    public String saveBrand(
+    public ResponseEntity<Void> saveBrand(
             @RequestPart BrandSaveRequest brandSaveRequest,
             @RequestPart MultipartFile image
     ) {
         String imageUrl = imageService.save(image, BRAND_DIRECTORY);
-        adminService.saveBrand(brandSaveRequest, imageUrl);
-        return "redirect:/admin";
+        Long brandId = adminService.saveBrand(brandSaveRequest, imageUrl);
+        return ResponseEntity.created(URI.create(MessageFormat.format("/api/brands/{0}", brandId))).build();
     }
 
     @PostMapping("/categories")
-    public String saveCategory(
+    public ResponseEntity<Void> saveCategory(
             @RequestBody CategorySaveRequest categorySaveRequest
     ) {
-        adminService.saveCategory(categorySaveRequest);
-        return "redirect:/admin";
+        Long categoryId = adminService.saveCategory(categorySaveRequest);
+        return ResponseEntity.created(URI.create(MessageFormat.format("/api/categories/{0}", categoryId))).build();
+    }
+
+    @DeleteMapping("/items/{itemId}")
+    public ResponseEntity<Void> deleteItem(@PathVariable Long itemId) {
+        adminService.deleteItem(itemId);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -27,7 +27,7 @@ public class LikeService {
         User user = userRepository.getById(userId);
 
         int likeCount = getAfterClickLikeCount(item, user);
-        boolean isLiked = itemLikeRepository.existsByItemIdAndUserId(itemId, userId);
+        boolean isLiked = !itemLikeRepository.existsByItemIdAndUserId(itemId, userId);
 
         return LikeResponse.of(likeCount, isLiked);
     }
