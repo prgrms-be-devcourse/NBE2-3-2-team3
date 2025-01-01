@@ -1,6 +1,7 @@
 package com.example.bestme.dto.community;
 
 import com.example.bestme.domain.community.Category;
+import com.example.bestme.domain.user.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -14,6 +15,7 @@ import lombok.*;
 public class RequestWriteDTO implements BoardDTO {
 
     private Long userId;
+    private User user;
 //    private String nickname;    // user 엔티티와 연결 후 사용
 //    private String password;    // user 엔티티와 연결 후 사용
     private String subject;

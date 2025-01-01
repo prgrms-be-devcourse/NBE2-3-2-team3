@@ -3,16 +3,12 @@ document.addEventListener("DOMContentLoaded", function() {
     console.log("커뮤니티 메인 페이지 스크립트")
 
     const accessToken = localStorage.getItem('Authorization')
-    console.log("accessToken: " + accessToken.toString())
     const buttonBody = document.getElementById("buttons");
 
     // 버튼 HTML 동적 생성
     if (accessToken) {
-        buttonBody.innerHTML = `
-            <div class="align_right">
-            <input type="button" value="글 작성" class="btn_write btn_txt01" style="cursor: pointer;" onclick="location.href='/community/write'" />
-            </div>
-        `;
+        console.log("accessToken: " + accessToken.toString())
+        buttonBody.innerHTML = `<button type="button" class="green" onclick="location.href = '/community/write'">글 작성</button>`;
     }
 
     // 게시물 목록 API 호출
@@ -31,7 +27,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
             // 게시물 데이터 추출
             const posts = data.data.content;
-            const tableBody = document.getElementById("post-list");
+            const tableBody = document.getElementById("board-list");
 
             // 현재 날짜 계산
             const today = new Date();
@@ -53,7 +49,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 const hrefLink = post.links.find(link => link.rel === 'self')?.href || '#';
 
                 newRow.innerHTML = `
-                    <td>&nbsp;</td>
                     <td>${post.boardId}</td>
                     <td class="left">
                         <a href="${hrefLink}">${post.subject}</a>&nbsp;
@@ -62,15 +57,15 @@ document.addEventListener("DOMContentLoaded", function() {
                     <td>${post.nickname}</td>
                     <td>${formattedCreatedAt}</td>
                     <td>${post.view}</td>
-                    <td>&nbsp;</td>
+                    <td></td>
                 `;
 
                 tableBody.appendChild(newRow);
             });
 
             // 데이터 총 갯수 id
-            const boardCount = document.getElementById("boards-count");
-            boardCount.innerHTML = `<div class="bold">총 <span class="txt_orange">${data.data.page.totalElements}</span>건</div>`;
+            // const boardCount = document.getElementById("boards-count");
+            // boardCount.innerHTML = `<div class="bold">총 <span class="txt_orange">${data.data.page.totalElements}</span>건</div>`;
 
             // 페이지 및 링크 데이터 추출
             const pages = data.data.page;
@@ -87,46 +82,35 @@ document.addEventListener("DOMContentLoaded", function() {
             const groupStartPage = currentGroup * maxVisiblePages + 1; // 현재 그룹의 첫 페이지 번호
             const groupEndPage = Math.min(groupStartPage + maxVisiblePages - 1, totalPages); // 현재 그룹의 마지막 페이지 번호
 
-            let paginationHtml = '<div align="absmiddle">';
-
+            // 네비게이션 HTML 생성
             // << 버튼 (firstPageOfPrevGroup 링크 사용)
             const firstPageOfPrevGroup = links.find(link => link.rel === "firstPageOfPrevGroup");
-            paginationHtml += firstPageOfPrevGroup
-                ? `<span><a href="${firstPageOfPrevGroup.href}">&lt;&lt;</a></span>`
-                : '<span><a class="disabled">&lt;&lt;</a></span>';
+            let paginationHtml = firstPageOfPrevGroup
+                ? `<a href="${firstPageOfPrevGroup.href}"><i class="fa-solid fa-angles-left"></i></a>`
+                : '<a class="disabled"><i class="fa-solid fa-angles-left"></i></a>';
 
-            // < 버튼 (nextPage 링크 사용)
+            // < 버튼 (prevPage 링크 사용)
             const prevPage = links.find(link => link.rel === "prevPage");
             paginationHtml += prevPage
-                ? `<span><a href="${prevPage.href}">&lt;</a></span>`
-                : '<span><a class="disabled">&lt;</a></span>';
+                ? `<a href="${prevPage.href}"><i class="fa-solid fa-angle-left"></i></a>`
+                : '<a class="disabled"><i class="fa-solid fa-angle-left"></i></a>';
 
             // 페이지 번호
             for (let i = groupStartPage; i <= groupEndPage; i++) {
-                if (i === currentPage) {
-                    paginationHtml += `<span><a>[ ${i} ]</a></span>`;
-                } else {
-                    paginationHtml += `<span><a href="/community/${i}">${i}</a></span>`;
-                }
+                paginationHtml += `<a href="/community/${i}" class="page-btn ${i === currentPage ? "sel" : ""}">${i}</a>`;
             }
-
-            paginationHtml += '&nbsp;&nbsp;';
 
             // > 버튼 (nextPage 링크 사용)
             const nextPage = links.find(link => link.rel === "nextPage");
             paginationHtml += nextPage
-                ? `<span><a href="${nextPage.href}">&gt;</a></span>`
-                : '<span><a class="disabled">&gt;</a></span>';
-
-            paginationHtml += '&nbsp;';
+                ? `<a href="${nextPage.href}"><i class="fa-solid fa-angle-right"></i></a>`
+                : '<a class="disabled"><i class="fa-solid fa-angle-right"></i></a>';
 
             // >> 버튼 (lastPageOfNextGroup 링크 사용)
             const lastPageOfNextGroup = links.find(link => link.rel === "lastPageOfNextGroup");
             paginationHtml += lastPageOfNextGroup
-                ? `<span><a href="${lastPageOfNextGroup.href}">&gt;&gt;</a></span>`
-                : '<span><a class="disabled">&gt;&gt;</a></span>';
-
-            paginationHtml += '</div>';
+                ? `<a href="${lastPageOfNextGroup.href}"><i class="fa-solid fa-angles-right"></i></a>`
+                : '<a class="disabled"><i class="fa-solid fa-angles-right"></i></a>';
 
             // 페이지 네비게이션 HTML 삽입
             pageNav.innerHTML = paginationHtml;
@@ -134,7 +118,7 @@ document.addEventListener("DOMContentLoaded", function() {
         })
         .catch((error) => {
             console.error("Error fetching result data:", error);
-            const tableBody = document.getElementById("post-list");
+            const tableBody = document.getElementById("board-list");
             tableBody.innerHTML = `<tr><td colspan="7">데이터를 로드할 수 없습니다.</td></tr>`;
         });
 });

@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const createdAt = document.getElementById("createdAt");
             const nickname = document.getElementById("nickname");
             const view = document.getElementById("view");
-            const category = document.getElementById("category");
+            // const category = document.getElementById("category");
             const content = document.getElementById("content");
             const image = document.getElementById("image-fIle");
 
@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", function () {
             // 조회 삽입
             view.innerHTML = post.view;
             // 카테고리 삽입
-            category.innerHTML = post.category;
+            // category.innerHTML = post.category;
             // 내용 삽입
             content.innerHTML = post.content;
 
@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 getImageFile(post.imagename).then(imageUrl => {
                     if (imageUrl) {
                         // 이미지 URL 또는 Blob을 img 태그의 src로 설정
-                        image.innerHTML = `<img src="${imageUrl}" alt="게시물 이미지" />`;
+                        image.innerHTML = `<img src="${imageUrl}" style="width: 100%; height: auto; object-fit: cover;" alt="게시물 이미지" />`;
                     } else {
                         image.innerHTML = "이미지 로드 실패.";
                     }
@@ -63,25 +63,24 @@ document.addEventListener("DOMContentLoaded", function () {
             // 버튼(수정, 삭제, 쓰기) 동적 표기 기능
             const accessToken = localStorage.getItem('Authorization');
             const buttonBody = document.getElementById("buttons");
-            const apiUserId = post.user;
+            const apiUserId = post.userId;
             let buttonHTML = "";
 
             if (accessToken) {
                 // getLoginInfo를 비동기적으로 처리
                 getLoginInfo().then(userInfo => {
-                    const userId = userInfo.id;
-                    console.log("토큰 내 유저 id: "+ userId);
+                    const tokenUserId = userInfo.id;
+                    console.log("토큰 내 유저 id: "+ tokenUserId);
                     console.log("api 응답 내 유저 id: " + apiUserId);
 
-                    if (apiUserId === userId && apiUserId !== 0 ) {
-                        buttonHTML = `
-                    <input type="button" value="수정" class="btn_list btn_txt02" style="cursor: pointer;" onclick="location.href='/community/modify/${boardId}'" />
-                    <input type="button" value="삭제" class="btn_list btn_txt02" style="cursor: pointer;" onclick="location.href='/community/delete/${boardId}'" />
-                    <input type="button" value="쓰기" class="btn_write btn_txt01" style="cursor: pointer;" onclick="location.href='/community/write'" />
+                    if (apiUserId === tokenUserId && apiUserId !== 0 ) {
+                        buttonHTML = `<button type="button" class="common" onclick="location.href='/community/modify/${boardId}'">수정</button>
+                            <button type="button" class="common" onclick="location.href='/community/delete/${boardId}'">삭제</button>
+                            <button type="button" class="green" onclick="location.href='/community/write'">글 작성</button>
                 `;
                     } else {
                         buttonHTML = `
-                    <input type="button" value="쓰기" class="btn_write btn_txt01" style="cursor: pointer;" onclick="location.href='/community/write'" />
+                    <button type="button" class="green" onclick="location.href='/community/write'">글 작성</button>
                 `;
                     }
 
@@ -94,9 +93,11 @@ document.addEventListener("DOMContentLoaded", function () {
         })
         .catch((error) => {
             console.error("Error fetching result data:", error);
-            const errorMessage = document.createElement("p");
-            errorMessage.textContent = "게시물 데이터를 불러오는 데 실패했습니다. 나중에 다시 시도해주세요.";
-            main.appendChild(errorMessage);
+            alert("게시물 데이터를 불러오는 데 실패했습니다. 나중에 다시 시도해주세요.")
+            location.href = "/community";
+            // const errorMessage = document.createElement("p");
+            // errorMessage.textContent = "게시물 데이터를 불러오는 데 실패했습니다. 나중에 다시 시도해주세요.";
+            // main.appendChild(errorMessage);
         });
 });
 

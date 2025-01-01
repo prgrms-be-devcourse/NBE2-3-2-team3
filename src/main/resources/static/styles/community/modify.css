@@ -95,3 +95,10 @@ table .file_label > input{
 .spring {
     flex: 1;
 }
+
+.delete-button {
+    color: red;
+    border: none;
+    background: none;
+    cursor: pointer;
+}
