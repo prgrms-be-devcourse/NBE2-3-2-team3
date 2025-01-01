@@ -9,13 +9,9 @@
     <link rel="stylesheet" type="text/css" th:href="@{/styles/mypage/member.css}">
     <script src="https://kit.fontawesome.com/5fcc17a7cc.js" crossorigin="anonymous"></script>
     <script defer type="text/javascript" th:src="@{/scripts/common.js}"></script>
+    <script defer type="text/javascript" th:src="@{/scripts/member.js}"></script>
     <script defer type="text/javascript" th:src="@{/scripts/modal.js}"></script>
-    <link rel="stylesheet" type="text/css" href="/static/styles/header.css">
-    <link rel="stylesheet" type="text/css" href="/static/styles/modal.css">
-    <link rel="stylesheet" type="text/css" href="/static/styles/mypage/index.css">
-    <link rel="stylesheet" type="text/css" href="/static/styles/mypage/member.css">
-    <script defer type="text/javascript" src="/static/scripts/common.js"></script>
-    <script defer type="text/javascript" src="/static/scripts/modal.js"></script>
+
 </head>
 <body>
 <header id="header">
@@ -67,16 +63,16 @@
     </div>
     <div class="content">
         <h3 class="title">나의 진단 결과</h3>
-        <div class="content-row">
-            <div class="content-history">
-                <span>닉네임 님의 커스널 컬러는</span>
-                <span class="highlight">"여름 쿨톤"</span>
-                <span>으로 추정됩니다</span>
+        <div id="content-row" class="content-row">
+            <div class="content-personal">
+                <span id="personal-nickname">닉네임</span> 님의 퍼스널 컬러는
+                <span id="personal-color-h" class="highlight">"-톤"</span>
+                <span id="five-ton">으로 추정됩니다.</span>
+                <br><span>(가장 많은 빈도로 진단된 퍼스널 컬러를 기준으로 합니다)</span>
             </div>
-            <div class="content-recommend">
-                <img src="#" alt="추천 아이템 이미지">
-                <div class="content-recommend-text">
-                    <span>이런 아이템이 어울려요~</span>
+            <div class="content-personal-history">
+                <h2>[ 진단 내역 ]</h2>
+                <div id="content-personal-history" class="content-personal-history">
                 </div>
             </div>
         </div>

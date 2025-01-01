@@ -101,6 +101,11 @@ document.addEventListener("DOMContentLoaded", function() {
             })
             .catch((error) => {
                 console.error("Error fetching result data:", error);
+
+                const spanElement1 = document.getElementById("guide-d1");
+                const spanElement2 = document.getElementById("guide-d2");
+                spanElement1.innerHTML = "회원님은 아직 퍼스널 컬러 진단 이력이 없습니다."
+                spanElement2.innerHTML = "퍼스널 컬러 진단을 받고 아래와 같은 맞춤 가이드를 제공받아보세요 😄"
             });
     }
 });
