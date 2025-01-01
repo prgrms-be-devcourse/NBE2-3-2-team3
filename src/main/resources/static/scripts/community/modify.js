@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const subject = document.getElementById("subject");
             // const category = document.getElementById("category");
             const content = document.getElementById("content");
-            const file = document.getElementById("file");
+            const fileName = document.getElementById("file-name");
 
             // 제목 삽입
             subject.value = post.subject;
@@ -35,31 +35,22 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // 파일 정보 추가 UI
             if (post.imagename) {
-                const fileInfoWrapper = document.createElement("div");
-                fileInfoWrapper.id = "file-info-wrapper";
+                // 동적으로 파일 이름과 삭제 버튼을 추가합니다.
+                fileName.innerHTML = `<span id="image-name">${post.imagename}</span><button id="delete-button" class="delete-button"> X </button>`;
 
-                const fileInfo = document.createElement("span");
-                fileInfo.textContent = `업로드된 파일: ${post.imagename}`;
-                fileInfo.style.marginRight = "10px";
+                // 삭제 버튼 클릭 시 처리
+                document.getElementById('delete-button').addEventListener('click', function () {
+                    // 파일 정보 UI 삭제
+                    fileName.innerHTML = '';
 
-                const deleteButton = document.createElement("button");
-                deleteButton.textContent = "X";
-                deleteButton.style.color = "red";
-                deleteButton.style.border = "none";
-                deleteButton.style.background = "none";
-                deleteButton.style.cursor = "pointer";
+                    // 파일 입력 초기화
+                    const fileInput = document.getElementById("file");
+                    fileInput.value = ""; // 새 파일 입력 가능
 
-                deleteButton.addEventListener("click", function () {
-                    fileInfoWrapper.remove(); // 파일 정보 UI 삭제
-                    file.value = ""; // 새 파일 입력 가능
-                    post.imagename = null; // 기존 파일 데이터 제거
+                    // 기존 파일 데이터 제거
+                    post.imagename = null;
                 });
-
-                fileInfoWrapper.appendChild(fileInfo);
-                fileInfoWrapper.appendChild(deleteButton);
-                file.insertAdjacentElement("beforebegin", fileInfoWrapper);
             }
-
         })
         .catch((error) => {
             console.error("Error fetching result data:", error);
@@ -78,8 +69,13 @@ async function modifySubmit() {
     const content = document.getElementById("content").value;
     const category = "BASIC"; // 카테고리 기본값 설정
     const fileInput = document.getElementById("file");
-    const fileName = document.getElementById("file-info-wrapper") ? document.getElementById("file-info-wrapper")
-        .textContent.replace("업로드된 파일: ", "") : null;
+    let fileName = null;
+
+    // 이미지 파일 이름을 가져오는 안전한 방법
+    const fileNameElement = document.getElementById("image-name");
+    if (fileNameElement) {
+        fileName = fileNameElement.textContent.trim();
+    }
 
     if (subject === '') {
         alert('제목을 입력해 주세요.');
@@ -108,7 +104,7 @@ async function modifySubmit() {
     }
 
     try {
-        const response = await fetch("http://localhost:8080/api/community/update", {
+        const response = await fetch("http://localhost:8080/api/community/modify", {
             method: "PUT",
             headers: {
                 Authorization: localStorage.getItem("Authorization")
@@ -136,3 +132,19 @@ async function modifySubmit() {
         alert("네트워크 오류가 발생했습니다.");
     }
 }
+
+// 파일 input 요소와 업로드된 파일 이름을 표시할 input 요소
+const fileInput = document.getElementById("file");
+const uploadText = document.getElementById("upload_text");
+
+// 파일 선택 시 실행되는 이벤트 리스너
+fileInput.addEventListener("change", function() {
+    const fileName = fileInput.files[0] ? fileInput.files[0].name : ''; // 파일 이름 가져오기
+
+    // 파일이 선택되었으면 파일 이름을 표시
+    if (fileName) {
+        uploadText.value = fileName;
+    } else {
+        uploadText.value = ''; // 파일이 선택되지 않으면 빈 문자열로 초기화
+    }
+});

@@ -13,10 +13,10 @@
     <script defer type="text/javascript" th:src="@{/scripts/modal.js}"></script>
     <script defer type="text/javascript" th:src="@{/scripts/community/detail.js}"></script>
     <script defer type="text/javascript" th:src="@{/scripts/community/file.js}"></script>
-    <link rel="stylesheet" href="/static/styles/header.css">
-    <link rel="stylesheet" href="/static/styles/modal.css">
-    <link rel="stylesheet" href="/static/styles/community/index.css">
-    <link rel="stylesheet" href="/static/styles/community/detail.css">
+<!--    <link rel="stylesheet" href="/static/styles/header.css">-->
+<!--    <link rel="stylesheet" href="/static/styles/modal.css">-->
+<!--    <link rel="stylesheet" href="/static/styles/community/index.css">-->
+<!--    <link rel="stylesheet" href="/static/styles/community/detail.css">-->
 </head>
 <body th:replace="~{community/community_base :: body}">
     <!-- 실제 페이지 내용 -->
@@ -37,28 +37,37 @@
                                 <tr>
                                     <th>제목</th>
                                     <td>
-                                        <span>여긴 제목칸</span>
+                                        <span id="subject">여긴 제목칸</span>
                                     </td>
                                     <th>등록일</th>
                                     <td>
-                                        <span>2024.12.25</span>
+                                        <span id="createdAt">2024.12.25</span>
                                     </td>
                                 </tr>
                                 <tr>
                                     <th>작성자</th>
                                     <td>
-                                        <span>여긴 닉네임</span>
+                                        <span id="nickname">여긴 닉네임</span>
                                     </td>
                                     <th>조회수</th>
                                     <td>
-                                        <span>15</span>
+                                        <span id="view">15</span>
                                     </td>
                                 </tr>
+<!--                                <tr>-->
+<!--                                    <th>카테고리</th>-->
+<!--                                    <td>-->
+<!--                                        <span id="category">여긴 카테고리</span>-->
+<!--                                    </td>-->
+<!--                                </tr>-->
                                 <tr>
                                     <th>내용</th>
                                     <td colspan="3" class="content">
                                         <div class="content-box">
                                             <!-- 여기에 첨부파일의 그림, 글 모두 다 넣으시면 될 것 같아요 -->
+                                            <span id="content"></span>
+                                            <br/><br/>
+                                            <span id="image-fIle"></span>
                                         </div>
                                     </td>
                                 </tr>
@@ -70,12 +79,7 @@
                             <button type="button" class="green"
                                     onclick="location.href='/community'">목록</button>
                             <span class="spring"></span>
-                            <button type="button" class="common"
-                                    onclick="location.href='#'">수정</button>
-                            <button type="button" class="common"
-                                    onclick="location.href='#'">삭제</button>
-                            <button type="button" class="green"
-                                    onclick="location.href='#'">글 작성</button>
+                            <div id="buttons"></div>
                         </div>
                         <!--//게시판-->
                     </div>

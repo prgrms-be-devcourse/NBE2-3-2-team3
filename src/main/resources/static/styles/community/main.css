@@ -75,3 +75,9 @@ table > tfoot .paging-div > i {
     cursor: pointer;
     font-size: 1.2rem;
 }
+
+a.disabled {
+    pointer-events: none; /* 클릭 불가 */
+    color: gray; /* 비활성화 색상 */
+    cursor: default; /* 기본 커서 */
+}

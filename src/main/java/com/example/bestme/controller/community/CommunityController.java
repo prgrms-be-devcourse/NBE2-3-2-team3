@@ -207,7 +207,7 @@ public class CommunityController {
 
     // 지정 게시물 Modify API
     @Operation( summary = "게시물 Modify API (테스트 순서: 4)", description = "지정 게시물 수정" )
-    @PutMapping(value = "/community/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = "/community/modify", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<ResponseFindDTO>> updateCommunity(
             @RequestPart(name = "to") RequestModifyDTO to,                           // 데이터 전송 (JSON 형식)
             @RequestPart(name = "file", required = false) MultipartFile file,        // 파일 업로드 처리

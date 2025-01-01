@@ -29,14 +29,14 @@ public class CommunityService {
     private final LocalFileService localFileService;
     private final ModelMapper modelMapper = new ModelMapper();
     private final UserRepository userRepository;
-//    private final PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     // DTO 유효성 검사 메서드
     public void validateBoardDTO(BoardDTO dto)  { dto.validate(); }
 
     // 사용자 Id 유무 검증 메서드 ( user 테이블에 해당 Id 존재 확인 )
-    public void validateUser(Long userId) {
-        userRepository.findById(userId)
+    public User validateUser(Long userId) {
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
 
         // 닉네임, 비밀번호 검증 코드 ( 사용 안함 )
@@ -50,6 +50,8 @@ public class CommunityService {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
          */
+
+        return user;
     }
 
     // 게시물 생성 기능
@@ -57,7 +59,8 @@ public class CommunityService {
         // DTO 유효성 검사
         validateBoardDTO(to);
         // 사용자 Id 유무 검증
-        validateUser(to.getUserId());
+        User user = validateUser(to.getUserId());
+        to.setUser(user);
         // 이미지 파일 업로드
         if ( file != null && !file.isEmpty() ) {
             try {
@@ -70,6 +73,8 @@ public class CommunityService {
         communityRepository.save(entity);
         // 응답 DTO 생성
         ResponseFindDTO result = modelMapper.map(entity, ResponseFindDTO.class);
+        result.setUserId(user.getId());
+        result.setNickname(user.getNickname());
 
         return result;
     }
@@ -110,6 +115,7 @@ public class CommunityService {
         ResponseFindDTO result = modelMapper.map(board, ResponseFindDTO.class);
         String nickname = board.getUser().getNickname();      // user 엔티티와 연결 후 사용
         result.setNickname(nickname);
+        result.setUserId(board.getUser().getId());
 
         return result;
     }
@@ -169,7 +175,13 @@ public class CommunityService {
         // DTO 유효성 검사
         validateBoardDTO(to);
         // 사용자 Id 유무 검증
-        validateUser(to.getUserId());
+        User user = validateUser(to.getUserId());
+
+        // 비밀번호 비교 (암호화된 비밀번호와 입력된 비밀번호 비교)
+        if (!passwordEncoder.matches(to.getPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+
         // 기존 게시물 불러오기
         Community board = communityRepository.findById(String.valueOf(to.getBoardId()))
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시물은 존재하지 않습니다."));

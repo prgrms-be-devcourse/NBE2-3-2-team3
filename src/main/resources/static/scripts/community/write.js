@@ -69,3 +69,19 @@ async function writeSubmit() {
         alert("네트워크 오류가 발생했습니다.");
     }
 }
+
+// 파일 input 요소와 업로드된 파일 이름을 표시할 input 요소
+const fileInput = document.getElementById("file");
+const uploadText = document.getElementById("upload_text");
+
+// 파일 선택 시 실행되는 이벤트 리스너
+fileInput.addEventListener("change", function() {
+    const fileName = fileInput.files[0] ? fileInput.files[0].name : ''; // 파일 이름 가져오기
+
+    // 파일이 선택되었으면 파일 이름을 표시
+    if (fileName) {
+        uploadText.value = fileName;
+    } else {
+        uploadText.value = ''; // 파일이 선택되지 않으면 빈 문자열로 초기화
+    }
+});
