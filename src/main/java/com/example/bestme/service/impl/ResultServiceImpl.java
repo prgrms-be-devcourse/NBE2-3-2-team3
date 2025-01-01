@@ -62,7 +62,7 @@ public class ResultServiceImpl implements ResultService {
     @Override
     @Transactional(readOnly = true)
     public List<Result> readResults(Long userId) {
-        List<Result> results = resultRepository.findAllByUser_UserId(userId);
+        List<Result> results = resultRepository.findAllByUser_id(userId);
         //결과가 없는 경우
         if (results.isEmpty()) {
             throw new EntityNotFoundException("해당 유저의 퍼스널 컬러 진단 결과가 존재하지 않습니다. (userId: " + userId + ")");

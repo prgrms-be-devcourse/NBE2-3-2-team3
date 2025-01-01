@@ -25,16 +25,16 @@
                 <a href="/">홈</a>
             </li>
             <li>
-                <a href="#">퍼스널컬러 테스트</a>
+                <a href="/personal">퍼스널컬러 테스트</a>
             </li>
             <li>
-                <a href="#">스타일링 추천</a>
+                <a href="/style/guide">스타일링 추천</a>
             </li>
             <li>
-                <a href="#">커뮤니티</a>
+                <a href="/community">커뮤니티</a>
             </li>
             <li>
-                <a href="#">마이 페이지</a>
+                <a href="/member">마이 페이지</a>
             </li>
         </ul>
     </div>
@@ -56,8 +56,8 @@
             <div class="nickname valid-check">
                 <span class="desc-text">닉네임</span>
                 <label class="text-label">
-                    <input autocomplete="off" type="text" name="nickname" minlength="2" maxlength="50"
-                           placeholder="BestMe에서 활동하실 닉네임을 입력해주세요 (숫자, 영소문자, 영대문자, 한글, -, _ 로 이루어진 2자 이상)"
+                    <input autocomplete="off" type="text" name="nickname" minlength="2" maxlength="8"
+                           placeholder="BestMe에서 활동하실 닉네임을 입력해주세요 (숫자, 영소문자, 영대문자, 한글, -, _ 로 이루어진 2~8자)"
                            th:attrappend="data-regex=${userRegex.nickname.expression}">
                 </label>
                 <span class="warning"></span>

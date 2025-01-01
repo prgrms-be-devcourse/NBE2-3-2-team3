@@ -23,7 +23,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     public UserDetails createUserDetails(User user) {
         return CustomUserDetailDTO.builder()
-                .userId(user.getUserId())
+                .userId(user.getId())
                 .email(user.getEmail())
                 .password(user.getPassword())
                 .role(user.getRole())

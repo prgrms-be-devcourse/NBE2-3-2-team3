@@ -36,7 +36,7 @@ public class CommunityService {
 
     // 사용자 Id 유무 검증 메서드 ( user 테이블에 해당 Id 존재 확인 )
     public void validateUser(Long userId) {
-        userRepository.findById(String.valueOf(userId))
+        userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
 
         // 닉네임, 비밀번호 검증 코드 ( 사용 안함 )

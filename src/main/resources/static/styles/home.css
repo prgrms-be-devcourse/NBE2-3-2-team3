@@ -78,7 +78,7 @@
 }
 
 #main > .section-container > .featured-post > .title{
-    font-size: 1.8rem;
+    font-size: 1.7rem;
     font-weight: 600;
 }
 
@@ -115,12 +115,12 @@
 
 #main > .section-container > .featured-post > .post-container > .post > .subject {
     font-weight: 300;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     text-decoration: none;
 }
 
 #main > .section-container > .featured-post > .post-container > .post > .writer,.views {
     font-weight: 300;
-    font-size: 1rem;
+    font-size: 0.9rem;
     color: #A1824A;
 }

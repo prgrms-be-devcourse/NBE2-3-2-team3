@@ -5,8 +5,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.NoSuchElementException;
+
 @Repository
-public interface UserRepository extends JpaRepository<User, String> {
+public interface UserRepository extends JpaRepository<User, Long> {
+
+    default User getById(Long id) {
+        return findById(id)
+                .orElseThrow(() -> new NoSuchElementException("유저 x"));
+    }
 
     // 이메일(Unique)로 유저를 찾는 쿼리
     @Query(value = "select u from User u where u.email = ?1 and u.deletedFlag = false")
@@ -17,6 +24,6 @@ public interface UserRepository extends JpaRepository<User, String> {
     User findByNickname(String nickname);
 
     // userId 로 유저를 찾는 쿼리
-    @Query(value = "select u from User u where u.userId = ?1 and u.deletedFlag = false")
+    @Query(value = "select u from User u where u.id = ?1 and u.deletedFlag = false")
     User findByUserId(Long id);
 }
