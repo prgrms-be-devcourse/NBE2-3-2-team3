@@ -1,105 +1,71 @@
-// static/scripts/community/detail.js
-document.addEventListener("DOMContentLoaded", function () {
-    console.log("커뮤니티 디테일 페이지 스크립트")
+// static/scripts/community/write.js
 
-    const main = document.getElementById("main");
-    const boardId = main.getAttribute("data-board-id");
-    // let apiUserId = 0;
+async function writeSubmit() {
 
-    // 게시물 목록 API 호출
-    fetch(`http://localhost:8080/api/community/detail/${boardId}`, {
-        method: 'GET',
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log(data);
+    // 폼 데이터 수집
+    const subject = document.getElementById("subject").value;
+    const content = document.getElementById("content").value;
+    const category = "BASIC"; // 카테고리 기본값 설정
+    const fileInput = document.getElementById("file");
+    const infoCheckbox = document.getElementById("info");
 
-            // 게시물 데이터 추출
-            const post = data.data;
-            // html 각 요소 준비
-            const subject = document.getElementById("subject");
-            const createdAt = document.getElementById("createdAt");
-            const nickname = document.getElementById("nickname");
-            const view = document.getElementById("view");
-            const category = document.getElementById("category");
-            const content = document.getElementById("content");
-            const image = document.getElementById("image-fIle");
+    // 개인정보 동의 여부 확인
+    if (!infoCheckbox.checked) {
+        alert("개인정보 수집 및 이용에 동의해 주세요.");
+        return;
+    }
+    if (subject === '') {
+        alert('제목을 입력해 주세요.');
+        return;
+    }
 
-            // 제목 삽입
-            subject.innerHTML = post.subject;
-            // 생성 날짜 삽입
-            const createdAtDate = new Date(post.createdAt);
-            const formattedCreatedAt = `${createdAtDate.getFullYear()}-${(createdAtDate.getMonth() + 1)
-                .toString().padStart(2, '0')}-${createdAtDate.getDate().toString().padStart(2, '0')}`;
-            createdAt.innerHTML = formattedCreatedAt;
-            // 작성자 삽입
-            nickname.innerHTML = post.nickname;
-            // 조회 삽입
-            view.innerHTML = post.view;
-            // 카테고리 삽입
-            category.innerHTML = post.category;
-            // 내용 삽입
-            content.innerHTML = post.content;
+    if (content === '') {
+        alert('내용을 입력해 주세요.');
+        return;
+    }
 
-            // 이미지 추가
-            if (post.imagename) {
-                // 이미지가 있으면 이미지를 비동기로 가져옴
-                getImageFile(post.imagename).then(imageUrl => {
-                    if (imageUrl) {
-                        // 이미지 URL 또는 Blob을 img 태그의 src로 설정
-                        image.innerHTML = `<img src="${imageUrl}" alt="게시물 이미지" />`;
-                    } else {
-                        image.innerHTML = "이미지 로드 실패.";
-                    }
-                });
-            } else {
-                image.innerHTML = "첨부된 이미지가 없습니다.";
-            }
+    // `RequestWriteDTO` 데이터 준비
+    const requestDTO = {
+        subject: subject,
+        content: content,
+        category: category
+    };
 
-            // 버튼(수정, 삭제, 쓰기) 동적 표기 기능
-            const accessToken = localStorage.getItem('Authorization');
-            const buttonBody = document.getElementById("buttons");
-            const apiUserId = post.user;
-            let buttonHTML = "";
+    // FormData 생성
+    const formData = new FormData();
+    formData.append("to", new Blob([JSON.stringify(requestDTO)], { type: "application/json" }));
 
-            if (accessToken) {
-                // getLoginInfo를 비동기적으로 처리
-                getLoginInfo().then(userInfo => {
-                    const userId = userInfo.id;
-                    console.log("토큰 내 유저 id: "+ userId);
-                    console.log("api 응답 내 유저 id: " + apiUserId);
+    if (fileInput.files.length > 0) {
+        formData.append("file", fileInput.files[0]);
+    }
 
-                    if (apiUserId === userId && apiUserId !== 0 ) {
-                        buttonHTML = `
-                    <input type="button" value="수정" class="btn_list btn_txt02" style="cursor: pointer;" onclick="location.href='/community/modify/${boardId}'" />
-                    <input type="button" value="삭제" class="btn_list btn_txt02" style="cursor: pointer;" onclick="location.href='/community/delete/${boardId}'" />
-                    <input type="button" value="쓰기" class="btn_write btn_txt01" style="cursor: pointer;" onclick="location.href='/community/write'" />
-                `;
-                    } else {
-                        buttonHTML = `
-                    <input type="button" value="쓰기" class="btn_write btn_txt01" style="cursor: pointer;" onclick="location.href='/community/write'" />
-                `;
-                    }
-
-                    buttonBody.innerHTML = buttonHTML;
-                }).catch(error => {
-                    console.error("로그인 정보 가져오기 실패:", error);
-                });
-            }
-
-        })
-        .catch((error) => {
-            console.error("Error fetching result data:", error);
-            const errorMessage = document.createElement("p");
-            errorMessage.textContent = "게시물 데이터를 불러오는 데 실패했습니다. 나중에 다시 시도해주세요.";
-            document.getElementById("main-content").appendChild(errorMessage);
+    try {
+        const response = await fetch("http://localhost:8080/api/community/write", {
+            method: "POST",
+            headers: {
+                Authorization: localStorage.getItem("Authorization") // 토큰 추가
+            },
+            body: formData
         });
-});
 
+        if (response.ok) {
+            const result = await response.json();
+            console.log("게시물 작성 성공:", result);
+            alert("게시물이 성공적으로 작성되었습니다!");
 
-
+            const post = result.data;
+            if (post && post.boardId) {
+                // 성공 후 해당 게시물 디테일 페이지로 리디렉션
+                window.location.href = `/community/detail/${post.boardId}`;
+            } else {
+                alert("게시물 생성은 성공했으나 리디렉션할 수 없습니다.");
+            }
+        } else {
+            console.error("게시물 작성 실패:", response.status);
+            alert("게시물 작성에 실패했습니다.");
+        }
+    } catch (error) {
+        console.error("API 호출 중 오류 발생:", error);
+        alert("네트워크 오류가 발생했습니다.");
+    }
+}

@@ -4,7 +4,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const main = document.getElementById("main");
     const boardId = main.getAttribute("data-board-id");
-    // let apiUserId = 0;
 
     // 게시물 목록 API 호출
     fetch(`http://localhost:8080/api/community/detail/${boardId}`, {
@@ -97,7 +96,7 @@ document.addEventListener("DOMContentLoaded", function () {
             console.error("Error fetching result data:", error);
             const errorMessage = document.createElement("p");
             errorMessage.textContent = "게시물 데이터를 불러오는 데 실패했습니다. 나중에 다시 시도해주세요.";
-            document.getElementById("main-content").appendChild(errorMessage);
+            main.appendChild(errorMessage);
         });
 });
 

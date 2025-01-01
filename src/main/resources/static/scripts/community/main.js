@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", function() {
     if (accessToken) {
         buttonBody.innerHTML = `
             <div class="align_right">
-            <input type="button" value="글 작성" class="btn_write btn_txt01" style="cursor: pointer;" onclick="location.href='/community_write'" />
+            <input type="button" value="글 작성" class="btn_write btn_txt01" style="cursor: pointer;" onclick="location.href='/community/write'" />
             </div>
         `;
     }

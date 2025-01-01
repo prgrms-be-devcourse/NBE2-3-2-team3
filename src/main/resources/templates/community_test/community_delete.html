@@ -1,20 +1,20 @@
 <!-- community_main.html -->
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{community/community_base :: head(~{::title},~{::link}, ~{::script})}">
+<head th:replace="~{community_test/community_base :: head(~{::title},~{::link}, ~{::script})}">
     <title>BestMe - Community</title>
     <!--css, js 추가 시 사용-->
     <link rel="stylesheet" type="text/css" th:href="@{/styles/community/board.css}">
     <!--<script></script>-->
 </head>
-<body th:replace="~{community/community_base :: body}">
+<body th:replace="~{community_test/community_base :: body}">
     <!-- 실제 페이지 내용 -->
     <div th:fragment="content">
         <main id="main">
             <!-- 페이지 내용 추가 -->
             <!-- 상단 디자인 -->
             <div class="con_title">
-                <h3>게시물 수정</h3>
+                <h3>게시물 삭제</h3>
             </div>
             <div class="con_txt">
                 <form action="" method="post" name="">
@@ -28,32 +28,11 @@
                                 </tr>
                                 <tr>
                                     <th>제목</th>
-                                    <td><input type="text" name="subject" value="" class="board_view_input" /></td>
+                                    <td><input type="text" name="subject" value="" class="board_view_input" readonly/></td>
                                 </tr>
                                 <tr>
                                     <th>비밀번호</th>
                                     <td><input type="password" name="password" value="" class="board_view_input_mail"/></td>
-                                </tr>
-                                <tr>
-                                    <th>첨부파일</th>
-                                    <td>
-                                        <input type="file" name="upload" value="" />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>내용</th>
-                                    <td><textarea name="content" class="board_editor_area"></textarea></td>
-                                </tr>
-                                <!--이미지 파일 로드-->
-                                <tr>
-                                    <th>이미지 파일</th>
-                                    <td colspan="4" height="200" valign="top" style="padding:20px; line-height:160%">
-                                        <div id="bbs_file_wrap">
-                                            <div>
-                                                <img src="./upload/607927_1.jpg" width="900" onerror="" /><br />
-                                            </div>
-                                        </div>
-                                    </td>
                                 </tr>
                             </table>
                         </div>
@@ -64,7 +43,7 @@
                                 <input type="button" value="보기" class="btn_list btn_txt02" style="cursor: pointer;" onclick="location.href='view.do'" />
                             </div>
                             <div class="align_right">
-                                <input type="button" value="수정" class="btn_write btn_txt01" style="cursor: pointer;" />
+                                <input type="button" value="삭제" class="btn_write btn_txt01" style="cursor: pointer;" />
                             </div>
                         </div>
                         <!--//게시판-->
