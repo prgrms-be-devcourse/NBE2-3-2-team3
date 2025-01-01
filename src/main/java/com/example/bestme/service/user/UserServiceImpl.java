@@ -198,7 +198,7 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional(readOnly = true)
     public User getUser(Long userId) {
-        User user = userRepository.findById(String.valueOf(userId)).orElseThrow(() -> new IllegalArgumentException("user를 찾을 수 없습니다."));
+        User user = userRepository.findById(Long.valueOf(userId)).orElseThrow(() -> new IllegalArgumentException("user를 찾을 수 없습니다."));
         return user;
     }
 
@@ -215,7 +215,7 @@ public class UserServiceImpl implements UserService{
         }
 
         ResponseUserDTO responseUserDTO = new ResponseUserDTO(
-                user.getUserId(),
+                user.getId(),
                 user.getNickname(),
                 user.getBirth(),
                 user.getGender());

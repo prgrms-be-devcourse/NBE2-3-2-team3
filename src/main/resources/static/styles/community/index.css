@@ -39,6 +39,20 @@ button.green:hover {
     background-color: #009963;
 }
 
+button.common {
+    border: none;
+    border-radius: 5px;
+    background-color: #cececedd;
+    color: black;
+    cursor: pointer;
+    padding: 0.6rem 1.8rem;
+    font-size: 0.9rem;
+}
+
+button.common:hover {
+    background-color: #cecece;
+}
+
 .button_common {
     border: none;
     border-radius: 5px;

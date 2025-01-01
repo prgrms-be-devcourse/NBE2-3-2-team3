@@ -36,7 +36,7 @@ public class CommunityService {
 
     // 사용자 검증 메서드
     public void validateUser(Long userId, String nickname, String password) {
-        User user = userRepository.findById(String.valueOf(userId))
+        User user = userRepository.findById(Long.valueOf(userId))
                 .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
         // 닉네임 검증
         if (!user.getNickname().equals(nickname)) {
