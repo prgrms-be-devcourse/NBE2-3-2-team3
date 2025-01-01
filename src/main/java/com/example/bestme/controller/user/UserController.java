@@ -90,7 +90,10 @@ public class UserController {
         Map<String, String> response = new HashMap<>();
         response.put("token", jwtToken);
 
-        return ResponseEntity.ok(response);
+        //return ResponseEntity.ok(response);
+        return ResponseEntity.status(HttpStatus.FOUND)
+                .header("Location", "/")
+                .build();
     }
 
     @GetMapping("/logout")
