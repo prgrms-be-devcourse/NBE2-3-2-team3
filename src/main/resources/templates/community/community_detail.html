@@ -1,4 +1,4 @@
-<!-- community_main.html -->
+<!-- community_detail.html -->
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -11,6 +11,8 @@
     <script src="https://kit.fontawesome.com/5fcc17a7cc.js" crossorigin="anonymous"></script>
     <script defer type="text/javascript" th:src="@{/scripts/common.js}"></script>
     <script defer type="text/javascript" th:src="@{/scripts/modal.js}"></script>
+    <script defer type="text/javascript" th:src="@{/scripts/community/detail.js}"></script>
+    <script defer type="text/javascript" th:src="@{/scripts/community/file.js}"></script>
     <link rel="stylesheet" href="/static/styles/header.css">
     <link rel="stylesheet" href="/static/styles/modal.css">
     <link rel="stylesheet" href="/static/styles/community/index.css">
@@ -19,7 +21,7 @@
 <body th:replace="~{community/community_base :: body}">
     <!-- 실제 페이지 내용 -->
     <div th:fragment="content">
-        <main id="main">
+        <main id="main" th:data-board-id="${boardId}">
             <!-- 페이지 내용 추가 -->
             <!-- 상단 디자인 -->
             <div class="com_head">
