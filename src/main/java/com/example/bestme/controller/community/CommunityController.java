@@ -99,8 +99,6 @@ public class CommunityController {
         for( int i=1; i < 55; i++) {
             RequestWriteDTO to = new RequestWriteDTO();
             to.setUserId(1L);
-            to.setNickname("bbb");
-            to.setPassword("bumtaehyun37!");
             to.setSubject("제목 " + i);
             to.setContent("내용 " + i);
             MultipartFile file = null;
@@ -163,7 +161,7 @@ public class CommunityController {
         return ResponseEntity.ok(ApiResponse.success(result));
     }
 
-    // 지정 게시물 이미지 파일 Read API
+    // 지정 게시물 이미지 파일 Read API (바이너리 타입으로 반환 - 스웨거에 사용하려고 만듬 )
     @Operation( summary = "단일 이미지 파일 Read API(테스트 순서: 3)", description = "지정 게시물의 이미지 확인" )
     @GetMapping("/community/image/{fileName}")
     public ResponseEntity<Resource> communityImage(
@@ -176,6 +174,21 @@ public class CommunityController {
                 .contentType(MediaType.parseMediaType(result.getContentType()))
                 .body(result.getResource());
     }
+
+    // 지정 게시물 이미지 파일 Read API (url 타입으로 반환)
+    /*
+    @GetMapping("/community/image/{fileName}")
+    public ResponseEntity<String> communityImage(
+            @Parameter(description = "게시물 생성 후, 반환된 imagename을 넣어주세요.", example = "e80253ce-1c81-482b-8fb8-f04b7d8117df_.jpg")
+            @PathVariable String fileName) {
+
+        // 이미지 파일 경로 및 URL 생성
+        String imageUrl = getImageUrl(fileName);
+
+        // 이미지 URL을 반환
+        return ResponseEntity.ok(imageUrl);
+    }
+     */
 
     // 지정 게시물 Navigation API ( 어려워서 구현 보류 )
     /*

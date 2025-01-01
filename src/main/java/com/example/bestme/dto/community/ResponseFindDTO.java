@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class ResponseFindDTO {
 
+    private Long user;
     private Long boardId;
     private String nickname;    // user 엔티티와 연결 후 사용
     private String subject;

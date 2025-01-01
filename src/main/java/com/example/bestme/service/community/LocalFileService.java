@@ -62,6 +62,7 @@ public class LocalFileService implements FileService {
         return fileName;
     }
 
+    // 이미지 파일 가져오는 기능 (바이너리 타입으로 반환 - 스웨거에 사용하려고 만듬 )
     @Override
     public ResponseFileDTO fileFind(String filename) {
         File file = new File(uploadPath, filename);
@@ -89,6 +90,17 @@ public class LocalFileService implements FileService {
 
         return result;
     }
+
+    // 이미지 파일 가져오는 기능 (url 타입으로 반환)
+    /*
+    public String getImageUrl(String filename) {
+        // 이미지 파일이 저장된 디렉터리 경로
+        String imageUrl = "http://localhost:8080" + uploadPath + filename;
+
+        // 이 URL을 클라이언트에게 반환
+        return imageUrl;
+    }
+    */
 
     @Override
     public void fileDelete(String filename) {

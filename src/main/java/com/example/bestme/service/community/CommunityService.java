@@ -28,16 +28,19 @@ public class CommunityService {
     private final CommunityRepository communityRepository;
     private final LocalFileService localFileService;
     private final ModelMapper modelMapper = new ModelMapper();
-    private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
+//    private final PasswordEncoder passwordEncoder;
 
     // DTO 유효성 검사 메서드
     public void validateBoardDTO(BoardDTO dto)  { dto.validate(); }
 
-    // 사용자 검증 메서드
-    public void validateUser(Long userId, String nickname, String password) {
-        User user = userRepository.findById(String.valueOf(userId))
+    // 사용자 Id 유무 검증 메서드 ( user 테이블에 해당 Id 존재 확인 )
+    public void validateUser(Long userId) {
+        userRepository.findById(String.valueOf(userId))
                 .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
+
+        // 닉네임, 비밀번호 검증 코드 ( 사용 안함 )
+        /*
         // 닉네임 검증
         if (!user.getNickname().equals(nickname)) {
             throw new IllegalArgumentException("닉네임이 일치하지 않습니다.");
@@ -46,14 +49,15 @@ public class CommunityService {
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
+         */
     }
 
     // 게시물 생성 기능
     public ResponseFindDTO createBoard(RequestWriteDTO to, MultipartFile file) {
         // DTO 유효성 검사
         validateBoardDTO(to);
-        // 사용자 검증
-        validateUser(to.getUserId(), to.getNickname(), to.getPassword());
+        // 사용자 Id 유무 검증
+        validateUser(to.getUserId());
         // 이미지 파일 업로드
         if ( file != null && !file.isEmpty() ) {
             try {
@@ -64,7 +68,7 @@ public class CommunityService {
         Community entity = modelMapper.map(to, Community.class);
         // 게시물 생성
         communityRepository.save(entity);
-        // 반환 DTO 생성
+        // 응답 DTO 생성
         ResponseFindDTO result = modelMapper.map(entity, ResponseFindDTO.class);
 
         return result;
@@ -75,12 +79,12 @@ public class CommunityService {
         // 게시물 목록 가져오기
         Pageable pageable = PageRequest.of(page, numberOfDataPerPage, Sort.by(Sort.Direction.DESC, "boardId"));
 
-        // JPQL 방식
+        // 페이징 데이터 가져오기
         Page<Object[]> boards = communityRepository.findAllBoard(pageable);
 
         if (boards.getNumberOfElements() == 0) { throw new IllegalArgumentException("존재하지 않는 페이지입니다."); }
 
-        // JPQL 방식
+        // 응답 DTO 생성
         Page<ResponseAllDTO> lists = boards.map(objects -> {
             Community community = (Community) objects[0];
             String nickname = (String) objects[1];
@@ -102,8 +106,8 @@ public class CommunityService {
         Community board = communityRepository.findById(boardId)         // communityRepository의 인자 타입이 String일 때 사용
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시물은 존재하지 않습니다."));
 
+        // 응답 DTO 생성
         ResponseFindDTO result = modelMapper.map(board, ResponseFindDTO.class);
-
         String nickname = board.getUser().getNickname();      // user 엔티티와 연결 후 사용
         result.setNickname(nickname);
 
@@ -125,8 +129,8 @@ public class CommunityService {
     public ResponseFindDTO modifyBoard(RequestModifyDTO to, MultipartFile file) {
         // DTO 유효성 검사
         validateBoardDTO(to);
-        // 사용자 검증
-        validateUser(to.getUserId(), to.getNickname(), to.getPassword());
+        // 사용자 Id 유무 검증
+        validateUser(to.getUserId());
         // 기존 게시물 읽어오기
         Community board = communityRepository.findById(String.valueOf(to.getBoardId()))
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시물은 존재하지 않습니다."));
@@ -152,25 +156,28 @@ public class CommunityService {
 
         // 게시물 업데이트
         communityRepository.save(board);
-        // 반환 DTO 생성
+        // 응답 DTO 생성
         ResponseFindDTO result = modelMapper.map(board, ResponseFindDTO.class);
-        result.setNickname(to.getNickname());
+        String nickname = board.getUser().getNickname();      // user 엔티티와 연결 후 사용
+        result.setNickname(nickname);
 
         return result;
     }
 
+    // 지정 게시물 삭제 기능
     public ResponseDeleteDTO deleteBoard(RequestDeleteDTO to) {
         // DTO 유효성 검사
         validateBoardDTO(to);
-        // 사용자 검증
-        validateUser(to.getUserId(), to.getNickname(), to.getPassword());
+        // 사용자 Id 유무 검증
+        validateUser(to.getUserId());
         // 기존 게시물 불러오기
         Community board = communityRepository.findById(String.valueOf(to.getBoardId()))
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시물은 존재하지 않습니다."));
 
-        // 반환 DTO 생성
+        // 응답 DTO 생성
         ResponseDeleteDTO result = modelMapper.map(board, ResponseDeleteDTO.class);
-        result.setNickname(to.getNickname());
+        String nickname = board.getUser().getNickname();      // user 엔티티와 연결 후 사용
+        result.setNickname(nickname);
         // 파일 삭제
         if (board.getImagename() != null) { localFileService.fileDelete(board.getImagename()); }
         // 게시물 삭제
@@ -184,12 +191,12 @@ public class CommunityService {
         // 게시물 목록 가져오기
         Pageable pageable = PageRequest.of(page, numberOfDataPerPage, Sort.by(Sort.Direction.DESC, "boardId"));
 
-        // JPQL 방식
+        // 페이징 데이터 가져오기
         Page<Object[]> boards = communityRepository.findAllBoardByUserId(pageable, userId);
 
         if (boards.getNumberOfElements() == 0) { throw new IllegalArgumentException("존재하지 않는 페이지입니다."); }
 
-        // JPQL 방식
+        // 응답 DTO 생성
         Page<ResponseAllDTO> lists = boards.map(objects -> {
             Community community = (Community) objects[0];
             String nickname = (String) objects[1];

@@ -1,8 +1,19 @@
-
+// static/scripts/community/main.js
 document.addEventListener("DOMContentLoaded", function() {
     console.log("커뮤니티 메인 페이지 스크립트")
 
-    // const accessToken = localStorage.getItem('Authorization')
+    const accessToken = localStorage.getItem('Authorization')
+    console.log("accessToken: " + accessToken.toString())
+    const buttonBody = document.getElementById("buttons");
+
+    // 버튼 HTML 동적 생성
+    if (accessToken) {
+        buttonBody.innerHTML = `
+            <div class="align_right">
+            <input type="button" value="글 작성" class="btn_write btn_txt01" style="cursor: pointer;" onclick="location.href='/community_write'" />
+            </div>
+        `;
+    }
 
     // 게시물 목록 API 호출
     fetch('http://localhost:8080/api/community', {
@@ -38,11 +49,14 @@ document.addEventListener("DOMContentLoaded", function() {
                 const isNew = formattedCreatedAt === todayDate;
                 const newIconHtml = isNew ? '<img src="/imgs/community/icon_new.gif" alt="NEW">' : '';
 
+                // links 배열에서 href 추출
+                const hrefLink = post.links.find(link => link.rel === 'self')?.href || '#';
+
                 newRow.innerHTML = `
                     <td>&nbsp;</td>
                     <td>${post.boardId}</td>
                     <td class="left">
-                        <a href="${post.links.href}">${post.subject}</a>&nbsp;
+                        <a href="${hrefLink}">${post.subject}</a>&nbsp;
                         ${newIconHtml}
                     </td>
                     <td>${post.nickname}</td>
