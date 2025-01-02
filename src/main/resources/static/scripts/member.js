@@ -7,6 +7,18 @@ document.addEventListener("DOMContentLoaded", function() {
         return;
     }
 
+
+    //닉네임 변경
+    const nicknameSection = document.getElementById("personal-nickname");
+    getLoginInfo().then(response => {
+        const nickname = response.nickname;
+        console.log(nickname);
+        nicknameSection.innerHTML = nickname;
+    }).catch(error => {
+        console.error("Error:", error);
+    });
+
+
     const accessToken = localStorage.getItem('Authorization')
 
     const colorSection = document.getElementById("personal-color-h");
@@ -79,7 +91,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
                 li.innerHTML = `
                     <div class="result-one">
-                        <div class="result-one-1">진단 결과: ${p_color}</div>
+                        <div class="result-one-1">#${i+1} 진단 결과: ${p_color}</div>
                         <div class="result-one-2">가장 밝은 피부톤: ${data.data[i].lightestSkinColor} | 가장 어두운 피부톤: ${data.data[i].darkestSkinColor} | 립 컬러: ${data.data[i].lipColor}</div>
                         <div class="result-one-2">헤어 컬러: ${data.data[i].hairColor} | 동공 색상: ${data.data[i].pupilColor} | 홍채 색상: ${data.data[i].irisColor}</div>
                     </div>`;

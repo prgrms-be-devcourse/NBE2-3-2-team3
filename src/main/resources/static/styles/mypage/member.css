@@ -1,9 +1,9 @@
 
 .content-personal-history {
-    background-color: lightblue;
+    background-color: #b6e6f8;
     border-radius: 15px;
     margin-top: 10px;
-    padding: 10px;
+    padding: 12px 20px;
     flex: 1;
     height: 100%;
     text-align: center;
@@ -55,4 +55,8 @@ ul, li {
     font-size: 1.2rem;
     color: #555;
     margin-top: 0;
+}
+
+#personal-nickname {
+    font-weight: bold;
 }
