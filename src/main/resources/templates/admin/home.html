@@ -152,13 +152,56 @@
             <td class="text-center" th:text="*{colorName}"></td>
             <td>
                 <div class="d-grid gap-2 d-md-block text-center align-middle">
-                    <button class="btn btn-light" type="button">수정</button>
+                    <button class="btn btn-light open-update-modal" data-bs-toggle="modal" data-bs-target="#itemUpdateModal" th:attr="data-item-id=*{id}" type="button">수정</button>
                     <button class="btn btn-light sendItemDelete" th:attr="data-item-id=*{id}" type="button">삭제</button>
                 </div>
             </td>
         </tr>
         </tbody>
     </table>
+    <div class="modal fade" id="itemUpdateModal" tabindex="-1" aria-labelledby="itemUpdateModalLabel">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="itemUpdateModalLabel">상품 수정</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="dataForm4">
+                        <div class="mb-3 d-flex justify-content-center align-items-center">
+                            <img src="" id="itemImagePreview4" alt="이미지" class="img-fluid">
+                        </div>
+                        <div class="mb-3">
+                            <label for="itemName4" class="form-label">이름</label>
+                            <input type="text" class="form-control" id="itemName4" name="itemName">
+                        </div>
+                        <div class="mb-3">
+                            <label for="purchaseUrl4" class="form-label">구매 링크</label>
+                            <input type="text" class="form-control" id="purchaseUrl4" name="purchaseUrl">
+                        </div>
+                        <div class="mb-3">
+                            <label for="itemImage4" class="form-label">아이템 이미지</label>
+                            <input type="file" class="form-control" id="itemImage4" name="itemImage">
+                        </div>
+                        <div class="mb-3">
+                            <label for="category4" class="form-label">카테고리</label>
+                            <select class="form-control form-select" id="category4" name="category">
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="color4" class="form-label">퍼스널컬러</label>
+                            <select class="form-control form-select" id="color4">
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary btn-light" id="sendUpdateItem">수정</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 
 <nav aria-label="Page navigation example" class="pagination justify-content-center">
@@ -389,6 +432,112 @@
             },
             error: function () {
                 alert('데이터 삭제를 실패했습니다.');
+            }
+        });
+    });
+
+    $(document).on("click", ".open-update-modal", function() {
+        let itemId = $(this).data('item-id');
+        const imageRequestUrl = `/images/items/${itemId}`;
+
+        $.ajax({
+            url: `/admin/items/${itemId}`,
+            type: "GET",
+            dataType: "json",
+            success: function (response) {
+                $("#itemImagePreview4").attr("src", imageRequestUrl);
+                $("#itemName4").val(response.name);
+                $("#purchaseUrl4").val(response.purchaseUrl);
+                $("#sendUpdateItem").data({'item-id': itemId});
+
+                $.ajax({
+                    url: "/admin/categories",
+                    type: "GET",
+                    success: function(categoriesResponse) {
+                        var categorySelect = $("#category4");
+                        categorySelect.empty();
+
+                        function addOptions(categories, depth) {
+                            categories.forEach(function(category) {
+                                var prefix = '-'.repeat(depth * 2);
+                                var option = $("<option></option>")
+                                    .attr("value", category.id)
+                                    .text(prefix + " " + category.name);
+
+                                if (category.name === response.categoryName) {
+                                    option.attr("selected", "selected");
+                                }
+
+                                categorySelect.append(option);
+
+                                if (category.subCategories && category.subCategories.length > 0) {
+                                    addOptions(category.subCategories, depth + 1);
+                                }
+                            });
+                        }
+
+                        addOptions(categoriesResponse.categories, 0);
+                    }
+                });
+
+                $.ajax({
+                    url: "/admin/colors",
+                    type: "GET",
+                    success: function(colorsResponse) {
+                        var colorSelect = $("#color4");
+                        colorSelect.empty();
+
+                        colorsResponse.forEach(function(color) {
+                            var option = $("<option></option>")
+                                .attr("value", color.id)
+                                .text(color.name);
+
+                            if (color.name === response.colorName) {
+                                option.attr("selected", "selected");
+                            }
+
+                            colorSelect.append(option);
+                        });
+                    }
+                });
+            },
+            error: function () {
+                alert('데이터를 불러올 수 없습니다.')
+            }
+        });
+    });
+
+    $(document).on("click", "#sendUpdateItem", function() {
+        let itemId = $(this).data('item-id');
+        var imageFile = $("#itemImage4")[0].files[0];
+
+        var formData = new FormData();
+        if (imageFile) {
+            formData.append("image", imageFile);
+        }
+
+        var selectedCategory = $("#category4").val();
+        var selectedColor = $("#color4").val();
+
+        var otherData = {
+            name: $("#itemName4").val(),
+            purchaseUrl: $("#purchaseUrl4").val(),
+            categoryId: selectedCategory,
+            colorId: selectedColor
+        };
+
+        formData.append("itemUpdateRequest", new Blob([JSON.stringify(otherData)], {type: "application/json"}));
+
+        $.ajax({
+            url: `/admin/items/${itemId}`,
+            type: "PATCH",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                alert("상품 수정 완료");
+                $("#itemModal").modal("hide");
+                location.reload();
             }
         });
     });
