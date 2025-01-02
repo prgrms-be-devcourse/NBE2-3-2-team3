@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -16,14 +17,17 @@ public class UserViewController {
     @GetMapping(value = "/login")
     public String login(Model model) {
 
-        //String kakaoUrl = kakaoService.getKakaoLogin();
-        //log.info("&&&Kakao Login URL: {}", kakaoUrl);
         model.addAttribute("clientId", kakaoService.getClient_id());
         model.addAttribute("redirectUri", kakaoService.getRedirect_uri());
 
         return "login";
     }
 
+    @GetMapping("/kakao/callback")
+    public String kakaoCallback(@RequestParam String token, Model model) {
+        model.addAttribute("token", token);
+        return "kakaoCallback";
+    }
 
     @GetMapping("/")
     public String home() {

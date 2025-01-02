@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -59,13 +60,16 @@ public class UserController {
     @GetMapping("/auth/kakao/callback")
     public ResponseEntity<Map<String, String>> kakaoLogin(
             @RequestParam String code,
-            HttpServletRequest request) {
+            HttpServletRequest request, Model model) {
         System.out.println("[UserController] kakaoLogin() 실행 ");
 
         String existingToken = jwtTokenProvider.resolveToken(request);
         if(existingToken != null) {
             System.out.println("이미 token 있는 회원");
-            return ResponseEntity.ok(Map.of("token", existingToken));
+//            return ResponseEntity.ok(Map.of("token", existingToken));
+            return ResponseEntity.status(HttpStatus.FOUND)
+                    .header("Location", "/kakao/callback?token=" + existingToken)
+                    .build();
         }
 
         System.out.println("신규 회원. token 발급");
@@ -89,12 +93,15 @@ public class UserController {
         // 4. 클라이언트에 JWT 토큰 반환
         Map<String, String> response = new HashMap<>();
         response.put("token", jwtToken);
+        response.put("email", email);
 
-        //return ResponseEntity.ok(response);
+//        return ResponseEntity.ok(response);
+        model.addAttribute("token", jwtToken);  // 모델에 토큰 추가
         return ResponseEntity.status(HttpStatus.FOUND)
-                .header("Location", "/")
+                .header("Location", "/kakao/callback?token=" + jwtToken)
                 .build();
     }
+
 
     @GetMapping("/logout")
     public ResponseEntity<ApiResponse<Void>> logout(HttpServletResponse response) {

@@ -31,8 +31,8 @@ public class SecurityConfig {
     private final JwtTokenProvider jwtTokenProvider;
     private final KakaoService kakaoService;
 
-    private final DefaultOAuth2UserService oAuth2UserService;
-    private final OAuth2SuccessHandler oAuth2SuccessHandler;
+//    private final DefaultOAuth2UserService oAuth2UserService;
+//    private final OAuth2SuccessHandler oAuth2SuccessHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
