@@ -3,12 +3,12 @@ package com.example.bestme.service.community;
 import com.example.bestme.domain.community.Community;
 import com.example.bestme.domain.user.User;
 import com.example.bestme.dto.community.*;
+import com.example.bestme.dto.user.RequestSignUpDTO;
 import com.example.bestme.repository.CommunityRepository;
 import com.example.bestme.repository.user.UserRepository;
 import com.example.bestme.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.nio.file.Path;
 
 @Service
 @Transactional      // 트랜잭션 관리 어노테이션 ( 최적화 필요 시 - @Transactional(readOnly = true)로 특정 작업 전용 설정 )
@@ -29,6 +30,7 @@ public class CommunityService {
     private final LocalFileService localFileService;
     private final ModelMapper modelMapper = new ModelMapper();
     private final UserRepository userRepository;
+    private final UserService userService;
     private final PasswordEncoder passwordEncoder;
 
     // DTO 유효성 검사 메서드
@@ -54,6 +56,39 @@ public class CommunityService {
         return user;
     }
 
+    // 테스트용 사용자 생성
+    public User createTestUser(RequestSignUpDTO joinDTO) {
+        // 테스트용 사용자 생성
+        userService.join(joinDTO);
+
+        // 입력한 이메일을 바탕으로 DB에 존재하는 User 검색
+        User user = userRepository.findActiveByEmail(joinDTO.getEmail());
+
+        // 입력한 이메일이 존재하지 않으면 error 발생
+        if (user == null) {
+            throw new IllegalArgumentException("테스트용 사용자 데이터 가져오기 실패");
+        }
+
+        return user;
+    }
+
+    // 테스트용 게시물 생성
+    public void createTestBoard(RequestWriteDTO to, Path sourcePath) {
+        // DTO 유효성 검사
+        validateBoardDTO(to);
+
+        // 이미지 파일 업로드
+        if ( sourcePath != null ) {
+            try {
+                String fileName = localFileService.testImageUpload(sourcePath);
+                to.setImagename(fileName);
+            } catch (IOException e) { throw new IllegalArgumentException("파일 처리 중 오류가 발생했습니다.");} }
+
+        Community entity = modelMapper.map(to, Community.class);
+        // 게시물 생성
+        communityRepository.save(entity);
+    }
+
     // 게시물 생성 기능
     public ResponseFindDTO createBoard(RequestWriteDTO to, MultipartFile file) {
         // DTO 유효성 검사
@@ -73,8 +108,8 @@ public class CommunityService {
         communityRepository.save(entity);
         // 응답 DTO 생성
         ResponseFindDTO result = modelMapper.map(entity, ResponseFindDTO.class);
-        result.setUserId(user.getId());
-        result.setNickname(user.getNickname());
+        result.setUserId(entity.getUser().getId());
+        result.setNickname(entity.getUser().getNickname());
 
         return result;
     }

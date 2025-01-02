@@ -10,6 +10,7 @@
     <script src="https://kit.fontawesome.com/5fcc17a7cc.js" crossorigin="anonymous"></script>
     <script defer type="text/javascript" th:src="@{/scripts/common.js}"></script>
     <script defer type="text/javascript" th:src="@{/scripts/modal.js}"></script>
+    <script defer type="text/javascript" th:src="@{/scripts/mypage/modify_profile.js}"></script>
 </head>
 <body>
 <header id="header">
@@ -62,10 +63,10 @@
     <div class="content">
         <h3 class="title">내 정보 변경</h3>
         <form id="modify_form" th:with="userRegex=${T(com.example.bestme.regex.UserRegex)}">
-            <div class="password valid-check">
+            <div class="origin-password valid-check">
                 <span class="desc-text">기존 비밀번호</span>
                 <label class="text-label">
-                    <input class="input-en" type="password" name="password" minlength="8" maxlength="20"
+                    <input class="input-en" type="password" name="origin_password" minlength="8" maxlength="20"
                            placeholder="로그인 시 필요한 비밀번호를 입력해주세요."
                            th:attrappend="data-regex=${userRegex.password.expression}">
                     <button type="button"><i class="fa-solid fa-eye-slash"></i></button>
@@ -75,7 +76,7 @@
             <div class="nickname valid-check">
                 <span class="desc-text">닉네임</span>
                 <label class="text-label">
-                    <input autocomplete="off" type="text" name="nickname" minlength="2" maxlength="50"
+                    <input autocomplete="off" type="text" name="nickname" minlength="2" maxlength="8"
                            placeholder="BestMe에서 활동하실 닉네임을 입력해주세요 (숫자, 영소문자, 영대문자, 한글, -, _ 로 이루어진 2자 이상)"
                            th:attrappend="data-regex=${userRegex.nickname.expression}">
                 </label>
@@ -105,31 +106,31 @@
                     <span class="warning"></span>
                 </div>
             </div>
-            <div class="password valid-check">
+            <div class="new-password valid-check">
                 <span class="desc-text">새 비밀번호</span>
                 <label class="text-label">
-                    <input class="input-en" type="password" name="password" minlength="0" maxlength="20"
+                    <input class="input-en" type="password" name="new_password" minlength="0" maxlength="20"
                            placeholder="비밀번호는 8 ~ 20자리 이상의 영어, 숫자, 특수문자의 조합입니다."
                            th:attrappend="data-regex=${userRegex.password.expression}">
                     <button type="button"><i class="fa-solid fa-eye-slash"></i></button>
                 </label>
                 <span class="warning"></span>
             </div>
-            <div class="password-check valid-check">
+            <div class="new-password-check valid-check">
                 <span class="desc-text">새 비밀번호 확인</span>
                 <label class="text-label">
-                    <input class="input-en" type="password" name="password-check" minlength="0" maxlength="20"
+                    <input class="input-en" type="password" name="new_password-check" minlength="0" maxlength="20"
                            placeholder="한 번 더 입력해주세요">
                     <button type="button"><i class="fa-solid fa-eye-slash"></i></button>
                 </label>
                 <span class="warning"></span>
             </div>
-            <button type="button" class="green">정보 수정하기</button>
+            <button type="submit" class="green">정보 수정하기</button>
         </form>
         <ul class="describe">
-            <li>내 정보 변경이 필요한 항목에 대해서 내용을 변경하신 후 수정하기 버튼을 입력해주세요.</li>
-            <li>새 비밀번호의 경우 공백란으로 입력할 시 기존 비밀번호가 수정되지 않습니다.</li>
             <li>기존 비밀번호가 일치하지 않는 경우 정보 수정이 불가능합니다.</li>
+            <li>내 정보 변경이 필요한 항목에 대해서 내용을 변경하신 후 수정하기 버튼을 클릭해주세요.</li>
+            <li>내 정보 변경이 필요하지 않은 항목은 공백으로 두시면 됩니다.</li>
         </ul>
     </div>
 </div>

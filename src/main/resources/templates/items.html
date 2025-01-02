@@ -213,11 +213,17 @@
   }
 
   document.getElementById("heart-icon").addEventListener("click", function () {
+    const accessToken = localStorage.getItem('Authorization');
     const itemId = document.getElementById("itemId").value;
     const heartIcon = document.getElementById("heart-icon");
     const likeCountElement = document.getElementById("like-count");
 
-    fetch(`/api/items/${itemId}/like`, { method: "PUT" })
+    fetch(`/api/items/${itemId}/like`, {
+      method: "PUT",
+      headers: {
+        'Authorization': accessToken
+      }
+    })
             .then(response => response.json())
             .then(data => {
               if (data.success && data.code === 200) {
@@ -225,7 +231,7 @@
                 const isLiked = data.data.isLiked;
 
                 likeCountElement.textContent = likeCount;
-                if (isLiked) {
+                if (!isLiked) {
                   heartIcon.classList.remove("bi-heart");
                   heartIcon.classList.add("bi-heart-fill");
                   heartIcon.style.color = "red";

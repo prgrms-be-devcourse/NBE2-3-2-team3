@@ -31,7 +31,7 @@ public class Community extends BaseEntity {
     @OnDelete(action = OnDeleteAction.CASCADE)      // 단방향 때에도, 해당 유저가 삭제되면 게시물이 자동 삭제되게 설정
     private User user;
 
-    @Column( length = 10, nullable = false )
+    @Column( length = 20, nullable = false )
     private String subject;
 
     private String imagename;

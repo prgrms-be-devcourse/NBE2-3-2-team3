@@ -34,6 +34,24 @@ public class LocalFileService implements FileService {
         }
     }
 
+    // 테스트용 이미지 파일 업로드
+    public String testImageUpload(Path sourcePath) throws IOException {
+        // 원본 파일 이름 추출
+        String originalFileName = sourcePath.getFileName().toString();
+        String ext = originalFileName.substring(originalFileName.lastIndexOf(".")).toLowerCase();
+
+        // 새로운 파일 이름 생성
+        String fileName = UUID.randomUUID() + ext;
+
+        // 업로드할 경로 설정
+        Path targetPath = Paths.get(uploadPath, fileName);
+
+        // 파일 복사
+        Files.copy(sourcePath, targetPath);
+
+        return fileName;
+    }
+
     @Override
     public String fileUpload(MultipartFile file) throws IOException {
         String fileName = file.getOriginalFilename();

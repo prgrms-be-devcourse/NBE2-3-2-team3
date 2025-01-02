@@ -26,6 +26,7 @@ import java.security.Key;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Collectors;
@@ -57,7 +58,7 @@ public class JwtTokenProvider {
 
         LocalDateTime now = LocalDateTime.now();
 
-        com.example.bestme.domain.user.User user = userRepository.findByEmail(authentication.getName());
+        com.example.bestme.domain.user.User user = userRepository.findActiveByEmail(authentication.getName());
 
         // 30 분의 유효기간 - accessToken
         LocalDateTime accessTokenExpire = now.plusMinutes(30);
@@ -126,7 +127,7 @@ public class JwtTokenProvider {
 
     public JwtTokenDTO generateTokenSimple(String email) {
 
-        com.example.bestme.domain.user.User user = userRepository.findByEmail(email);
+        com.example.bestme.domain.user.User user = userRepository.findActiveByEmail(email);
 
         LocalDateTime now = LocalDateTime.now();
 
@@ -192,7 +193,7 @@ public class JwtTokenProvider {
     }
 
     // 토큰 재발급 메서드
-    public ResponseEntity<ApiResponse<String>> refresh(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<ApiResponse<String>> refresh(HttpServletRequest request) {
         String Token = getRefreshToken(request);
         if (Token == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -200,7 +201,6 @@ public class JwtTokenProvider {
         }
         JwtTokenDTO jwtTokenDTO = reGenerateToken(Token);
         String accessToken = jwtTokenDTO.getGrantType() + " " + jwtTokenDTO.getAccessToken();
-        saveRefreshToken(response, jwtTokenDTO.getRefreshToken());
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.success(accessToken));
     }
@@ -227,8 +227,11 @@ public class JwtTokenProvider {
     }
 
     public void saveRefreshToken(HttpServletResponse response, String refreshToken) {
+        Claims claims = parseClaims(refreshToken);
+        int expirationTime = (int) (claims.getExpiration().getTime() / 1000);
+
         Cookie cookie = new Cookie("refresh", refreshToken);
-        cookie.setMaxAge(60*60*24*7); // 일주일
+        cookie.setMaxAge(expirationTime);
         cookie.setPath("/");
         response.addCookie(cookie);
     }

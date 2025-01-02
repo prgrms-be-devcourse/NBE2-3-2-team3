@@ -23,4 +23,9 @@ public class ResultViewController {
     public String guide() {
         return "guide";
     }
+
+    @GetMapping("/style/guide/items")
+    public String guideItem() {
+        return "guide_item";
+    }
 }
