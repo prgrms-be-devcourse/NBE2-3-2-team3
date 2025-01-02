@@ -66,7 +66,7 @@ public class CommunityService {
         userService.join(joinDTO);
 
         // 입력한 이메일을 바탕으로 DB에 존재하는 User 검색
-        User user = userRepository.findByEmail(joinDTO.getEmail());
+        User user = userRepository.findActiveByEmail(joinDTO.getEmail());
 
         // 입력한 이메일이 존재하지 않으면 error 발생
         if (user == null) {
