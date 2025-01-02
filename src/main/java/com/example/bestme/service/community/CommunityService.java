@@ -4,19 +4,15 @@ import com.example.bestme.domain.community.Community;
 import com.example.bestme.domain.user.User;
 import com.example.bestme.dto.community.*;
 import com.example.bestme.dto.user.RequestSignUpDTO;
-import com.example.bestme.exception.ApiResponse;
 import com.example.bestme.repository.CommunityRepository;
 import com.example.bestme.repository.user.UserRepository;
 import com.example.bestme.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -66,7 +62,7 @@ public class CommunityService {
         userService.join(joinDTO);
 
         // 입력한 이메일을 바탕으로 DB에 존재하는 User 검색
-        User user = userRepository.findByEmail(joinDTO.getEmail());
+        User user = userRepository.findActiveByEmail(joinDTO.getEmail());
 
         // 입력한 이메일이 존재하지 않으면 error 발생
         if (user == null) {
