@@ -32,6 +32,10 @@ table > tbody td:nth-child(2) {
     text-align: left;
 }
 
+table > tbody td:nth-child(3) {
+    text-align: center; /* nickname 셀만 중앙 정렬 */
+}
+
 table > tfoot > .paging {
     border : none;
 }

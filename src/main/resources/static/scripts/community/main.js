@@ -119,9 +119,108 @@ document.addEventListener("DOMContentLoaded", function() {
         .catch((error) => {
             console.error("Error fetching result data:", error);
             const tableBody = document.getElementById("board-list");
-            tableBody.innerHTML = `<tr><td colspan="7">데이터를 로드할 수 없습니다.</td></tr>`;
+            tableBody.innerHTML = `<tr><td colspan="7">작성된 게시글이 없습니다.</td></tr>`;
         });
 });
 
-
-
+// document.addEventListener("click", function (event) {
+//     if (event.target.classList.contains("page-btn")) {
+//         event.preventDefault(); // 기본 링크 이동 방지
+//         const page = event.target.textContent; // 클릭한 페이지 번호
+//         loadPageData(page); // 페이지 데이터 로드 함수 호출
+//     }
+// });
+//
+// function loadPageData(page) {
+//     const url = `http://localhost:8080/api/community?page=${page}`; // 필요한 API URL
+//     fetch(url, { method: "GET" })
+//         .then(response => {
+//             if (!response.ok) {
+//                 throw new Error("Network response was not ok");
+//             }
+//             return response.json();
+//         })
+//         .then(data => {
+//             updateTable(data.data.content); // 테이블 업데이트
+//             updatePagination(data.data.page, data.data.links); // 페이지 네비게이션 업데이트
+//         })
+//         .catch(error => {
+//             console.error("Error fetching page data:", error);
+//             const tableBody = document.getElementById("board-list");
+//             tableBody.innerHTML = `<tr><td colspan="7">작성된 게시글이 없습니다.</td></tr>`;
+//         });
+// }
+//
+// function updateTable(posts) {
+//     const tableBody = document.getElementById("board-list");
+//     tableBody.innerHTML = ""; // 기존 내용 초기화
+//
+//     const today = new Date();
+//     const todayDate = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`;
+//
+//     posts.forEach(post => {
+//         const newRow = document.createElement("tr");
+//         const createdAtDate = new Date(post.createdAt);
+//         const formattedCreatedAt = `${createdAtDate.getFullYear()}-${(createdAtDate.getMonth() + 1).toString().padStart(2, '0')}-${createdAtDate.getDate().toString().padStart(2, '0')}`;
+//         const isNew = formattedCreatedAt === todayDate;
+//         const newIconHtml = isNew ? '<img src="/imgs/community/icon_new.gif" alt="NEW">' : '';
+//         const hrefLink = post.links.find(link => link.rel === 'self')?.href || '#';
+//
+//         newRow.innerHTML = `
+//             <td>${post.boardId}</td>
+//             <td class="left">
+//                 <a href="${hrefLink}">${post.subject}</a>&nbsp;
+//                 ${newIconHtml}
+//             </td>
+//             <td>${post.nickname}</td>
+//             <td>${formattedCreatedAt}</td>
+//             <td>${post.view}</td>
+//             <td></td>
+//         `;
+//         tableBody.appendChild(newRow);
+//     });
+// }
+//
+// function updatePagination(pages, links) {
+//     const pageNav = document.getElementById("page-nav");
+//
+//     const currentPage = pages.number + 1;
+//     const totalPages = pages.totalPages;
+//     const maxVisiblePages = 5;
+//     const currentGroup = Math.floor((currentPage - 1) / maxVisiblePages);
+//     const groupStartPage = currentGroup * maxVisiblePages + 1;
+//     const groupEndPage = Math.min(groupStartPage + maxVisiblePages - 1, totalPages);
+//
+//     let paginationHtml = "";
+//
+//     // << 버튼
+//     const firstPageOfPrevGroup = links.find(link => link.rel === "firstPageOfPrevGroup");
+//     paginationHtml += firstPageOfPrevGroup
+//         ? `<a href="${firstPageOfPrevGroup.href}" class="page-btn"><i class="fa-solid fa-angles-left"></i></a>`
+//         : '<a class="disabled"><i class="fa-solid fa-angles-left"></i></a>';
+//
+//     // < 버튼
+//     const prevPage = links.find(link => link.rel === "prevPage");
+//     paginationHtml += prevPage
+//         ? `<a href="${prevPage.href}" class="page-btn"><i class="fa-solid fa-angle-left"></i></a>`
+//         : '<a class="disabled"><i class="fa-solid fa-angle-left"></i></a>';
+//
+//     // 페이지 번호
+//     for (let i = groupStartPage; i <= groupEndPage; i++) {
+//         paginationHtml += `<a href="/community/${i}" class="page-btn ${i === currentPage ? "sel" : ""}">${i}</a>`;
+//     }
+//
+//     // > 버튼
+//     const nextPage = links.find(link => link.rel === "nextPage");
+//     paginationHtml += nextPage
+//         ? `<a href="${nextPage.href}" class="page-btn"><i class="fa-solid fa-angle-right"></i></a>`
+//         : '<a class="disabled"><i class="fa-solid fa-angle-right"></i></a>';
+//
+//     // >> 버튼
+//     const lastPageOfNextGroup = links.find(link => link.rel === "lastPageOfNextGroup");
+//     paginationHtml += lastPageOfNextGroup
+//         ? `<a href="${lastPageOfNextGroup.href}" class="page-btn"><i class="fa-solid fa-angles-right"></i></a>`
+//         : '<a class="disabled"><i class="fa-solid fa-angles-right"></i></a>';
+//
+//     pageNav.innerHTML = paginationHtml;
+// }

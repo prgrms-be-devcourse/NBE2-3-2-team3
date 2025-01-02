@@ -61,31 +61,4 @@ public class CommunityViewController {
         model.addAttribute("boardId", boardId);
         return "community/community_delete";
     }
-
-    // 현재 User가 작성한 게시물 목록 view
-    @RequestMapping( "/community/my_boards/{page}" )
-    public String communityMyBoards(@PathVariable(required = false) String page, Model model, HttpSession session) {
-
-        // 현재 페이지 초기화
-        String userPageNumber;
-
-        if (page == null) {
-            // URL 파라미터가 없을 때, 세션 값 사용 또는 기본값 설정
-            userPageNumber = (String) session.getAttribute("userPageNumber");
-            if (userPageNumber == null) {
-                userPageNumber = "1"; // 기본값 설정
-            }
-        } else {
-            // URL에서 받은 값을 사용
-            userPageNumber = page;
-        }
-
-        // 세션에 현재 페이지 저장
-        session.setAttribute("userPageNumber", userPageNumber);
-
-        // 모델에 현재 페이지 추가 (뷰에서 사용할 데이터)
-        model.addAttribute("userPageNumber", userPageNumber);
-
-        return "my_posting";
-    }
 }
