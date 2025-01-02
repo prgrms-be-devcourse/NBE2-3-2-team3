@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", function() {
         console.error("Error:", error);
     });
 
-
+    refresh();
     const accessToken = localStorage.getItem('Authorization')
 
     const colorSection = document.getElementById("personal-color-h");

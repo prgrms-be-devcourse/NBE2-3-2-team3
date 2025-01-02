@@ -82,7 +82,6 @@ joinForm.onsubmit = (e) => {
     bVC.classList.remove('-invalid');
     gVC.classList.remove('-invalid');
 
-    /*
 
     if (eInput.value === '' || !eRegex.test(eInput.value)) {
         eVC.classList.add('-invalid');
@@ -92,7 +91,7 @@ joinForm.onsubmit = (e) => {
 
     if (nInput.value === '' || !nRegex.test(nInput.value)) {
         nVC.classList.add('-invalid');
-        nVC.querySelector('.warning').innerText = '닉네임은 숫자, 영소문자, 영대문자, 한글, -, _ 로 이루어진 2자 이상이어야 합니다.';
+        nVC.querySelector('.warning').innerText = '닉네임은 숫자, 영소문자, 영대문자, 한글, -, _ 로 이루어진 2 ~ 8자입니다.';
         validCount++;
     }
 
@@ -119,9 +118,6 @@ joinForm.onsubmit = (e) => {
         gVC.querySelector('.warning').innerText = '성별을 선택해주세요.';
         validCount++;
     }
-
-
-     */
 
     let requestObject = {
         email : joinForm.email.value,

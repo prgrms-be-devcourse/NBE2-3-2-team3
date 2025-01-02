@@ -175,7 +175,7 @@ public class KakaoService {
         String nickname = (String)userInfo.get("nickname");
 
         // 이메일 기준으로 사용자 검색
-        User user = userRepository.findByEmail(email);
+        User user = userRepository.findActiveByEmail(email);
 
         if (user == null) {
             // 회원가입 처리

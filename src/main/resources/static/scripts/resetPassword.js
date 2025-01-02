@@ -36,17 +36,17 @@ identifyUserForm.onsubmit = (e) => {
     eVC.classList.remove('-invalid');
     bVC.classList.remove('-invalid');
 
-    // if (email === "" || !eRegex.test(email)) {
-    //     eVC.classList.add('-invalid');
-    //     eVC.querySelector('.warning').innerText = '잘못된 이메일 형식입니다.';
-    //     validCount++;
-    // }
-//
-    // if (birth === "" || !bRegex.test(birth) || !checkBirth(birth)) {
-    //     bVC.classList.add('-invalid');
-    //     bVC.querySelector('.warning').innerText = '잘못된 생년월일 형식입니다.';
-    //     validCount++;
-    // }
+     if (email === "" || !eRegex.test(email)) {
+         eVC.classList.add('-invalid');
+         eVC.querySelector('.warning').innerText = '잘못된 이메일 형식입니다.';
+         validCount++;
+     }
+
+     if (birth === "" || !bRegex.test(birth) || !checkBirth(birth)) {
+         bVC.classList.add('-invalid');
+         bVC.querySelector('.warning').innerText = '잘못된 생년월일 형식입니다.';
+         validCount++;
+     }
 
     if (validCount > 0) {
         return;

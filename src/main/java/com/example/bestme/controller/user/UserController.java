@@ -9,6 +9,8 @@ import com.example.bestme.util.jwt.JwtAuthenticationFilter;
 import com.example.bestme.util.jwt.JwtTokenDTO;
 import com.example.bestme.util.jwt.JwtTokenProvider;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -20,9 +22,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+@Tag(name = "User", description = "회원 관련 API")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api")
@@ -33,25 +37,29 @@ public class UserController {
     private final KakaoService kakaoService;
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
+    private final LocalDateTime localDateTime = LocalDateTime.now();
 
+    @Operation( summary = "회원가입 API 입니다.", description = "새로 회원가입하는 API 입니다." )
     @PostMapping("/join")
     public ResponseEntity<ApiResponse<Void>> join(@RequestBody RequestSignUpDTO to) {
         return userService.join(to);
     }
 
+    @Operation( summary = "로그인 API 입니다.", description = "회원으로 가입되어 있는 유저에 관한 로그인 API" )
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<String>> login(@RequestBody RequestLoginDTO to, HttpServletResponse response) {
         return userService.login(to, response);
     }
 
+    @Operation( summary = "비밀번호 재설정 기능에서 회원을 확인하는 API 입니다.", description = "이메일과 생년월일 입력으로 계정확인" )
     @PostMapping("/identifyUser")
-    public ResponseEntity<ApiResponse<Long>> resetPassword(@RequestBody RequestIdentifyUserDTO to){
+    public ResponseEntity<ApiResponse<Long>> identifyUser(@RequestBody RequestIdentifyUserDTO to){
         return userService.identifyUser(to);
     }
 
+    @Operation( summary = "비밀번호 재설정 API 입니다.", description = "비밀번호 형식에 맞춰서 비밀번호 입력." )
     @PostMapping("/resetPassword")
     public ResponseEntity<ApiResponse<Void>> resetPassword(@RequestBody RequestResetPasswordDTO to){
-        System.out.println(to.getUserId());
         return userService.resetPassword(to);
     }
 
@@ -96,6 +104,7 @@ public class UserController {
                 .build();
     }
 
+    @Operation( summary = "로그아웃 API 입니다.", description = "로그아웃을 통해 token 삭제" )
     @GetMapping("/logout")
     public ResponseEntity<ApiResponse<Void>> logout(HttpServletResponse response) {
         jwtTokenProvider.deleteRefreshToken(response);
@@ -103,17 +112,29 @@ public class UserController {
                 .body(ApiResponse.success(HttpStatus.OK, "로그아웃에 성공하였습니다.", null));
     }
 
+    @Operation( summary = "기존 refresh 토큰을 이용하여 새로운 accessToken 발급 API 입니다.", description = "refresh 토큰이 만료되어 있다면 기존 저장된 토큰 삭제 및 로그인 페이지로 리다이렉트" )
     @GetMapping("/refresh")
-    public ResponseEntity<ApiResponse<String>> refresh(HttpServletRequest request, HttpServletResponse response) {
-        return userService.refresh(request, response);
+    public ResponseEntity<ApiResponse<String>> refresh(HttpServletRequest request) {
+        return userService.refresh(request);
     }
 
+    @Operation( summary = "회원 정보 수정 API 입니다.", description = "accessToken 및 기존 비밀번호 입력(필수), 나머지 항목들은 변경있을 시 입력(선택)" )
+    @PutMapping("/user")
+    public ResponseEntity<ApiResponse<String>> modifyUser(@RequestBody RequestModifyUserDTO requestModifyUserDTO,
+                                                          HttpServletRequest request,
+                                                          HttpServletResponse response) {
+        return userService.modifyUser(requestModifyUserDTO, request, response);
+    }
 
+    @Operation( summary = "회원탈퇴 API 입니다.", description = "accessToken 및 기존 비밀번호 입력을 통해 회원탈퇴" )
     @DeleteMapping("/user")
-    public ResponseEntity<ApiResponse<Void>> deleteUser(HttpServletRequest request) {
-        return userService.deleteUser(request);
+    public ResponseEntity<ApiResponse<Void>> deleteUser(@RequestBody RequestDeleteUserDTO requestDeleteUserDTO,
+                                                        HttpServletRequest request,
+                                                        HttpServletResponse response) {
+        return userService.deleteUser(requestDeleteUserDTO, request, response);
     }
 
+    @Operation( summary = "로그인 중인 회원에 관한 정보를 가져오는 API 입니다.", description = "accessToken 을 활용하여 userId, nickname, birth, gender 반환" )
     @GetMapping("/loginUser")
     public ResponseEntity<ApiResponse<ResponseUserDTO>> getLoginUser(HttpServletRequest request) {
         return userService.getLoginUser(request);
@@ -129,5 +150,9 @@ public class UserController {
 
  */
 
-
+    @Operation(summary = "서버 재시작 감지 API 입니다.", description = "서버 시작 시간을 반환하여 그 값에 따라 토큰을 삭제합니다.")
+    @GetMapping("/isRestartedServer")
+    public String isRestartedServer() {
+        return localDateTime.toString();
+    }
 }

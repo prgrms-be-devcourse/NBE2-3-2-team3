@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 getImageFile(post.imagename).then(imageUrl => {
                     if (imageUrl) {
                         // 이미지 URL 또는 Blob을 img 태그의 src로 설정
-                        image.innerHTML = `<img src="${imageUrl}" style="width: 100%; height: auto; object-fit: cover;" alt="게시물 이미지" />`;
+                        image.innerHTML = `<img src="${imageUrl}" alt="게시물 이미지" />`;
                     } else {
                         image.innerHTML = "이미지 로드 실패.";
                     }

@@ -1,8 +1,8 @@
 
 document.addEventListener("DOMContentLoaded", function() {
     event.preventDefault();
+    refresh();
     const accessToken = localStorage.getItem('Authorization')
-
 
     const guideSection = document.getElementById("color-guide");
     const nonMemberSection = document.getElementById("non-member");

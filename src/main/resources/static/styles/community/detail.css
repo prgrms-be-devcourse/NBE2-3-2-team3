@@ -32,6 +32,22 @@ table tbody td.none {
     padding-right: 0;
 }
 
+table tbody .content-box {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+.content-box > #image-fIle {
+    width: 100%;
+}
+
+.content-box > #image-fIle > img{
+    width: 60%;
+}
+
 .btn_area {
     margin-top: 1rem;
     display: flex;
