@@ -7,9 +7,11 @@
     <link rel="stylesheet" type="text/css" th:href="@{/styles/modal.css}">
     <link rel="stylesheet" type="text/css" th:href="@{/styles/mypage/index.css}">
     <link rel="stylesheet" type="text/css" th:href="@{/styles/mypage/my_posting.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/styles/community/main.css}">
     <script src="https://kit.fontawesome.com/5fcc17a7cc.js" crossorigin="anonymous"></script>
     <script defer type="text/javascript" th:src="@{/scripts/common.js}"></script>
     <script defer type="text/javascript" th:src="@{/scripts/modal.js}"></script>
+    <script defer type="text/javascript" th:src="@{/scripts/community/my_posting.js}"></script>
 </head>
 <body>
 <header id="header">
@@ -61,62 +63,35 @@
     </div>
     <div class="content">
         <h3 class="title">내가 작성한 게시물</h3>
-<!--        게시물 리스트~-->
         <table class="table">
             <thead>
             <tr>
-                <th style="width: 10%;">글 번호</th>
+                <th style="width: 10%;">번호</th>
                 <th style="width: 50%;">제목</th>
                 <th style="width: 20%;">날짜</th>
                 <th style="width: 20%;">작성 시간</th>
             </tr>
             </thead>
-            <tbody>
+            <!--게시물 리스트-->
+            <tbody id="board-list"></tbody>
             <!-- 반복문을 사용하여 게시물 목록 출력 -->
-<!--            <tr th:each="post : ${posts}">-->
-<!--                <td th:text="${post.id}"></td>-->
-<!--                <td th:text="${post.date}"></td>-->
-<!--                <td th:text="${post.title}"></td>-->
-<!--                <td th:text="${post.time}"></td>-->
-<!--            </tr>-->
-            <tr>
-                <td>1</td>
-                <td>첫 번째 게시물</td>
-                <td>2024-12-27</td>
-                <td>10:00 AM</td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td>두 번째 게시물</td>
-                <td>2024-12-26</td>
-                <td>11:30 AM</td>
-            </tr>
-            <tr>
-                <td>3</td>
-                <td>세 번째 게시물</td>
-                <td>2024-12-25</td>
-                <td>2:00 PM</td>
-            </tr>
-            </tbody>
+            <!--<tbody>
+            <tr th:each="post : ${posts}">
+            <td th:text="${post.id}"></td>
+            <td th:text="${post.date}"></td>
+            <td th:text="${post.title}"></td>
+            <td th:text="${post.time}"></td>
+            </tr>-->
+            <tfoot>
+                <tr class="paging">
+                    <td colspan="6">
+                        <!--페이지 버튼-->
+                        <div class="paging-div" id="page-nav"></div>
+                    </td>
+                </tr>
+            </tfoot>
         </table>
     </div>
-    <!--페이지넘버-->
-    <div class="paginate_regular">
-        <div align="absmiddle">
-            <span><a>&lt;&lt;</a></span>
-            &nbsp;
-            <span><a>&lt;</a></span>
-            &nbsp;&nbsp;
-            <span><a>[ 1 ]</a></span>
-            <span><a href="board_list1.jsp">2</a></span>
-            <span><a href="board_list1.jsp">3</a></span>
-            &nbsp;&nbsp;
-            <span><a>&gt;</a></span>
-            &nbsp;
-            <span><a>&gt;&gt;</a></span>
-        </div>
-    </div>
-    <!--//페이지넘버-->
 </div>
 
 </body>

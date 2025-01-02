@@ -1,11 +1,14 @@
 package com.example.bestme.controller.user;
 
 import com.example.bestme.service.KakaoService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -45,13 +48,6 @@ public class UserViewController {
         return "mypage/member";
     }
 
-    @GetMapping("/member/my_posting")
-    public String MyPosting(Model model) {
-        // DB에서 자기가 쓴 게시물 불러와서
-        // model.addAttribute로 넘겨줘야할듯
-        return "mypage/my_posting";
-    }
-
     @GetMapping("/member/modify_profile")
     public String modifyProfile() {
         return "mypage/modify_profile";
@@ -60,5 +56,27 @@ public class UserViewController {
     @GetMapping("/member/delete_profile")
     public String deleteProfile() {
         return "mypage/delete_profile";
+    }
+
+    @RequestMapping( value = { "/member/my_posting", "/member/my_posting/{page}"} )
+    public String MyPosting(@PathVariable(required = false) String page, Model model, HttpSession session) {
+        // 현재 페이지 초기화
+        Integer userPageNumber;
+        if (page == null || page.equals("0")) {
+            // URL 파라미터가 없을 때, 세션 값 사용 또는 기본값 설정
+            userPageNumber = (Integer) session.getAttribute("userPageNumber");
+            if (userPageNumber == null) {
+                userPageNumber = 1; // 기본값 설정
+            }
+        } else {
+            // URL에서 받은 값을 사용
+            userPageNumber = Integer.parseInt(page);
+        }
+        // 세션에 현재 페이지 저장
+        session.setAttribute("userPageNumber", userPageNumber);
+        // 모델에 현재 페이지 추가 (뷰에서 사용할 데이터)
+        model.addAttribute("userPageNumber", userPageNumber);
+
+        return "mypage/my_posting";
     }
 }

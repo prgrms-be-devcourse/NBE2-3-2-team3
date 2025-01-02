@@ -51,13 +51,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 getImageFile(post.imagename).then(imageUrl => {
                     if (imageUrl) {
                         // 이미지 URL 또는 Blob을 img 태그의 src로 설정
-                        image.innerHTML = `<img src="${imageUrl}" style="width: 100%; height: auto; object-fit: cover;" alt="게시물 이미지" />`;
+                        image.innerHTML = `<img src="${imageUrl}" style="width: 100%; height: auto; object-fit: cover;" alt="게시물 이미지" /> <br><br>`;
                     } else {
                         image.innerHTML = "이미지 로드 실패.";
                     }
                 });
-            } else {
-                image.innerHTML = "첨부된 이미지가 없습니다.";
             }
 
             // 버튼(수정, 삭제, 쓰기) 동적 표기 기능
@@ -75,7 +73,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     if (apiUserId === tokenUserId && apiUserId !== 0 ) {
                         buttonHTML = `<button type="button" class="common" onclick="location.href='/community/modify/${boardId}'">수정</button>
-                            <button type="button" class="common" onclick="location.href='/community/delete/${boardId}'">삭제</button>
+<!--                            <button type="button" class="common" onclick="location.href='/community/delete/${boardId}'">삭제</button>-->
+                            <button type="button" class="common" onclick="openDeleteModal('${post.subject}', '${post.nickname}', ${boardId})">삭제</button>
                             <button type="button" class="green" onclick="location.href='/community/write'">글 작성</button>
                 `;
                     } else {
@@ -102,4 +101,47 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
+// 삭제 버튼 모달
+function openDeleteModal(title, nickname, boardId) {
+    const modalContent = `
+        <div style="width: 100%; padding: 20px 0; font-size: 1.1rem;">
+            <div style="padding: 10px 0;">다음 게시물을 삭제하시겠습니까?</div>
+        
+            <div style="padding: 10px 0;">
+                <strong>제목:</strong> ${title}
+            </div>
+        
+            <div style="padding: 10px 0;">
+                <strong>작성자:</strong> ${nickname}
+            </div>
+        
+            <div style="padding: 10px 0; display: flex; align-items: center;">
+                <strong style="margin-right: 10px;">비밀번호:</strong>
+                <input type="password" id="password" placeholder="비밀번호를 입력하세요" style="flex-grow: 1; padding: 0.5rem; font-size: 1rem;" />
+            </div>
+        </div>
+    `;
+
+    const modalObj = new ModalObj();
+    const buttonOptions = [
+        {
+            title: '삭제',
+            onclick: () => {
+                const password = document.getElementById('password').value.trim();
+                if (!password) {
+                    alert('비밀번호를 입력해주세요.');
+                    return;
+                }
+                deletePost(boardId, password);
+                modalObj.delete(); // 모달 닫기
+            }
+        },
+        {
+            title: '취소',
+            onclick: () => modalObj.delete() // 모달 닫기
+        }
+    ];
+
+    modalObj.createModal('게시물 삭제', modalContent, buttonOptions);
+}
 
