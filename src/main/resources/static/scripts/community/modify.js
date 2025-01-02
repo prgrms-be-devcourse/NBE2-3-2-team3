@@ -102,7 +102,7 @@ async function modifySubmit() {
     if (fileInput.files.length > 0) {
         formData.append("file", fileInput.files[0]);
     }
-
+    refresh();
     try {
         const response = await fetch("http://localhost:8080/api/community/modify", {
             method: "PUT",

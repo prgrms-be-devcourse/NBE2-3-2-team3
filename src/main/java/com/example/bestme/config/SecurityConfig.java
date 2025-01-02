@@ -69,6 +69,8 @@ public class SecurityConfig {
                         // 다른 요청들은 거부
                         .anyRequest().permitAll()
                 )
+                .formLogin(login -> login.loginPage("/login"))
+                .logout(logout -> logout.logoutSuccessUrl("/"))
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }

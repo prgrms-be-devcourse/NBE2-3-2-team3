@@ -39,6 +39,7 @@ async function writeSubmit() {
         formData.append("file", fileInput.files[0]);
     }
 
+    refresh();
     try {
         const response = await fetch("http://localhost:8080/api/community/write", {
             method: "POST",

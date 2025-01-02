@@ -1,6 +1,7 @@
 // static/scripts/community/delete.js
 
 async function deletePost(boardId, password) {
+    refresh();
     try {
         const requestDTO = { boardId, password };
 

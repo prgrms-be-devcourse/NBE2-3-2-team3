@@ -38,4 +38,18 @@ public class Item extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "brand_id")
     private Brand brand;
+
+    public void updateItem(
+            String name,
+            String purchaseUrl,
+            String imageUrl,
+            Category category,
+            Color color
+    ) {
+        this.name = name;
+        this.purchaseUrl = purchaseUrl;
+        this.imageUrl = imageUrl;
+        this.category = category;
+        this.color = color;
+    }
 }
