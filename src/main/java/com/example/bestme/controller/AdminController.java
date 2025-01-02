@@ -3,10 +3,8 @@ package com.example.bestme.controller;
 import com.example.bestme.dto.request.BrandSaveRequest;
 import com.example.bestme.dto.request.CategorySaveRequest;
 import com.example.bestme.dto.request.ItemSaveRequest;
-import com.example.bestme.dto.response.BrandSelectResponse;
-import com.example.bestme.dto.response.CategoryMenuResponse;
-import com.example.bestme.dto.response.ColorSelectResponse;
-import com.example.bestme.dto.response.ItemDetailResponse;
+import com.example.bestme.dto.request.ItemUpdateRequest;
+import com.example.bestme.dto.response.*;
 import com.example.bestme.service.AdminService;
 import com.example.bestme.service.LocalImageService;
 import lombok.RequiredArgsConstructor;
@@ -43,6 +41,13 @@ public class AdminController {
         Page<ItemDetailResponse> pagingItems = adminService.getPagingItems(pageable);
         model.addAttribute("pagingItems", pagingItems);
         return "admin/home";
+    }
+
+    @ResponseBody
+    @GetMapping("/items/{itemId}")
+    public ResponseEntity<ItemReadResponse> getItem(@PathVariable Long itemId) {
+        ItemReadResponse response = adminService.getItem(itemId);
+        return ResponseEntity.ok(response);
     }
 
     @ResponseBody
@@ -89,6 +94,20 @@ public class AdminController {
     ) {
         Long categoryId = adminService.saveCategory(categorySaveRequest);
         return ResponseEntity.created(URI.create(MessageFormat.format("/api/categories/{0}", categoryId))).build();
+    }
+
+    @PatchMapping("/items/{itemId}")
+    public ResponseEntity<Void> updateItem(
+            @PathVariable Long itemId,
+            @RequestPart ItemUpdateRequest itemUpdateRequest,
+            @RequestPart(required = false) MultipartFile image
+    ) {
+        String imageUrl = null;
+        if (image != null && !image.isEmpty()) {
+            imageUrl = imageService.save(image, ITEM_DIRECTORY);
+        }
+        adminService.updateItem(itemId, itemUpdateRequest, imageUrl);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/items/{itemId}")
