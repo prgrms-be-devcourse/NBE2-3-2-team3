@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>BestMe</title>
+  <link rel="stylesheet" type="text/css" th:href="@{/styles/guide.css}">
+  <link rel="stylesheet" type="text/css" th:href="@{/styles/modal.css}">
+  <script src="https://kit.fontawesome.com/5fcc17a7cc.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" type="text/css" th:href="@{/styles/header.css}">
+  <script defer type="text/javascript" th:src="@{/scripts/common.js}"></script>
+</head>
+<body>
+<header id="header">
+  <div class="header-box">
+    <a href="/">
+      <i class="fa-solid fa-droplet"></i>
+      <span>Best Me</span>
+    </a>
+  </div>
+  <div class="header-box">
+    <ul>
+      <li>
+        <a href="/">홈</a>
+      </li>
+      <li>
+        <a href="/personal">퍼스널컬러 테스트</a>
+      </li>
+      <li class="sel">
+        <a href="/style/guide">스타일링 추천</a>
+      </li>
+      <li>
+        <a href="/community">커뮤니티</a>
+      </li>
+      <li>
+        <a href="/member">마이 페이지</a>
+      </li>
+    </ul>
+  </div>
+  <div class="header-box login">
+  </div>
+</header>
+<main id="guide">
+  <div class="tab-container">
+    <a class="tab" href="/style/guide">개인 맞춤 가이드</a>
+    <a class="tab" href="/style/items/guide">맞춤 아이템 추천</a>
+  </div>
+
+  <div class="container" id="items-container">
+    <!-- 여기에 /items 페이지의 콘텐츠가 Ajax로 로드됩니다 -->
+  </div>
+</main>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const content = document.getElementById('items-container');
+
+    // Ajax 요청으로 콘텐츠 로드
+    const url = "http://localhost:8080/items/recommend"
+    fetch(url)
+            .then(response => {
+              if (!response.ok) {
+                throw new Error('네트워크 응답이 올바르지 않습니다.');
+              }
+              return response.text();
+            })
+            .then(data => {
+              content.innerHTML = data; // 성공 시 응답 데이터 삽입
+            })
+            .catch(() => {
+              content.innerHTML = '<p>콘텐츠를 불러오는 데 실패했습니다.</p>'; // 오류 메시지
+            });
+  });
+</script>
+</body>
+</html>

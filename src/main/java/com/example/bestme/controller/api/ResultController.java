@@ -50,8 +50,8 @@ public class ResultController {
         String gptRequest = chatGPTController.chat(requestMessage);
         System.out.println(gptRequest);
         Long colorId = null;
-        if (chatGPTController.chat(requestMessage).startsWith("1")) { colorId = 1L;} else if (chatGPTController.chat(requestMessage).startsWith("2")) {colorId = 2L;
-        } else if (chatGPTController.chat(requestMessage).startsWith("3")) { colorId = 3L; } else if (chatGPTController.chat(requestMessage).startsWith("4")) { colorId = 4L;
+        if (gptRequest.startsWith("1")) { colorId = 1L;} else if (gptRequest.startsWith("2")) {colorId = 2L;
+        } else if (gptRequest.startsWith("3")) { colorId = 3L; } else if (gptRequest.startsWith("4")) { colorId = 4L;
         } else { colorId = 5L; }
         Result result = resultService.createResult(userId, colorId, createResultDTO);
         ResultResponse.CreateResultResponseDTO dto = modelMapper.map(result, ResultResponse.CreateResultResponseDTO.class);
