@@ -28,8 +28,7 @@ table > tbody td:nth-child(2) {
     padding: 0.5rem 1rem;
 }
 
-table > tbody td:nth-child(2),
-table > tbody td:nth-child(3) {
+table > tbody td:nth-child(2) {
     text-align: left;
 }
 

@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", function() {
+    refresh();
     const accessToken = localStorage.getItem('Authorization')
 
     //URL에서 값 가져오기

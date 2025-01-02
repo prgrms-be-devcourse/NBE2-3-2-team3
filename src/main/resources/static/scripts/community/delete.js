@@ -54,6 +54,7 @@ async function deleteSubmit() {
         password: password
     };
 
+    refresh();
     try {
         const response = await fetch("http://localhost:8080/api/community/delete", {
             method: "DELETE",

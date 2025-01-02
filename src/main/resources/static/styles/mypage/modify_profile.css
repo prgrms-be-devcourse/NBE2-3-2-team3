@@ -55,8 +55,9 @@
     gap: 0.2rem;
 }
 
-#modify_form > .password button,
-#modify_form > .password-check button{
+#modify_form > .origin-password button,
+#modify_form > .new-password button,
+#modify_form > .new-password-check button {
     border: none;
     background-color: white;
     cursor: pointer;
