@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.time.LocalDateTime;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -21,14 +20,17 @@ public class UserViewController {
     @GetMapping(value = "/login")
     public String login(Model model) {
 
-        //String kakaoUrl = kakaoService.getKakaoLogin();
-        //log.info("&&&Kakao Login URL: {}", kakaoUrl);
         model.addAttribute("clientId", kakaoService.getClient_id());
         model.addAttribute("redirectUri", kakaoService.getRedirect_uri());
 
         return "login";
     }
 
+    @GetMapping("/kakao/callback")
+    public String kakaoCallback(@RequestParam String token, Model model) {
+        model.addAttribute("token", token);
+        return "kakaoCallback";
+    }
 
     @GetMapping("/")
     public String home() {

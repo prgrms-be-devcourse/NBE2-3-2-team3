@@ -10,6 +10,7 @@
     <script defer type="text/javascript" th:src="@{/scripts/common.js}"></script>
     <script defer type="text/javascript" th:src="@{/scripts/modal.js}"></script>
     <script defer type="text/javascript" th:src="@{/scripts/login.js}"></script>
+    <script defer type="text/javascript" th:src="@{/scripts/kakaoLogin.js}"></script>
 </head>
 <body>
 <header id="header">
@@ -70,11 +71,12 @@
             <button class="login-btn">로그인</button>
             <span class="horizontal-bar"></span>
             <span>다른 로그인 방법</span>
-            <button type="button" class="kakao" id="kakao-login-btn">
-                <a th:href="|https://kauth.kakao.com/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=account_email|">
+            <button type="button" class="kakao">
+                <div id="kakao-login-btn"
+                     th:attr="data-client-id=${clientId}, data-redirect-uri=${redirectUri}">
                     <img th:src="@{/imgs/pngwing.com.png}" alt="">
                     <span>카카오로 로그인하기</span>
-                </a>
+                </div>
             </button>
             <span class="horizontal-bar"></span>
             <span>회원이 아니신가요?
