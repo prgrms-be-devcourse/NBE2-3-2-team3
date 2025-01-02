@@ -64,7 +64,7 @@ public class ItemService {
         for (Category category : categories) {
             items.put(
                     category.getName(),
-                    itemRepository.findTop3ByCategoryIdOrderByLikeCountDesc(category.getId())
+                    itemRepository.findRecommendItems(category.getId())
             );
         }
 
