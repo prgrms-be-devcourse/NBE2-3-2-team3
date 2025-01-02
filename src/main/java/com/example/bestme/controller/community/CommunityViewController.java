@@ -3,6 +3,7 @@ package com.example.bestme.controller.community;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class CommunityViewController {
 
     // 커뮤니티 메인 view
-    @RequestMapping( value = {"/community", "/community/{page}"} )
+    @GetMapping( value = {"/community", "/community/{page}"} )
     public String communityMain(@PathVariable(required = false) String page, Model model, HttpSession session) {
         // 현재 페이지 초기화
         Integer currentPageNumber;
@@ -36,27 +37,27 @@ public class CommunityViewController {
     }
 
     // 게시물 디테일 view
-    @RequestMapping( "/community/detail/{boardId}" )
+    @GetMapping( "/community/detail/{boardId}" )
     public String communityDetail(@PathVariable String boardId, Model model) {
         model.addAttribute("boardId", boardId);
         return "community/community_detail";
     }
 
     // 게시물 생성 view
-    @RequestMapping( "/community/write" )
+    @GetMapping( "/community/write" )
     public String communityWrite() {
         return "community/community_write";
     }
 
     // 게시물 수정 view
-    @RequestMapping( "/community/modify/{boardId}" )
+    @GetMapping( "/community/modify/{boardId}" )
     public String communityUpdate(@PathVariable String boardId, Model model) {
         model.addAttribute("boardId", boardId);
         return "community/community_modify";
     }
 
     // 게시물 삭제 view
-    @RequestMapping( "/community/delete/{boardId}" )
+    @GetMapping( "/community/delete/{boardId}" )
     public String communityDelete(@PathVariable String boardId, Model model) {
         model.addAttribute("boardId", boardId);
         return "community/community_delete";

@@ -60,7 +60,7 @@ public class UserViewController {
         return "mypage/delete_profile";
     }
 
-    @RequestMapping( value = { "/member/my_posting", "/member/my_posting/{page}"} )
+    @GetMapping( value = { "/member/my_posting", "/member/my_posting/{page}"} )
     public String MyPosting(@PathVariable(required = false) String page, Model model, HttpSession session) {
         // 현재 페이지 초기화
         Integer userPageNumber;
