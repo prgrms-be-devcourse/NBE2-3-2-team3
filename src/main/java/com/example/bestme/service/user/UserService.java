@@ -13,7 +13,8 @@ public interface UserService {
 
     // 로그인
 
-    ResponseEntity<ApiResponse<String>> login(RequestLoginDTO to, HttpServletResponse response);
+    ResponseEntity<ApiResponse<String>> login(RequestLoginDTO to,
+                                              HttpServletResponse response);
 
     // 비밀번호 재설정 계정 확인
     ResponseEntity<ApiResponse<Long>> identifyUser(RequestIdentifyUserDTO to);
@@ -21,10 +22,17 @@ public interface UserService {
     // 비밀번호 재설정하기
     ResponseEntity<ApiResponse<Void>> resetPassword(RequestResetPasswordDTO to);
 
-    // 회원탈퇴
-    ResponseEntity<ApiResponse<Void>> deleteUser(HttpServletRequest request);
+    // 회원수정
+    ResponseEntity<ApiResponse<String>> modifyUser(RequestModifyUserDTO requestModifyUserDTO,
+                                                   HttpServletRequest request,
+                                                   HttpServletResponse response);
 
-    ResponseEntity<ApiResponse<String>> refresh(HttpServletRequest request, HttpServletResponse response);
+    // 회원탈퇴
+    ResponseEntity<ApiResponse<Void>> deleteUser(RequestDeleteUserDTO requestDeleteUserDTO,
+                                                 HttpServletRequest request,
+                                                 HttpServletResponse response);
+
+    ResponseEntity<ApiResponse<String>> refresh(HttpServletRequest request);
   
     // user 가져오기
     User getUser(Long userId);

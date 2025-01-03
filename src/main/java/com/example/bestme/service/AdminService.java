@@ -7,10 +7,8 @@ import com.example.bestme.domain.Item;
 import com.example.bestme.dto.request.BrandSaveRequest;
 import com.example.bestme.dto.request.CategorySaveRequest;
 import com.example.bestme.dto.request.ItemSaveRequest;
-import com.example.bestme.dto.response.BrandSelectResponse;
-import com.example.bestme.dto.response.CategoryMenuResponse;
-import com.example.bestme.dto.response.ColorSelectResponse;
-import com.example.bestme.dto.response.ItemDetailResponse;
+import com.example.bestme.dto.request.ItemUpdateRequest;
+import com.example.bestme.dto.response.*;
 import com.example.bestme.repository.BrandRepository;
 import com.example.bestme.repository.CategoryRepository;
 import com.example.bestme.repository.ColorRepository;
@@ -36,6 +34,11 @@ public class AdminService {
     public Page<ItemDetailResponse> getPagingItems(Pageable pageable) {
         return itemRepository.findAll(pageable)
                 .map(ItemDetailResponse::from);
+    }
+
+    public ItemReadResponse getItem(Long itemId) {
+        Item item = itemRepository.getById(itemId);
+        return ItemReadResponse.from(item);
     }
 
     public CategoryMenuResponse getCategoryMenu() {
@@ -81,6 +84,25 @@ public class AdminService {
         Category category = categorySaveRequest.toEntity(parentCategory);
 
         return categoryRepository.save(category).getId();
+    }
+
+    @Transactional
+    public void updateItem(Long itemId, ItemUpdateRequest itemUpdateRequest, String imageUrl) {
+        Item item = itemRepository.getById(itemId);
+        Category category = categoryRepository.getById(itemUpdateRequest.categoryId());
+        Color color = colorRepository.getById(itemUpdateRequest.colorId());
+
+        if (imageUrl == null) {
+            imageUrl = item.getImageUrl();
+        }
+
+        item.updateItem(
+                itemUpdateRequest.name(),
+                itemUpdateRequest.purchaseUrl(),
+                imageUrl,
+                category,
+                color
+        );
     }
 
     @Transactional

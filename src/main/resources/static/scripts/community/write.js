@@ -39,6 +39,7 @@ async function writeSubmit() {
         formData.append("file", fileInput.files[0]);
     }
 
+    refresh();
     try {
         const response = await fetch("http://localhost:8080/api/community/write", {
             method: "POST",
@@ -48,21 +49,36 @@ async function writeSubmit() {
             body: formData
         });
 
+        const result = await response.json();
+
         if (response.ok) {
-            const result = await response.json();
             console.log("게시물 작성 성공:", result);
-            alert("게시물이 성공적으로 작성되었습니다!");
 
             const post = result.data;
             if (post && post.boardId) {
-                // 성공 후 해당 게시물 디테일 페이지로 리디렉션
-                window.location.href = `/community/detail/${post.boardId}`;
+                // 성공 모달 표시
+                const modalObj = new ModalObj();
+                modalObj.createModal("성공", "게시물이 성공적으로 작성되었습니다.", [{
+                            title: "확인",
+                            onclick: () => {
+                                window.location.href = `/community/detail/${post.boardId}`;}
+                        }]);
             } else {
-                alert("게시물 생성은 성공했으나 리디렉션할 수 없습니다.");
+                const modalObj = new ModalObj();
+                modalObj.createModal("경고", "게시물 생성은 성공했으나 리디렉션할 수 없습니다.", [{
+                            title: "확인",
+                            onclick: () => {
+                                modalObj.delete();}
+                        }]);
             }
         } else {
-            console.error("게시물 작성 실패:", response.status);
-            alert("게시물 작성에 실패했습니다.");
+            console.error("게시물 작성 실패:", result.message);
+            const modalObj = new ModalObj();
+            modalObj.createModal("실패", "게시물 작성에 실패했습니다.", [{
+                        title: "확인",
+                        onclick: () => {
+                            modalObj.delete();}
+                    }]);
         }
     } catch (error) {
         console.error("API 호출 중 오류 발생:", error);

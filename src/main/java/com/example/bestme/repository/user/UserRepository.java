@@ -15,15 +15,15 @@ public interface UserRepository extends JpaRepository<User, Long> {
                 .orElseThrow(() -> new NoSuchElementException("유저 x"));
     }
 
-    // 이메일(Unique)로 유저를 찾는 쿼리
+    // 이메일로 유저를 찾는 쿼리 - 회원 탈퇴 기준으로 반영
     @Query(value = "select u from User u where u.email = ?1 and u.deletedFlag = false")
-    User findByEmail(String email);
+    User findActiveByEmail(String email);
 
-    // 닉네임(Unique)으로 유저를 찾는 쿼리
+    // 닉네임으로 유저를 찾는 쿼리 - 회원 탈퇴 기준으로 반영
     @Query(value = "select u from User u where u.nickname = ?1 and u.deletedFlag = false")
-    User findByNickname(String nickname);
+    User findActiveByNickname(String nickname);
 
     // userId 로 유저를 찾는 쿼리
     @Query(value = "select u from User u where u.id = ?1 and u.deletedFlag = false")
-    User findByUserId(Long id);
+    User findActiveByUserId(Long id);
 }

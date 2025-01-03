@@ -8,6 +8,26 @@ HTMLElement.prototype.hide = function () {
     return this;
 }
 
+// 브라우저 종료 시 사라지는 sessionStorage 값을 이용하여 localStorage 관리하기.
+// 페이지 이동이나 새로고침에는 sessionStorage 값은 사라지지 않음.
+// 서버 구동 시간을 받아와서 sessionStorage 에 저장 - 이 후 값을 비교하여 서버 재시작됐는지 확인하여 토큰 삭제.
+function checkRestart() {
+    fetch('/api/isRestartedServer')
+        .then(response => response.text())  // 서버의 재시작 시간 받기
+        .then(serverStartTime => {
+            const storedTime = sessionStorage.getItem('serverStartTime');
+            // 서버 시작 시간이 저장된 시간보다 더 늦으면 localStorage 삭제
+            if (serverStartTime !== storedTime) {
+                deleteCookie('refresh');
+                localStorage.removeItem('Authorization');  // localStorage 삭제
+                sessionStorage.setItem('serverStartTime', serverStartTime);  // 최신 서버 시작 시간 저장
+            }
+            setLoginBox();
+        })
+        .catch(error => console.error('Error fetching server start time:', error));
+}
+
+
 // 쿠키 다루기
 function getCookie(name) {
     let matches = document.cookie.match(new RegExp(
@@ -119,6 +139,7 @@ function checkBirth(input) {
     return true;
 }
 
+// refresh 토큰을 이용하여 새로운 토큰 배치
 function refresh() {
     fetch('/api/refresh', {}).then(response => response.json())
         .then(data => {
@@ -127,7 +148,7 @@ function refresh() {
                 localStorage.setItem("Authorization", Authorization);
             }
             if (data.success === false) {
-                logout();
+                localStorage.removeItem("Authorization");
                 const refreshModal = new ModalObj();
                 refreshModal.createModal('알림', '로그인 기간이 만료되었습니다.', [{
                     title: '확인',
@@ -173,4 +194,4 @@ async function getLoginInfo() {
 // getLoginInfo().then(userInfo => alert(userInfo.nickname));
 // 로그인 중인 사용자의 nickname 이 알림창에 표시됩니다.
 
-setLoginBox();
+checkRestart();
