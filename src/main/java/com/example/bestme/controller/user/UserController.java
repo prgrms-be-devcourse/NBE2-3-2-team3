@@ -65,6 +65,7 @@ public class UserController {
     }
 
     // 카카오 로그인 처리
+    @Operation( summary = "카카오 로그인 후 토큰 반환하는 API 입니다. ", description = "카카오 엑세스 토큰을 받아서 userInfo를 불러옴." )
     @GetMapping("/auth/kakao/callback")
     public ResponseEntity<Map<String, String>> kakaoLogin(
             @RequestParam String code,
