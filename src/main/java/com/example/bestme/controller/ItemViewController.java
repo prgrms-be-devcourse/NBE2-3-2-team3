@@ -17,10 +17,4 @@ public class ItemViewController {
     public String getItems() {
         return "items";
     }
-
-    @GetMapping("/recommend")
-    @Operation( summary = "추천 아이템 페이지", description = "추천 아이템 페이지" )
-    public String getRecommendItems() {
-        return "recommend-item";
-    }
 }
