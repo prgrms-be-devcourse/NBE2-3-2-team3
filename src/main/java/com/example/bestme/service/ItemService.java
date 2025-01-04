@@ -4,12 +4,10 @@ import com.example.bestme.domain.Brand;
 import com.example.bestme.domain.Category;
 import com.example.bestme.domain.Color;
 import com.example.bestme.domain.Item;
+import com.example.bestme.dto.api.ResultResponse;
 import com.example.bestme.dto.request.SearchConditionRequest;
 import com.example.bestme.dto.response.*;
-import com.example.bestme.repository.BrandRepository;
-import com.example.bestme.repository.CategoryRepository;
-import com.example.bestme.repository.ColorRepository;
-import com.example.bestme.repository.ItemRepository;
+import com.example.bestme.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -27,6 +25,7 @@ public class ItemService {
     private final CategoryRepository categoryRepository;
     private final BrandRepository brandRepository;
     private final ColorRepository colorRepository;
+    private final ResultRepository resultRepository;
 
     public ItemsResponse getSliceItemsResponseBySearchCondition(SearchConditionRequest searchConditionRequest, Pageable pageable) {
         return ItemsResponse.from(getSliceItemsBySearchCondition(searchConditionRequest, pageable));
@@ -57,14 +56,15 @@ public class ItemService {
         return FilterMenuResponse.of(brands, colors);
     }
 
-    public RecommendItemsResponse getRecommendItemsResponse() {
+    public RecommendItemsResponse getRecommendItemsResponse(Long userId) {
+        ResultResponse.ReadColorResponseDTO resultColor = resultRepository.findColorId(userId);
         List<Category> categories = categoryRepository.findAllByParentCategoryIdIsNull();
         Map<String, List<Item>> items = new HashMap<>();
 
         for (Category category : categories) {
             items.put(
                     category.getName(),
-                    itemRepository.findRecommendItems(category.getId())
+                    itemRepository.findRecommendItems(category.getId(), resultColor.getColorId())
             );
         }
 

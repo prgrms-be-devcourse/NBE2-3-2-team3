@@ -68,8 +68,12 @@ public class ItemController {
 
     @GetMapping("/recommend")
     @Operation( summary = "추천 아이템 조회", description = "최상위 카테고리 별로 좋아요 수가 많은 3개 아이템을 추천 아이템으로 선택" )
-    public ApiResponse<RecommendItemsResponse> getRecommendItems() {
-        RecommendItemsResponse response = itemService.getRecommendItemsResponse();
+    public ApiResponse<RecommendItemsResponse> getRecommendItems(HttpServletRequest request) {
+        String accessToken = jwtTokenProvider.resolveToken(request);
+        Claims claims = jwtTokenProvider.parseClaims(accessToken);
+        Long userId = Long.valueOf(claims.getId());
+
+        RecommendItemsResponse response = itemService.getRecommendItemsResponse(userId);
         return ApiResponse.success(response);
     }
 

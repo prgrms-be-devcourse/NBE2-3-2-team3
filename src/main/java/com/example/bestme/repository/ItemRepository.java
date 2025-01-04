@@ -56,11 +56,12 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
                     SELECT i.*
                     FROM item i 
                     WHERE (i.category_id IN (SELECT id FROM cte))
+                    AND (i.color_id = :colorId)
                     ORDER BY i.like_count DESC
                     LIMIT 3
             """
             , nativeQuery = true)
-    List<Item> findRecommendItems(Long categoryId);
+    List<Item> findRecommendItems(Long categoryId, Long colorId);
 
     @Modifying(clearAutomatically = true)
     @Query(
