@@ -84,7 +84,48 @@
 
 <br/></br></br>
 
+## 시연 영상 캡쳐본(일부)
+#### 회원 로그인 & OAuth2 카카오 로그인
+<p align="left">
+  <img width="85%" align="center" src="https://github.com/user-attachments/assets/cdd36a24-a0ab-41c0-ad06-9d1c20e46f1d">
+</p>  
+</br>
+#### 퍼스널 컬러 진단
+<p align="left">
+  <img width="70%" align="center" src="https://github.com/user-attachments/assets/e1fc47c7-5e89-4120-9311-279d1ef9df35">
+</p>  
+<p align="left">
+  <img width="70%" align="center" src="https://github.com/user-attachments/assets/2d5ca273-65a8-405c-bb26-4385164b7f31">
+</p>  
+</br>
+#### 가이드 제공
+<p align="left">
+  <img width="70%" align="center" src="https://github.com/user-attachments/assets/18c5ddb8-094b-4dd9-a422-660d5c435bcd">
+</p>  
+</br>
 
+#### 아이템 추천 & 브랜드 추가 & 필터링
+<p align="left">
+  <img width="70%" align="center" src="https://github.com/user-attachments/assets/bd2379d1-c017-469a-96a3-846d04ed8f16">
+</p>  
+</br>
+<p align="left">
+  <img width="70%" align="center" src="https://github.com/user-attachments/assets/95f5d0f1-de50-413f-9741-630f707272ac">
+</p>  
+</br>
+
+#### 게시글 작성
+<p align="left">
+  <img width="70%" align="center" src="https://github.com/user-attachments/assets/e00dd1b1-4ed8-4a48-b5ca-985eb9eddcfa">
+</p>  
+
+#### 마이페이지
+<p align="left">
+  <img width="70%" align="center" src="https://github.com/user-attachments/assets/8927666b-14f7-42da-a9a6-24134cf0cbaa">
+</p>  
+
+
+<br/></br></br>
 
 ## Git Convention
 Feat : 새로운 기능 추가
