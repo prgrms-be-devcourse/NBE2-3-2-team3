@@ -62,7 +62,7 @@ public class ItemController {
         Claims claims = jwtTokenProvider.parseClaims(accessToken);
         Long userId = Long.valueOf(claims.getId());
 
-        LikeResponse response = likeService.clickItemLike(itemId, userId);
+        LikeResponse response = likeService.getLikeResponse(itemId, userId);
         return ApiResponse.success(response);
     }
 
