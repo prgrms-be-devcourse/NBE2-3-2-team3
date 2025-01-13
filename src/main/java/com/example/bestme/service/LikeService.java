@@ -33,6 +33,7 @@ public class LikeService {
         if (itemLike.isPresent()) {
             itemRepository.decreaseLike(itemId);
             itemLikeRepository.deleteByItemIdAndUserId(itemId, userId);
+            return;
         }
         itemRepository.increaseLike(itemId);
         itemLikeRepository.save(
