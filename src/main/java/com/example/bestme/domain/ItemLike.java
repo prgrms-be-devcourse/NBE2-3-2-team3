@@ -9,6 +9,12 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(uniqueConstraints = {
+        @UniqueConstraint(
+                name = "uk_item_user",
+                columnNames = {"item_id", "user_id"}
+        )
+})
 public class ItemLike {
 
     @Id

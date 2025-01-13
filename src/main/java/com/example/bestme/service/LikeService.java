@@ -6,7 +6,6 @@ import com.example.bestme.domain.user.User;
 import com.example.bestme.dto.response.LikeResponse;
 import com.example.bestme.repository.ItemLikeRepository;
 import com.example.bestme.repository.ItemRepository;
-import com.example.bestme.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,32 +19,27 @@ public class LikeService {
 
     private final ItemRepository itemRepository;
     private final ItemLikeRepository itemLikeRepository;
-    private final UserRepository userRepository;
 
-    public LikeResponse clickItemLike(Long itemId, Long userId) {
+    public LikeResponse getLikeResponse(Long itemId, Long userId) {
+        clickItemLike(itemId, userId);
         Item item = itemRepository.getById(itemId);
-        User user = userRepository.getById(userId);
-
-        int likeCount = getAfterClickLikeCount(item, user);
         boolean isLiked = !itemLikeRepository.existsByItemIdAndUserId(itemId, userId);
 
-        return LikeResponse.of(likeCount, isLiked);
+        return LikeResponse.of(item.getLikeCount(), isLiked);
     }
 
-    private int getAfterClickLikeCount(Item item, User user) {
-        Optional<ItemLike> itemLike = itemLikeRepository.findByItemIdAndUserId(item.getId(), user.getId());
+    private void clickItemLike(Long itemId, Long userId) {
+        Optional<ItemLike> itemLike = itemLikeRepository.findByItemIdAndUserId(itemId, userId);
         if (itemLike.isPresent()) {
-            itemRepository.decreaseLike(item.getId());
-            itemLikeRepository.deleteByItemIdAndUserId(item.getId(), user.getId());
-            return item.getLikeCount() - 1;
+            itemRepository.decreaseLike(itemId);
+            itemLikeRepository.deleteByItemIdAndUserId(itemId, userId);
+            return;
         }
-
-        itemRepository.increaseLike(item.getId());
+        itemRepository.increaseLike(itemId);
         itemLikeRepository.save(
                 ItemLike.builder()
-                        .item(item)
-                        .user(user)
+                        .item(Item.builder().id(itemId).build())
+                        .user(User.builder().id(userId).build())
                         .build());
-        return item.getLikeCount() + 1;
     }
 }
